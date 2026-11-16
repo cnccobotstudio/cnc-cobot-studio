@@ -1,29 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="./style.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pen</title>
-  </head>
-  <body>
-
-    <script src="./script.js"></script>
-  </body>
-</html>
-<!DOCTYPE html>
-
-<html class="dark" lang="es">
+<html lang="es" class="dark">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>CNC &amp; Cobot Studio - Created by EagleCelest</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
-<script src="https://unpkg.com/lucide@latest"></script>
-<script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CNC & Cobot Studio - Created by EagleCelest</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts & Iconos Lucide -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
@@ -36,7 +27,8 @@
       }
     }
   </script>
-<style>
+
+  <style>
     body {
       background-color: #070e1d;
       color: #e2e8f0;
@@ -65,304 +57,298 @@
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col bg-[#070e1d] text-slate-200 antialiased selection:bg-blue-600 selection:text-white">
-<!-- TOP BAR GLOBAL -->
-<header class="h-16 border-b border-[#232d42] bg-[#0c1322]/95 backdrop-blur sticky top-0 z-40 flex items-center justify-between px-4">
-<div class="flex items-center space-x-4">
-<!-- LOGO OFICIAL EMBEBIDO + TÍTULOS -->
-<div class="flex items-center space-x-3 cursor-pointer" onclick="switchView('setup')">
-<div class="relative w-10 h-10 flex-shrink-0 rounded-xl overflow-hidden border border-cyan-500/30 bg-slate-900 shadow-lg shadow-cyan-500/10 flex items-center justify-center p-0.5">
-<svg class="w-full h-full" viewbox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
-<defs>
-<lineargradient id="hdrCobotBg" x1="0%" x2="100%" y1="0%" y2="100%">
-<stop offset="0%" stop-color="#0a101f"></stop>
-<stop offset="100%" stop-color="#030712"></stop>
-</lineargradient>
-<lineargradient id="hdrCyanBlue" x1="0%" x2="100%" y1="0%" y2="100%">
-<stop offset="0%" stop-color="#00f2fe"></stop>
-<stop offset="50%" stop-color="#4facfe"></stop>
-<stop offset="100%" stop-color="#2563eb"></stop>
-</lineargradient>
-<filter height="140%" id="hdrCobotGlow" width="140%" x="-20%" y="-20%">
-<fegaussianblur result="blur" stddeviation="6"></fegaussianblur>
-<fecomposite in="SourceGraphic" in2="blur" operator="over"></fecomposite>
-</filter>
-</defs>
-<rect fill="url(#hdrCobotBg)" height="400" rx="48" width="400"></rect>
-<rect fill="none" height="400" rx="48" stroke="#1e293b" stroke-width="3" width="400"></rect>
-<circle cx="200" cy="200" fill="none" r="140" stroke="#1e293b" stroke-dasharray="4 8" stroke-width="1.5"></circle>
-<circle cx="200" cy="200" fill="none" r="90" stroke="#2563eb" stroke-opacity="0.3" stroke-width="1"></circle>
-<path d="M 140 310 L 260 310 L 245 285 L 155 285 Z" fill="#1e293b" stroke="#38bdf8" stroke-width="2.5"></path>
-<circle cx="200" cy="265" fill="#0f172a" r="22" stroke="url(#hdrCyanBlue)" stroke-width="4"></circle>
-<circle cx="200" cy="265" fill="#38bdf8" r="9"></circle>
-<path d="M 190 265 L 135 175 L 158 160 L 210 252 Z" fill="#1e293b" stroke="#3b82f6" stroke-width="2"></path>
-<circle cx="145" cy="170" fill="#0b1329" filter="url(#hdrCobotGlow)" r="26" stroke="url(#hdrCyanBlue)" stroke-width="4.5"></circle>
-<circle cx="145" cy="170" fill="#00f2fe" r="10"></circle>
-<path d="M 145 170 L 255 110 L 268 128 L 155 188 Z" fill="#1e293b" stroke="#38bdf8" stroke-width="2"></path>
-<circle cx="260" cy="120" fill="#0b1329" r="18" stroke="url(#hdrCyanBlue)" stroke-width="3.5"></circle>
-<circle cx="260" cy="120" fill="#38bdf8" r="7"></circle>
-<path d="M 260 120 L 290 145" stroke="#94a3b8" stroke-linecap="round" stroke-width="8"></path>
-<circle cx="295" cy="150" fill="#0f172a" r="12" stroke="#10b981" stroke-width="3"></circle>
-<path d="M 290 162 L 285 180 L 295 180" fill="none" stroke="#38bdf8" stroke-width="3"></path>
-<path d="M 300 162 L 305 180 L 295 180" fill="none" stroke="#38bdf8" stroke-width="3"></path>
-<circle cx="295" cy="195" fill="#10b981" filter="url(#hdrCobotGlow)" r="4"></circle>
-<path d="M 295 195 C 330 250, 270 290, 200 290" fill="none" stroke="#10b981" stroke-dasharray="4 4" stroke-width="2"></path>
-</svg>
-</div>
-<div>
-<div class="flex items-center gap-2">
-<span class="text-white text-base leading-none font-bold tracking-wider font-mono">CNC &amp; COBOT STUDIO</span>
-<span class="px-1.5 py-0.5 text-[10px] font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 rounded font-mono">v4.2 PRO</span>
-</div>
-<span class="text-slate-400 text-[11px] block font-mono tracking-wide mt-0.5">Created by EagleCelest · Universal Orchestrator</span>
-</div>
-</div>
-<div class="hidden lg:flex items-center space-x-3 text-xs font-mono border-l border-[#232d42] pl-4">
-<div class="flex items-center space-x-1.5 bg-[#141b2b] px-2.5 py-1 rounded border border-[#232d42]">
-<span class="w-2 h-2 rounded-full bg-emerald-400 pulse-dot"></span>
-<span class="text-slate-400">BUS:</span>
-<span class="text-emerald-400 font-semibold">500 Hz RTDE Ok</span>
-</div>
-<div class="flex items-center space-x-1.5 bg-[#141b2b] px-2.5 py-1 rounded border border-[#232d42]">
-<i class="w-3.5 h-3.5 text-blue-400" data-lucide="zap"></i>
-<span class="text-slate-400">KERNEL:</span>
-<span class="text-blue-400 font-semibold">0ms • WASM Local RT</span>
-</div>
-</div>
-</div>
-<!-- ACCIONES SUPERIORES (ROLES, FEEDBACK, ESTOP) -->
-<div class="flex items-center space-x-3">
-<!-- Selector de Rol (Estudiante 0€ vs Taller Pro) -->
-<div class="flex bg-[#141b2b] p-0.5 rounded-lg border border-[#232d42] text-xs font-medium">
-<button class="px-3 py-1.5 rounded bg-blue-600 text-white shadow font-semibold flex items-center space-x-1.5 transition" id="btn-mode-edu" onclick="setAppMode('edu')">
-<i class="w-3.5 h-3.5" data-lucide="graduation-cap"></i>
-<span>Estudiante (0€)</span>
-</button>
-<button class="px-3 py-1.5 rounded text-slate-400 hover:text-white transition flex items-center space-x-1.5" id="btn-mode-pro" onclick="setAppMode('pro')">
-<i class="w-3.5 h-3.5" data-lucide="factory"></i>
-<span>Taller Pro</span>
-</button>
-</div>
-<!-- Botón de Feedback Beta -->
-<button class="hidden sm:flex items-center space-x-1.5 bg-[#141b2b] hover:bg-[#1b2438] px-3 py-1.5 rounded-lg border border-amber-500/40 text-xs font-mono text-amber-300 hover:text-white transition cursor-pointer shadow-sm" onclick="openSurveyModal()" type="button"><i class="w-3.5 h-3.5 text-amber-400 fill-amber-400" data-lucide="star"></i><span>⭐ Encuesta (14d)</span></button><a class="hidden sm:flex items-center space-x-1.5 bg-[#141b2b] hover:bg-[#1b2438] px-3 py-1.5 rounded-lg border border-[#232d42] text-xs font-mono text-cyan-300 transition" href="mailto:cnccobot.feedback@gmail.com?subject=Feedback%20CNC%26Cobot%20Studio%20v4.2" target="_blank">
-<i class="w-3.5 h-3.5 text-cyan-400" data-lucide="message-square"></i>
-<span>Feedback Beta</span>
-</a>
-<!-- E-STOP -->
-<button class="bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-1.5 rounded-lg flex items-center space-x-2 border border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.4)] transition active:scale-95" id="btn-estop" onclick="triggerEStop()">
-<i class="w-4 h-4" data-lucide="octagon-alert"></i>
-<span class="font-mono text-xs tracking-wider">E-STOP</span>
-</button>
-</div>
-</header>
-<!-- CUERPO PRINCIPAL: SIDEBAR + VISTAS DINÁMICAS -->
-<div class="flex-1 flex overflow-hidden">
-<aside class="w-64 bg-[#0c1322] border-r border-[#232d42] flex flex-col justify-between shrink-0 select-none">
-<div class="p-4 space-y-6">
-<div class="text-[11px] font-mono text-slate-500 uppercase tracking-wider font-semibold">Módulos de Trabajo</div>
-<nav class="space-y-1.5" id="sidebar-nav">
-<button class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium bg-blue-600/15 text-blue-400 border border-blue-500/30 transition text-left" id="nav-setup" onclick="switchView('setup')">
-<i class="w-4 h-4 shrink-0" data-lucide="folder-plus"></i>
-<span>Nuevo Proyecto &amp; Setup</span>
-</button>
-<button class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-[#141b2b] transition text-left" id="nav-console" onclick="switchView('console')">
-<i class="w-4 h-4 shrink-0" data-lucide="activity"></i>
-<span>Centro Cinemático 3D</span>
-</button>
-<button class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-[#141b2b] transition text-left" id="nav-editor" onclick="switchView('editor')">
-<i class="w-4 h-4 shrink-0" data-lucide="code"></i>
-<span>Editor &amp; Transpilador</span>
-</button>
-<button class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-[#141b2b] transition text-left" id="nav-academy" onclick="switchView('academy')">
-<i class="w-4 h-4 shrink-0" data-lucide="book-open"></i>
-<span>Hub de Aprendizaje</span>
-</button>
-</nav>
-</div>
-<div class="p-4 border-t border-[#232d42] bg-[#070e1d] text-xs font-mono space-y-2">
-<div class="flex justify-between items-center text-slate-400">
-<span>HARDWARE ACTIVO:</span>
-<span class="text-emerald-400 font-bold flex items-center" id="badge-hw-status">
-<span class="w-2 h-2 rounded-full bg-emerald-400 inline-block mr-1.5 pulse-dot"></span>CONECTADO
+<body class="min-h-screen flex flex-col bg-[#070e1d] text-slate-200 antialiased selection:bg-blue-600 selection:text-white pb-16 md:pb-0">
+
+  <!-- TOP BAR GLOBAL -->
+  <header class="h-16 border-b border-[#232d42] bg-[#0c1322]/95 backdrop-blur sticky top-0 z-40 flex items-center justify-between px-3 sm:px-4">
+    <div class="flex items-center space-x-2 sm:space-x-4">
+      
+      <!-- LOGO OFICIAL EMBEBIDO + TÍTULOS -->
+      <div class="flex items-center space-x-2.5 sm:space-x-3 cursor-pointer" onclick="switchView('setup')">
+        <div class="relative w-9 h-9 sm:w-10 sm:h-10 flex-shrink-0 rounded-xl overflow-hidden border border-cyan-500/30 bg-slate-900 shadow-lg shadow-cyan-500/10 flex items-center justify-center p-0.5">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" class="w-full h-full">
+            <defs>
+              <linearGradient id="hdrCobotBg" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#0a101f"/>
+                <stop offset="100%" stop-color="#030712"/>
+              </linearGradient>
+              <linearGradient id="hdrCyanBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#00f2fe"/>
+                <stop offset="50%" stop-color="#4facfe"/>
+                <stop offset="100%" stop-color="#2563eb"/>
+              </linearGradient>
+              <filter id="hdrCobotGlow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="6" result="blur"/>
+                <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+              </filter>
+            </defs>
+            <rect width="400" height="400" rx="48" fill="url(#hdrCobotBg)"/>
+            <rect width="400" height="400" rx="48" fill="none" stroke="#1e293b" stroke-width="3"/>
+            <circle cx="200" cy="200" r="140" fill="none" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="4 8"/>
+            <circle cx="200" cy="200" r="90" fill="none" stroke="#2563eb" stroke-width="1" stroke-opacity="0.3"/>
+            <path d="M 140 310 L 260 310 L 245 285 L 155 285 Z" fill="#1e293b" stroke="#38bdf8" stroke-width="2.5"/>
+            <circle cx="200" cy="265" r="22" fill="#0f172a" stroke="url(#hdrCyanBlue)" stroke-width="4"/>
+            <circle cx="200" cy="265" r="9" fill="#38bdf8"/>
+            <path d="M 190 265 L 135 175 L 158 160 L 210 252 Z" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+            <circle cx="145" cy="170" r="26" fill="#0b1329" stroke="url(#hdrCyanBlue)" stroke-width="4.5" filter="url(#hdrCobotGlow)"/>
+            <circle cx="145" cy="170" r="10" fill="#00f2fe"/>
+            <path d="M 145 170 L 255 110 L 268 128 L 155 188 Z" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+            <circle cx="260" cy="120" r="18" fill="#0b1329" stroke="url(#hdrCyanBlue)" stroke-width="3.5"/>
+            <circle cx="260" cy="120" r="7" fill="#38bdf8"/>
+            <path d="M 260 120 L 290 145" stroke="#94a3b8" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="295" cy="150" r="12" fill="#0f172a" stroke="#10b981" stroke-width="3"/>
+            <path d="M 290 162 L 285 180 L 295 180" fill="none" stroke="#38bdf8" stroke-width="3"/>
+            <path d="M 300 162 L 305 180 L 295 180" fill="none" stroke="#38bdf8" stroke-width="3"/>
+            <circle cx="295" cy="195" r="4" fill="#10b981" filter="url(#hdrCobotGlow)"/>
+            <path d="M 295 195 C 330 250, 270 290, 200 290" fill="none" stroke="#10b981" stroke-width="2" stroke-dasharray="4 4"/>
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5 sm:gap-2">
+            <span class="text-white text-xs sm:text-base leading-none font-bold tracking-wider font-mono">CNC &amp; COBOT STUDIO</span>
+            <span class="px-1.5 py-0.5 text-[9px] sm:text-[10px] font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 rounded font-mono">v4.2 PRO</span>
+          </div>
+          <span class="text-slate-400 text-[10px] sm:text-[11px] block font-mono tracking-wide mt-0.5 truncate max-w-[170px] sm:max-w-none">Created by EagleCelest &middot; Universal Orchestrator</span>
+        </div>
+      </div>
+
+      <!-- BADGE DE OPTIMIZACIÓN PLATAFORMAS (HEADER PILL) -->
+      <div class="hidden xl:flex items-center space-x-2 px-2.5 py-1 rounded-full bg-[#141b2b] border border-cyan-500/30 text-[11px] font-mono text-cyan-300">
+        <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+        <span class="text-slate-300">Optimizado para Web &amp; Tablet</span>
+        <span class="text-slate-600">|</span>
+        <span class="text-slate-400">Próximamente App Móvil Nativa</span>
+      </div>
+
+      <div class="hidden lg:flex items-center space-x-3 text-xs font-mono border-l border-[#232d42] pl-4">
+        <div class="flex items-center space-x-1.5 bg-[#141b2b] px-2.5 py-1 rounded border border-[#232d42]">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-dot"></span>
+          <span class="text-slate-400">BUS:</span>
+          <span class="text-emerald-400 font-semibold">500 Hz RTDE Ok</span>
+        </div>
+        <div class="flex items-center space-x-1.5 bg-[#141b2b] px-2.5 py-1 rounded border border-[#232d42]">
+          <i data-lucide="zap" class="w-3.5 h-3.5 text-blue-400"></i>
+          <span class="text-slate-400">KERNEL:</span>
+          <span class="text-blue-400 font-semibold">0ms &bull; WASM Local RT</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACCIONES SUPERIORES (ROLES, FEEDBACK, ESTOP) -->
+    <div class="flex items-center space-x-2 sm:space-x-3">
+      <!-- Selector de Rol (Estudiante 0€ vs Taller Pro) -->
+      <div class="hidden sm:flex bg-[#141b2b] p-0.5 rounded-lg border border-[#232d42] text-xs font-medium">
+        <button id="btn-mode-edu" onclick="setAppMode('edu')" class="px-2.5 sm:px-3 py-1.5 rounded bg-blue-600 text-white shadow font-semibold flex items-center space-x-1.5 transition">
+          <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>
+          <span>Estudiante (0€)</span>
+        </button>
+        <button id="btn-mode-pro" onclick="setAppMode('pro')" class="px-2.5 sm:px-3 py-1.5 rounded text-slate-400 hover:text-white transition flex items-center space-x-1.5">
+          <i data-lucide="factory" class="w-3.5 h-3.5"></i>
+          <span>Taller Pro</span>
+        </button>
+      </div>
+
+      <!-- Botón de Feedback Beta -->
+      <a href="mailto:cnccobot.feedback@gmail.com?subject=Feedback%20CNC%26Cobot%20Studio%20v4.2" target="_blank" class="hidden sm:flex items-center space-x-1.5 bg-[#141b2b] hover:bg-[#1b2438] px-3 py-1.5 rounded-lg border border-[#232d42] text-xs font-mono text-cyan-300 transition">
+        <i data-lucide="message-square" class="w-3.5 h-3.5 text-cyan-400"></i>
+        <span>Feedback Beta</span>
+      </a>
+
+      <!-- E-STOP -->
+      <button id="btn-estop" onclick="triggerEStop()" class="bg-red-600 hover:bg-red-700 text-white font-bold px-3 sm:px-4 py-1.5 rounded-lg flex items-center space-x-1.5 sm:space-x-2 border border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.4)] transition active:scale-95">
+        <i data-lucide="octagon-alert" class="w-4 h-4"></i>
+        <span class="font-mono text-xs tracking-wider">E-STOP</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- CUERPO PRINCIPAL: SIDEBAR + VISTAS DINÁMICAS -->
+  <div class="flex-1 flex overflow-hidden">
+    
+    <!-- BARRA LATERAL (Visible en tablets/escritorio 'md:flex', oculta en móviles 'hidden') -->
+    <aside class="hidden md:flex w-64 bg-[#0c1322] border-r border-[#232d42] flex-col justify-between shrink-0 select-none">
+      <div class="p-4 space-y-6">
+        <div class="text-[11px] font-mono text-slate-500 uppercase tracking-wider font-semibold">Módulos de Trabajo</div>
+        
+        <nav class="space-y-1.5" id="sidebar-nav">
+          <button onclick="switchView('setup')" id="nav-setup" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium bg-blue-600/15 text-blue-400 border border-blue-500/30 transition text-left">
+            <i data-lucide="folder-plus" class="w-4 h-4 shrink-0"></i>
+            <span>Nuevo Proyecto &amp; Setup</span>
+          </button>
+          
+          <button onclick="switchView('console')" id="nav-console" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-[#141b2b] transition text-left">
+            <i data-lucide="activity" class="w-4 h-4 shrink-0"></i>
+            <span>Centro Cinemático 3D</span>
+          </button>
+
+          <button onclick="switchView('editor')" id="nav-editor" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-[#141b2b] transition text-left">
+            <i data-lucide="code" class="w-4 h-4 shrink-0"></i>
+            <span>Editor &amp; Transpilador</span>
+          </button>
+
+          <button onclick="switchView('academy')" id="nav-academy" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-[#141b2b] transition text-left">
+            <i data-lucide="book-open" class="w-4 h-4 shrink-0"></i>
+            <span>Hub de Aprendizaje</span>
+          </button>
+        </nav>
+      </div>
+
+      <div class="p-4 border-t border-[#232d42] bg-[#070e1d] text-xs font-mono space-y-2">
+        <div class="flex justify-between items-center text-slate-400">
+          <span>HARDWARE ACTIVO:</span>
+          <span class="text-emerald-400 font-bold flex items-center" id="badge-hw-status">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block mr-1.5 pulse-dot"></span>CONECTADO
           </span>
-</div>
-<div class="text-slate-200 font-bold text-sm truncate" id="side-machine-name">UR10e Cobot (6-DOF)</div>
-<div class="flex justify-between text-[11px] text-slate-500">
-<span>Interlock SIL-3:</span>
-<span class="text-emerald-400 font-semibold">ARMADO</span>
-</div>
-<div class="pt-1">
-<button class="w-full py-1.5 px-2 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 rounded text-[10px] font-mono text-amber-300 hover:text-amber-200 flex items-center justify-center space-x-1.5 transition cursor-pointer" onclick="simulate14DaysTrigger()" type="button">
-<i class="w-3 h-3 text-amber-400" data-lucide="sparkles"></i>
-<span>[Simular 14 Días / Encuesta]</span>
-</button>
-</div><div class="pt-2 border-t border-[#232d42]/60 text-[10px] text-slate-400 text-center font-mono">
+        </div>
+        <div class="text-slate-200 font-bold text-sm truncate" id="side-machine-name">UR10e Cobot (6-DOF)</div>
+        <div class="flex justify-between text-[11px] text-slate-500">
+          <span>Interlock SIL-3:</span>
+          <span class="text-emerald-400 font-semibold">ARMADO</span>
+        </div>
+
+        <button onclick="window.triggerSurveyModal()" class="w-full mt-2 py-1.5 px-2 bg-[#141b2b] hover:bg-[#1b2438] border border-amber-500/30 text-amber-300 rounded text-[11px] font-mono flex items-center justify-center space-x-1.5 transition">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span>[Simular 14 Días / Encuesta]</span>
+        </button>
+
+        <div class="pt-2 border-t border-[#232d42]/60 text-[10px] text-slate-400 text-center font-mono">
           Creado por <span class="text-blue-400 font-bold">EagleCelest</span>
-</div>
-</div>
-</aside>
-<main class="flex-1 overflow-y-auto custom-scroll p-6 bg-[#070e1d]" id="main-content-view">
-</main>
-</div>
-<!-- WIDGET FLOTANTE: ENCUESTA DIFERIDA INTELIGENTE (14 DÍAS / 5 PROYECTOS) -->
-<div class="fixed bottom-6 right-6 z-40 max-w-md w-full bg-[#0c1322]/95 border border-amber-500/40 rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.6)] backdrop-blur p-4 space-y-3 transition-all duration-300" id="survey-delayed-banner">
-<div class="flex items-start justify-between gap-3">
-<div class="flex items-center space-x-2.5">
-<div class="w-8 h-8 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center shrink-0">
-<i class="w-4 h-4 text-amber-400" data-lucide="sparkles"></i>
-</div>
-<div>
-<div class="flex items-center gap-2">
-<span class="font-mono font-bold text-xs text-white">⭐ Tu opinión importa · Encuesta</span>
-<span class="px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 text-[9px] font-mono border border-amber-500/30 font-bold">+14 DÍAS</span>
-</div>
-<p class="text-[11px] text-slate-400 font-mono mt-0.5 leading-snug">Llevas más de 14 días (o uso representativo) trabajando con CNC &amp; Cobot Studio. ¿Nos dedicas 1 minuto para ayudarnos a mejorar?</p>
-</div>
-</div>
-<button class="text-slate-500 hover:text-slate-300 text-xs p-1" onclick="dismissSurveyBanner('later')">✕</button>
-</div>
-<div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[#232d42]">
-<button class="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-mono font-bold text-xs flex items-center space-x-1.5 shadow transition cursor-pointer active:scale-95" onclick="openSurveyModal()">
-<i class="w-3.5 h-3.5" data-lucide="message-square-heart"></i>
-<span>Completar Encuesta (1 min)</span>
-</button>
-<div class="flex items-center space-x-2 text-[11px] font-mono">
-<button class="text-slate-400 hover:text-white transition underline" onclick="dismissSurveyBanner('later')">Recordármelo más tarde (5 días)</button>
-<span class="text-slate-600">•</span>
-<button class="text-slate-500 hover:text-slate-400 transition" onclick="dismissSurveyBanner('never')">No volver a preguntar</button>
-</div>
-</div>
-</div>
-<!-- MODAL MICRO-ENCUESTA DE SATISFACCIÓN (1 MINUTO) -->
-<div class="fixed inset-0 z-50 bg-[#070e1d]/85 backdrop-blur-sm hidden flex items-center justify-center p-4" id="survey-modal">
-<div class="bg-[#0c1322] border border-[#232d42] rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto custom-scroll shadow-2xl p-6 space-y-6 relative">
-<!-- Encabezado con Logotipo Oficial -->
-<div class="flex items-start justify-between pb-4 border-b border-[#232d42]">
-<div class="flex items-center space-x-3">
-<div class="w-11 h-11 flex-shrink-0 rounded-xl overflow-hidden border border-cyan-500/30 bg-slate-900 shadow-lg shadow-cyan-500/10 flex items-center justify-center p-0.5">
-<svg class="w-full h-full" viewbox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
-<defs>
-<lineargradient id="surveyCobotBg" x1="0%" x2="100%" y1="0%" y2="100%">
-<stop offset="0%" stop-color="#0a101f"></stop>
-<stop offset="100%" stop-color="#030712"></stop>
-</lineargradient>
-<lineargradient id="surveyCyanBlue" x1="0%" x2="100%" y1="0%" y2="100%">
-<stop offset="0%" stop-color="#00f2fe"></stop>
-<stop offset="50%" stop-color="#4facfe"></stop>
-<stop offset="100%" stop-color="#2563eb"></stop>
-</lineargradient>
-</defs>
-<rect fill="url(#surveyCobotBg)" height="400" rx="48" width="400"></rect>
-<circle cx="200" cy="200" fill="none" r="140" stroke="#1e293b" stroke-dasharray="4 8" stroke-width="1.5"></circle>
-<path d="M 140 310 L 260 310 L 245 285 L 155 285 Z" fill="#1e293b" stroke="#38bdf8" stroke-width="2.5"></path>
-<circle cx="200" cy="265" fill="#0f172a" r="22" stroke="url(#surveyCyanBlue)" stroke-width="4"></circle>
-<path d="M 190 265 L 135 175 L 158 160 L 210 252 Z" fill="#1e293b" stroke="#3b82f6" stroke-width="2"></path>
-<circle cx="145" cy="170" fill="#0b1329" r="26" stroke="url(#surveyCyanBlue)" stroke-width="4.5"></circle>
-<circle cx="145" cy="170" fill="#00f2fe" r="10"></circle>
-<path d="M 145 170 L 255 110 L 268 128 L 155 188 Z" fill="#1e293b" stroke="#38bdf8" stroke-width="2"></path>
-<circle cx="260" cy="120" fill="#0b1329" r="18" stroke="url(#surveyCyanBlue)" stroke-width="3.5"></circle>
-<path d="M 260 120 L 290 145" stroke="#94a3b8" stroke-linecap="round" stroke-width="8"></path>
-<circle cx="295" cy="150" fill="#0f172a" r="12" stroke="#10b981" stroke-width="3"></circle>
-<path d="M 295 195 C 330 250, 270 290, 200 290" fill="none" stroke="#10b981" stroke-dasharray="4 4" stroke-width="2"></path>
-</svg>
-</div>
-<div>
-<div class="flex items-center space-x-2">
-<h2 class="text-base font-bold text-white font-mono tracking-wide">Micro-Encuesta de Satisfacción &amp; Experiencia</h2>
-<span class="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded font-mono font-bold">1 MINUTO</span>
-</div>
-<p class="text-xs text-slate-400 font-mono mt-0.5">Tu feedback guía el roadmap de democratización industrial por EagleCelest.</p>
-</div>
-</div>
-<button class="w-8 h-8 rounded-lg bg-[#141b2b] hover:bg-[#1b2438] text-slate-400 hover:text-white flex items-center justify-center border border-[#232d42] transition cursor-pointer" onclick="closeSurveyModal()">✕</button>
-</div>
-<!-- Formulario de Encuesta -->
-<form class="space-y-5" id="survey-form" onsubmit="submitSurvey(event)">
-<!-- Pregunta 1: Perfil de usuario -->
-<div class="space-y-2">
-<label class="text-xs font-mono text-slate-300 font-semibold block">1. ¿Cuál es tu perfil de uso primordial?</label>
-<div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 font-mono text-xs">
-<label class="flex items-center space-x-2 bg-[#141b2b] p-3 rounded-lg border border-[#232d42] hover:border-cyan-500/50 cursor-pointer transition">
-<input checked="" class="accent-cyan-400" name="survey-role" type="radio" value="Estudiante / Docente"/>
-<span class="text-slate-200">Estudiante / Docente</span>
-</label>
-<label class="flex items-center space-x-2 bg-[#141b2b] p-3 rounded-lg border border-[#232d42] hover:border-cyan-500/50 cursor-pointer transition">
-<input class="accent-cyan-400" name="survey-role" type="radio" value="Autónomo / Pequeño Taller"/>
-<span class="text-slate-200">Autónomo / Taller</span>
-</label>
-<label class="flex items-center space-x-2 bg-[#141b2b] p-3 rounded-lg border border-[#232d42] hover:border-cyan-500/50 cursor-pointer transition">
-<input class="accent-cyan-400" name="survey-role" type="radio" value="Programador / Empresa Industrial"/>
-<span class="text-slate-200">Empresa Industrial</span>
-</label>
-</div>
-</div>
-<!-- Pregunta 2: Calificación Facilidad de uso y precisión TCP -->
-<div class="space-y-2 bg-[#141b2b] p-3.5 rounded-xl border border-[#232d42]">
-<div class="flex justify-between items-center">
-<label class="text-xs font-mono text-slate-300 font-semibold">2. Facilidad de uso y calibrador TCP (4 Puntos):</label>
-<span class="text-xs font-mono text-amber-400 font-bold" id="rating-tcp-val">5 / 5 Excelente</span>
-</div>
-<div class="flex items-center space-x-2" id="stars-tcp">
-<button class="p-1 text-amber-400 hover:scale-110 transition" onclick="setRating('tcp', 1)" type="button"><i class="w-5 h-5 fill-amber-400" data-lucide="star"></i></button>
-<button class="p-1 text-amber-400 hover:scale-110 transition" onclick="setRating('tcp', 2)" type="button"><i class="w-5 h-5 fill-amber-400" data-lucide="star"></i></button>
-<button class="p-1 text-amber-400 hover:scale-110 transition" onclick="setRating('tcp', 3)" type="button"><i class="w-5 h-5 fill-amber-400" data-lucide="star"></i></button>
-<button class="p-1 text-amber-400 hover:scale-110 transition" onclick="setRating('tcp', 4)" type="button"><i class="w-5 h-5 fill-amber-400" data-lucide="star"></i></button>
-<button class="p-1 text-amber-400 hover:scale-110 transition" onclick="setRating('tcp', 5)" type="button"><i class="w-5 h-5 fill-amber-400" data-lucide="star"></i></button>
-</div>
-</div>
-<!-- Pregunta 3: Estabilidad y simulación en 5 ejes -->
-<div class="space-y-2 bg-[#141b2b] p-3.5 rounded-xl border border-[#232d42]">
-<div class="flex justify-between items-center">
-<label class="text-xs font-mono text-slate-300 font-semibold">3. Estabilidad de simulación y cinemática RT:</label>
-<span class="text-xs font-mono text-emerald-400 font-bold" id="rating-kin-val">5 / 5 Muy Fluida</span>
-</div>
-<div class="flex items-center space-x-2" id="stars-kin">
-<button class="p-1 text-emerald-400 hover:scale-110 transition" onclick="setRating('kin', 1)" type="button"><i class="w-5 h-5 fill-emerald-400" data-lucide="star"></i></button>
-<button class="p-1 text-emerald-400 hover:scale-110 transition" onclick="setRating('kin', 2)" type="button"><i class="w-5 h-5 fill-emerald-400" data-lucide="star"></i></button>
-<button class="p-1 text-emerald-400 hover:scale-110 transition" onclick="setRating('kin', 3)" type="button"><i class="w-5 h-5 fill-emerald-400" data-lucide="star"></i></button>
-<button class="p-1 text-emerald-400 hover:scale-110 transition" onclick="setRating('kin', 4)" type="button"><i class="w-5 h-5 fill-emerald-400" data-lucide="star"></i></button>
-<button class="p-1 text-emerald-400 hover:scale-110 transition" onclick="setRating('kin', 5)" type="button"><i class="w-5 h-5 fill-emerald-400" data-lucide="star"></i></button>
-</div>
-</div>
-<!-- Pregunta 4: Próximas cinemáticas deseadas -->
-<div class="space-y-2">
-<label class="text-xs font-mono text-slate-300 font-semibold block">4. ¿Qué máquina o función te gustaría que prioricemos?</label>
-<select class="w-full bg-[#141b2b] border border-[#232d42] rounded-lg px-3 py-2 text-xs font-mono text-slate-200 focus:outline-none focus:border-cyan-500" id="survey-feature">
-<option value="Robots Industriales KUKA / ABB / Doosan (6-7 Ejes)">Robots Industriales KUKA / ABB / Doosan (6-7 Ejes)</option>
-<option value="Torno-Fresa Multitarea Sub-Husillo (Multi-turret)">Torno-Fresa Multitarea Sub-Husillo (Multi-turret)</option>
-<option value="Más Probetas y Retos Didácticos para Estudiantes (0€)">Más Probetas y Retos Didácticos para Estudiantes (0€)</option>
-<option value="Postprocesadores Fanuc 31i / Siemens Sinumerik / Heidenhain">Postprocesadores Fanuc 31i / Siemens Sinumerik / Heidenhain</option>
-<option value="Simulación de Gemelo Digital e Interlocks I/O MQTT">Simulación de Gemelo Digital e Interlocks I/O MQTT</option>
-</select>
-</div>
-<!-- Pregunta 5: Sugerencia abierta -->
-<div class="space-y-2">
-<label class="text-xs font-mono text-slate-300 font-semibold block">5. Comentario libre o sugerencia técnica:</label>
-<textarea class="w-full bg-[#070e1d] border border-[#232d42] rounded-lg p-2.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-blue-500 custom-scroll" id="survey-comments" placeholder="Escribe aquí cualquier sugerencia, duda o necesidad de tu taller o centro educativo..." rows="2"></textarea>
-</div>
-<!-- Acciones de Envío -->
-<div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-[#232d42]">
-<div class="text-[11px] font-mono text-slate-500 flex items-center space-x-1">
-<i class="w-3.5 h-3.5 text-emerald-400" data-lucide="shield-check"></i>
-<span>Respaldo a cnccobot.feedback@gmail.com</span>
-</div>
-<div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
-<button class="px-4 py-2 bg-[#141b2b] hover:bg-[#1b2438] text-slate-300 rounded-lg text-xs font-mono border border-[#232d42] transition cursor-pointer" onclick="closeSurveyModal()" type="button">Cancelar</button>
-<button class="px-5 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-mono font-bold text-xs rounded-lg flex items-center space-x-2 shadow-lg transition cursor-pointer active:scale-95" type="submit">
-<i class="w-3.5 h-3.5" data-lucide="send"></i>
-<span>Enviar Valoración</span>
-</button>
-</div>
-</div>
-</form>
-</div>
-</div><div class="fixed bottom-6 right-6 z-50 flex flex-col space-y-2 pointer-events-none" id="toast-container"></div>
-<!-- MOTOR JAVASCRIPT GLOBAL REACTIVO -->
-<script>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ÁREA PRINCIPAL CON BANNER RESPONSIVE Y VISTAS -->
+    <main class="flex-1 overflow-y-auto custom-scroll p-3 sm:p-6 bg-[#070e1d]" id="main-content-view">
+    </main>
+  </div>
+
+  <!-- NAVEGACIÓN MÓVIL INFERIOR (BOTTOM TAB BAR - Solo visible en móviles '< md') -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#0c1322]/95 backdrop-blur border-t border-[#232d42] z-40 flex items-center justify-around px-1 select-none">
+    <button onclick="switchView('setup')" id="mob-nav-setup" class="flex flex-col items-center justify-center w-16 py-1 text-cyan-400 font-mono text-[10px] font-bold">
+      <i data-lucide="folder-plus" class="w-5 h-5 mb-0.5"></i>
+      <span>SETUP</span>
+    </button>
+    <button onclick="switchView('console')" id="mob-nav-console" class="flex flex-col items-center justify-center w-16 py-1 text-slate-400 hover:text-slate-200 font-mono text-[10px]">
+      <i data-lucide="activity" class="w-5 h-5 mb-0.5"></i>
+      <span>CINEMÁTICA</span>
+    </button>
+    <button onclick="switchView('editor')" id="mob-nav-editor" class="flex flex-col items-center justify-center w-16 py-1 text-slate-400 hover:text-slate-200 font-mono text-[10px]">
+      <i data-lucide="code" class="w-5 h-5 mb-0.5"></i>
+      <span>G-CODE</span>
+    </button>
+    <button onclick="switchView('academy')" id="mob-nav-academy" class="flex flex-col items-center justify-center w-16 py-1 text-slate-400 hover:text-slate-200 font-mono text-[10px]">
+      <i data-lucide="book-open" class="w-5 h-5 mb-0.5"></i>
+      <span>RETOS</span>
+    </button>
+  </nav>
+
+  <!-- BANNER FLOTANTE DE ENCUESTA INTELIGENTE 14 DÍAS / USO ACUMULADO -->
+  <div id="survey-floating-banner" class="hidden fixed bottom-20 md:bottom-6 right-3 md:right-6 max-w-sm w-[calc(100%-24px)] md:w-96 bg-[#141b2b] border border-amber-500/40 rounded-xl p-4 shadow-2xl z-50">
+    <div class="flex items-start space-x-3">
+      <div class="w-9 h-9 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0 mt-0.5">
+        <i data-lucide="sparkles" class="w-4 h-4"></i>
+      </div>
+      <div class="flex-1 space-y-1.5">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-1.5">
+            <span class="text-xs font-bold text-white">Tu opinión importa</span>
+            <span class="text-[9px] font-mono px-1.5 py-0.5 bg-amber-500/20 text-amber-300 rounded font-semibold border border-amber-500/30">+14 DÍAS</span>
+          </div>
+          <button onclick="dismissSurvey(5)" class="text-slate-400 hover:text-white p-1 text-xs">✕</button>
+        </div>
+        <p class="text-xs text-slate-300 leading-snug">
+          Llevas más de 14 días (o uso representativo) trabajando con CNC &amp; Cobot Studio. ¿Nos dedicas 1 minuto para ayudarnos a mejorar?
+        </p>
+        <div class="pt-1 flex flex-wrap items-center gap-2">
+          <button onclick="triggerSurveyModal()" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg text-xs font-mono transition flex items-center space-x-1.5 shadow">
+            <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+            <span>Completar Encuesta (1 min)</span>
+          </button>
+          <button onclick="dismissSurvey(5)" class="text-[11px] text-slate-400 hover:text-slate-200 underline font-mono">
+            Recordármelo más tarde (5 días)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL COMPLETO DE ENCUESTA SATISFACCIÓN -->
+  <div id="survey-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-[#141b2b] border border-[#232d42] rounded-2xl max-w-lg w-full p-6 space-y-5 shadow-2xl relative">
+      <button onclick="closeSurveyModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-1">✕</button>
+      
+      <div class="flex items-center space-x-3 pb-3 border-b border-[#232d42]">
+        <div class="w-10 h-10 rounded-xl bg-blue-600/20 border border-blue-500/30 text-cyan-400 flex items-center justify-center">
+          <i data-lucide="star" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-white">Micro-Encuesta de Satisfacción</h3>
+          <p class="text-xs text-slate-400 font-mono">CNC &amp; Cobot Studio &bull; cnccobot.feedback@gmail.com</p>
+        </div>
+      </div>
+
+      <form id="form-survey" onsubmit="submitSurvey(event)" class="space-y-4 text-xs font-mono">
+        <div>
+          <label class="text-slate-300 block mb-1.5">1. ¿Cuál es tu perfil principal de uso?</label>
+          <div class="grid grid-cols-3 gap-2">
+            <label class="flex items-center space-x-2 bg-[#0c1322] p-2.5 rounded-lg border border-[#232d42] cursor-pointer hover:border-slate-500">
+              <input type="radio" name="profile" value="Estudiante/Docente" checked class="text-blue-600">
+              <span class="text-slate-300">Estudiante</span>
+            </label>
+            <label class="flex items-center space-x-2 bg-[#0c1322] p-2.5 rounded-lg border border-[#232d42] cursor-pointer hover:border-slate-500">
+              <input type="radio" name="profile" value="Autónomo/Taller" class="text-blue-600">
+              <span class="text-slate-300">Taller/Pyme</span>
+            </label>
+            <label class="flex items-center space-x-2 bg-[#0c1322] p-2.5 rounded-lg border border-[#232d42] cursor-pointer hover:border-slate-500">
+              <input type="radio" name="profile" value="Ingeniero/CAM" class="text-blue-600">
+              <span class="text-slate-300">Ingeniería</span>
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <label class="text-slate-300 block mb-1.5">2. Facilidad de uso del configurador TCP &amp; cinemática (1 a 5):</label>
+          <div class="flex items-center space-x-3 bg-[#0c1322] p-2.5 rounded-lg border border-[#232d42] justify-around">
+            <label class="cursor-pointer"><input type="radio" name="rating_ease" value="1"> 1★</label>
+            <label class="cursor-pointer"><input type="radio" name="rating_ease" value="2"> 2★</label>
+            <label class="cursor-pointer"><input type="radio" name="rating_ease" value="3"> 3★</label>
+            <label class="cursor-pointer"><input type="radio" name="rating_ease" value="4"> 4★</label>
+            <label class="cursor-pointer"><input type="radio" name="rating_ease" value="5" checked> 5★</label>
+          </div>
+        </div>
+
+        <div>
+          <label class="text-slate-300 block mb-1.5">3. ¿Qué funcionalidad te gustaría ver añadida próximamente?</label>
+          <select id="survey-feature" class="w-full bg-[#0c1322] border border-[#232d42] rounded-lg p-2.5 text-slate-200 focus:outline-none">
+            <option value="Soporte Robots KUKA / ABB / Yaskawa">Soporte Robots KUKA / ABB / Yaskawa</option>
+            <option value="Más probetas didácticas y retos de aula">Más probetas didácticas y retos de aula</option>
+            <option value="Transmisor directo Wi-Fi / Ethernet a máquina">Transmisor directo Wi-Fi / Ethernet a máquina</option>
+            <option value="App Móvil Nativa Android / iOS">App Móvil Nativa Android / iOS</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="text-slate-300 block mb-1.5">4. Comentarios, sugerencias o mejoras para EagleCelest:</label>
+          <textarea id="survey-comments" rows="3" placeholder="Escribe aquí tu opinión sincera..." class="w-full bg-[#0c1322] border border-[#232d42] rounded-lg p-2.5 text-slate-200 focus:outline-none focus:border-blue-500 custom-scroll"></textarea>
+        </div>
+
+        <div class="pt-2 flex justify-end space-x-3">
+          <button type="button" onclick="closeSurveyModal()" class="px-4 py-2 bg-[#0c1322] hover:bg-slate-800 text-slate-300 rounded-lg">Cancelar</button>
+          <button type="submit" class="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg shadow transition">Enviar a Feedback</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast-container" class="fixed bottom-20 md:bottom-6 left-3 md:left-auto md:right-6 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+  <!-- MOTOR JAVASCRIPT GLOBAL REACTIVO -->
+  <script>
     window.AppState = {
       mode: 'edu',
       currentView: 'setup',
       eStopTriggered: false,
+      mobileBannerDismissed: false,
       
       project: {
         name: 'Mecanizado_Probeta',
@@ -394,6 +380,14 @@
             btn.className = "w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-[#141b2b] transition text-left";
           }
         }
+        var mobBtn = document.getElementById('mob-nav-' + v);
+        if (mobBtn) {
+          if (v === view) {
+            mobBtn.className = "flex flex-col items-center justify-center w-16 py-1 text-cyan-400 font-mono text-[10px] font-bold";
+          } else {
+            mobBtn.className = "flex flex-col items-center justify-center w-16 py-1 text-slate-400 hover:text-slate-200 font-mono text-[10px]";
+          }
+        }
       });
       window.renderCurrentView();
     };
@@ -403,12 +397,12 @@
       var btnEdu = document.getElementById('btn-mode-edu');
       var btnPro = document.getElementById('btn-mode-pro');
       if (mode === 'edu') {
-        if (btnEdu) btnEdu.className = "px-3 py-1.5 rounded bg-blue-600 text-white font-semibold shadow flex items-center space-x-1.5";
-        if (btnPro) btnPro.className = "px-3 py-1.5 rounded text-slate-400 hover:text-white transition flex items-center space-x-1.5";
+        if (btnEdu) btnEdu.className = "px-2.5 sm:px-3 py-1.5 rounded bg-blue-600 text-white font-semibold shadow flex items-center space-x-1.5";
+        if (btnPro) btnPro.className = "px-2.5 sm:px-3 py-1.5 rounded text-slate-400 hover:text-white transition flex items-center space-x-1.5";
         window.showToast("Modo Estudiante: Democratización activa. Coste 0€ garantizado.", "info");
       } else {
-        if (btnPro) btnPro.className = "px-3 py-1.5 rounded bg-blue-600 text-white font-semibold shadow flex items-center space-x-1.5";
-        if (btnEdu) btnEdu.className = "px-3 py-1.5 rounded text-slate-400 hover:text-white transition flex items-center space-x-1.5";
+        if (btnPro) btnPro.className = "px-2.5 sm:px-3 py-1.5 rounded bg-blue-600 text-white font-semibold shadow flex items-center space-x-1.5";
+        if (btnEdu) btnEdu.className = "px-2.5 sm:px-3 py-1.5 rounded text-slate-400 hover:text-white transition flex items-center space-x-1.5";
         window.showToast("Modo Taller Pro Activado: Velocidades estándar y telemetría industrial.", "info");
       }
     };
@@ -436,20 +430,61 @@
       if (window.AppState.currentView === 'console') window.renderCurrentView();
     };
 
+    window.dismissMobileBanner = function() {
+      window.AppState.mobileBannerDismissed = true;
+      var b = document.getElementById('mobile-notice-banner');
+      if (b) b.remove();
+    };
+
+    window.getMobileBannerHTML = function() {
+      if (window.AppState.mobileBannerDismissed) return '';
+      return `
+        <!-- BANNER AVISO DISPOSITIVO MÓVIL (Solo visible en pantallas estrechas < md) -->
+        <div id="mobile-notice-banner" class="md:hidden mb-4 p-4 rounded-xl bg-gradient-to-r from-blue-950/80 via-slate-900 to-[#141b2b] border border-cyan-500/40 text-white relative shadow-lg">
+          <button onclick="dismissMobileBanner()" class="absolute top-2.5 right-2.5 text-slate-400 hover:text-white text-sm p-1">✕</button>
+          <div class="flex items-start space-x-3">
+            <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0 mt-0.5 border border-cyan-500/30">
+              <i data-lucide="smartphone" class="w-4 h-4"></i>
+            </div>
+            <div class="space-y-1 pr-4">
+              <div class="flex items-center space-x-2">
+                <h4 class="font-bold text-xs text-cyan-200">Vista Web Móvil</h4>
+                <span class="text-[9px] font-mono px-1.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 uppercase font-semibold border border-cyan-500/30">En desarrollo nativo</span>
+              </div>
+              <p class="text-[11px] text-slate-300 leading-relaxed">
+                Estás en la vista Web desde móvil. La suite de cinemática 3D y edición G-code está optimizada para <strong>Tablet y PC</strong>. Estamos preparando la App Móvil Nativa de CNC &amp; Cobot Studio.
+              </p>
+              <div class="pt-2 flex flex-wrap items-center gap-2">
+                <a href="mailto:cnccobot.feedback@gmail.com?subject=Sugerencia%20App%20Móvil" class="text-xs font-semibold text-cyan-300 hover:underline flex items-center space-x-1">
+                  <span>✉ Sugerir función</span>
+                </a>
+                <button onclick="dismissMobileBanner()" class="px-2.5 py-1 text-xs rounded bg-slate-800 text-slate-300 hover:bg-slate-700 font-mono">Entendido</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    };
+
     window.renderCurrentView = function() {
       var container = document.getElementById('main-content-view');
       if (!container) return;
 
       var v = window.AppState.currentView;
+      var bannerHTML = window.getMobileBannerHTML();
+      var contentHTML = '';
+
       if (v === 'setup') {
-        container.innerHTML = window.getSetupHTML();
+        contentHTML = window.getSetupHTML();
       } else if (v === 'console') {
-        container.innerHTML = window.getConsoleHTML();
+        contentHTML = window.getConsoleHTML();
       } else if (v === 'editor') {
-        container.innerHTML = window.getEditorHTML();
+        contentHTML = window.getEditorHTML();
       } else if (v === 'academy') {
-        container.innerHTML = window.getAcademyHTML();
+        contentHTML = window.getAcademyHTML();
       }
+
+      container.innerHTML = bannerHTML + contentHTML;
 
       try {
         if (window.lucide && typeof window.lucide.createIcons === 'function') {
@@ -463,27 +498,27 @@
     window.getSetupHTML = function() {
       var p = window.AppState.project;
       return `
-        <div class="max-w-6xl mx-auto space-y-6">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[#232d42] gap-4">
+        <div class="max-w-6xl mx-auto space-y-4 sm:space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[#232d42] gap-3 sm:gap-4">
             <div>
-              <div class="text-xs font-mono text-cyan-400 tracking-wider">PASO 01 // CONFIGURACIÓN INICIAL &amp; CINEMÁTICA</div>
-              <h1 class="text-2xl font-bold text-white mt-1">Nuevo Proyecto &amp; Selector de Máquina</h1>
+              <div class="text-[11px] sm:text-xs font-mono text-cyan-400 tracking-wider font-semibold">PASO 01 // CONFIGURACIÓN INICIAL &amp; CINEMÁTICA</div>
+              <h1 class="text-xl sm:text-2xl font-bold text-white mt-0.5">Nuevo Proyecto &amp; Selector de Máquina</h1>
               <p class="text-xs text-slate-400 font-mono mt-0.5">Democratización técnica para estudiantes, autónomos y talleres.</p>
             </div>
-            <div class="flex items-center space-x-3">
-              <button onclick="exportProjectFile()" class="px-4 py-2 bg-[#141b2b] hover:bg-[#1b2438] border border-[#232d42] text-slate-300 rounded-lg text-sm font-medium flex items-center space-x-2 transition cursor-pointer">
+            <div class="flex items-center space-x-2 sm:space-x-3">
+              <button onclick="exportProjectFile()" class="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-[#141b2b] hover:bg-[#1b2438] border border-[#232d42] text-slate-300 rounded-lg text-xs sm:text-sm font-medium flex items-center justify-center space-x-1.5 sm:space-x-2 transition cursor-pointer">
                 <i data-lucide="download" class="w-4 h-4 text-slate-400"></i>
                 <span>Exportar .CNCPROJ</span>
               </button>
-              <button onclick="launchProject()" class="px-5 py-2 bg-blue-600 hover:bg-blue-500 font-bold text-white rounded-lg text-sm flex items-center space-x-2 shadow-[0_0_15px_rgba(37,99,235,0.4)] transition cursor-pointer active:scale-95">
+              <button onclick="launchProject()" class="flex-1 sm:flex-none px-4 sm:px-5 py-2 bg-blue-600 hover:bg-blue-500 font-bold text-white rounded-lg text-xs sm:text-sm flex items-center justify-center space-x-1.5 sm:space-x-2 shadow-[0_0_15px_rgba(37,99,235,0.4)] transition cursor-pointer active:scale-95">
                 <i data-lucide="play" class="w-4 h-4"></i>
-                <span>Iniciar Proyecto Ahora →</span>
+                <span>Iniciar Proyecto Ahora &rarr;</span>
               </button>
             </div>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-5 space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+            <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-4 sm:p-5 space-y-3 sm:space-y-4">
               <div class="flex justify-between items-center text-xs font-mono text-slate-400">
                 <span>01 // IDENTIFICACIÓN</span>
                 <span class="text-emerald-400 flex items-center font-semibold"><i data-lucide="check" class="w-3.5 h-3.5 mr-1"></i> AUTO-GUARDADO</span>
@@ -497,12 +532,12 @@
               </div>
             </div>
 
-            <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-5 space-y-4">
+            <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-4 sm:p-5 space-y-3 sm:space-y-4">
               <div class="text-xs font-mono text-slate-400">02 // ORIGEN DE PARTIDA (DATUM)</div>
               <div class="grid grid-cols-3 gap-2">
                 ${['G54', 'G55', 'BASE'].map(function(datum) {
                   return `
-                  <button type="button" onclick="selectDatum('${datum}')" class="py-2 text-center rounded-lg font-mono font-bold text-sm border transition cursor-pointer ${p.datum === datum ? 'bg-blue-600/25 border-blue-500 text-blue-400 shadow-sm' : 'bg-[#0c1322] border-[#232d42] text-slate-400 hover:border-slate-500'}">
+                  <button type="button" onclick="selectDatum('${datum}')" class="py-2 text-center rounded-lg font-mono font-bold text-xs sm:text-sm border transition cursor-pointer ${p.datum === datum ? 'bg-blue-600/25 border-blue-500 text-blue-400 shadow-sm' : 'bg-[#0c1322] border-[#232d42] text-slate-400 hover:border-slate-500'}">
                     ${datum}
                   </button>
                 `;}).join('')}
@@ -510,13 +545,13 @@
               <p class="text-xs text-slate-500 font-mono">G54: Origen fijado en mordaza de amarre rápido.</p>
             </div>
 
-            <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-5 space-y-4">
+            <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-4 sm:p-5 space-y-3 sm:space-y-4">
               <div class="text-xs font-mono text-slate-400">03 // BRUTO &amp; PRECISIÓN</div>
-              <div class="flex justify-between items-center text-sm">
+              <div class="flex justify-between items-center text-xs sm:text-sm">
                 <span class="text-slate-400">Material Bruto:</span>
                 <span class="font-mono text-white font-bold">${p.roughStock.material}</span>
               </div>
-              <div class="flex justify-between items-center text-sm">
+              <div class="flex justify-between items-center text-xs sm:text-sm">
                 <span class="text-slate-400">Interpolación:</span>
                 <span class="font-mono text-emerald-400 font-semibold">NURBS + RTCP (0.001mm)</span>
               </div>
@@ -529,7 +564,7 @@
               <span>04 // SELECCIÓN DE CINEMÁTICA &amp; HARDWARE DE TALLER</span>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
               <div onclick="selectKinematic('ur10e', 'Brazo Cobot 6-DOF (UR10e / Fanuc CRX)')" class="cursor-pointer p-4 rounded-xl border transition ${p.kinematic === 'ur10e' ? 'bg-blue-600/10 border-blue-500 ring-1 ring-blue-500 shadow-lg' : 'bg-[#141b2b] border-[#232d42] hover:border-slate-500'}">
                 <div class="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 inline-block mb-2 font-bold">6 EJES ARTICULADOS</div>
                 <div class="font-bold text-white text-base">Brazo Cobot 6-DOF</div>
@@ -594,19 +629,19 @@
       var tcpY = joint2Y - Math.cos(radJ3) * armLength2;
 
       return `
-        <div class="max-w-7xl mx-auto space-y-6">
-          <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="max-w-7xl mx-auto space-y-4 sm:space-y-6">
+          <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-3 sm:p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4">
             <div class="flex items-center space-x-3">
               <div class="w-3.5 h-3.5 rounded-full ${s.eStopTriggered ? 'bg-red-500 animate-ping' : 'bg-emerald-400 pulse-dot'} shrink-0"></div>
               <div>
                 <span class="text-xs font-mono text-slate-400">PROYECTO SINCRONIZADO:</span>
-                <span class="font-bold font-mono text-white text-base ml-2">${s.project.name}${s.project.fileExtension}</span>
-                <span class="text-xs px-2 py-0.5 bg-blue-500/20 text-cyan-300 rounded font-mono ml-2 border border-blue-500/30">${s.project.kinematicLabel}</span>
+                <span class="font-bold font-mono text-white text-sm sm:text-base ml-1 sm:ml-2">${s.project.name}${s.project.fileExtension}</span>
+                <span class="text-[10px] sm:text-xs px-2 py-0.5 bg-blue-500/20 text-cyan-300 rounded font-mono ml-2 border border-blue-500/30">${s.project.kinematicLabel}</span>
               </div>
             </div>
             <div class="flex items-center space-x-2">
               <button onclick="switchView('setup')" class="px-3.5 py-1.5 bg-[#0c1322] hover:bg-[#1b2438] text-slate-300 rounded-lg text-xs font-mono border border-[#232d42] transition cursor-pointer">
-                ← Volver a Setup
+                &larr; Volver a Setup
               </button>
               <button onclick="saveProjectState()" class="px-4 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-mono font-bold transition shadow cursor-pointer">
                 Guardar Estado
@@ -614,11 +649,11 @@
             </div>
           </div>
 
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <div class="lg:col-span-4 space-y-6">
-              <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-5 space-y-4">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
+            <div class="lg:col-span-4 space-y-4 sm:space-y-6">
+              <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-4 sm:p-5 space-y-4">
                 <div class="flex justify-between items-center">
-                  <div class="font-bold text-white flex items-center space-x-2">
+                  <div class="font-bold text-white text-sm flex items-center space-x-2">
                     <i data-lucide="crosshair" class="w-4 h-4 text-cyan-400"></i>
                     <span>Calibrador TCP (4 Puntos)</span>
                   </div>
@@ -627,7 +662,7 @@
 
                 <div class="space-y-2">
                   <div class="flex justify-between text-xs text-slate-400">
-                    <span>Progreso de Puntas de Aguja:</span>
+                    <span>Progreso de Puntas:</span>
                     <span class="font-mono text-emerald-400 font-bold">${s.tcpPointsRecorded} de 4 fijados</span>
                   </div>
                   <div class="grid grid-cols-4 gap-2 text-xs font-mono text-center">
@@ -656,11 +691,11 @@
                 <div class="grid grid-cols-3 gap-2 text-center text-xs font-mono bg-[#0c1322] p-2.5 rounded border border-[#232d42]">
                   <div><span class="text-slate-500 block">TCP X:</span><span class="text-slate-200">${s.project.tool.x.toFixed(3)}</span></div>
                   <div><span class="text-slate-500 block">TCP Y:</span><span class="text-slate-200">${s.project.tool.y.toFixed(3)}</span></div>
-                  <div><span class="text-slate-500 block">TCP Z:</span><span class="text-emerald-400 font-bold">${s.project.tool.z.toFixed(3)}</span></div>
+                  <div><span class="text-emerald-400 font-bold block">TCP Z:</span><span class="text-emerald-400 font-bold">${s.project.tool.z.toFixed(3)}</span></div>
                 </div>
               </div>
 
-              <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-5 space-y-3">
+              <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-4 sm:p-5 space-y-3">
                 <div class="flex justify-between items-center">
                   <div class="font-bold text-white text-sm flex items-center space-x-2">
                     <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
@@ -669,14 +704,14 @@
                   <span class="text-xs text-emerald-400 font-mono font-bold">SIL-3 Activo</span>
                 </div>
                 <div class="space-y-1.5 text-xs font-mono text-slate-400">
-                  <div class="flex justify-between"><span>Plano Seguridad Superior:</span><span class="text-slate-200">Z+ 50.00 mm</span></div>
+                  <div class="flex justify-between"><span>Plano Seguridad:</span><span class="text-slate-200">Z+ 50.00 mm</span></div>
                   <div class="flex justify-between"><span>Volumen Perimetral:</span><span class="text-slate-200">1600 × 1200 mm</span></div>
-                  <div class="flex justify-between"><span>Desaceleración Ámbar:</span><span class="text-amber-400">250 mm/s (ISO Stop 1)</span></div>
+                  <div class="flex justify-between"><span>Desaceleración:</span><span class="text-amber-400">250 mm/s (Stop 1)</span></div>
                 </div>
               </div>
             </div>
 
-            <div class="lg:col-span-4 bg-[#141b2b] border border-[#232d42] rounded-xl p-5 flex flex-col justify-between">
+            <div class="lg:col-span-4 bg-[#141b2b] border border-[#232d42] rounded-xl p-4 sm:p-5 flex flex-col justify-between">
               <div>
                 <div class="flex justify-between items-center mb-3">
                   <span class="text-xs font-mono text-slate-400 flex items-center">
@@ -687,7 +722,7 @@
                   </div>
                 </div>
 
-                <div class="h-64 bg-[#070e1d] rounded-lg border border-[#232d42] relative flex items-center justify-center overflow-hidden grid-bg shadow-inner">
+                <div class="h-60 sm:h-64 bg-[#070e1d] rounded-lg border border-[#232d42] relative flex items-center justify-center overflow-hidden grid-bg shadow-inner">
                   <svg class="w-full h-full" viewBox="0 0 300 240">
                     <circle cx="150" cy="190" r="45" fill="none" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="4" opacity="0.4" />
                     <rect x="130" y="180" width="40" height="20" rx="4" fill="#1e3a8a" stroke="#3b82f6" stroke-width="1.5" />
@@ -708,7 +743,7 @@
                   </svg>
                   
                   <div class="absolute bottom-2 left-2 text-[10px] font-mono text-slate-400 bg-[#0c1322]/90 px-2 py-0.5 rounded border border-[#232d42]">
-                    RT-SOLVER: WASM • JITTER: 12µs • 60 FPS
+                    RT-SOLVER: WASM &bull; JITTER: 12µs
                   </div>
                   <div class="absolute top-2 right-2 text-[10px] font-mono text-amber-400 bg-[#0c1322]/90 px-2 py-0.5 rounded border border-[#232d42]">
                     TCP: [X:${s.dro.x.toFixed(1)}, Z:${s.dro.z.toFixed(1)}]
@@ -730,8 +765,8 @@
               </div>
             </div>
 
-            <div class="lg:col-span-4 space-y-6">
-              <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-5 space-y-4">
+            <div class="lg:col-span-4 space-y-4 sm:space-y-6">
+              <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-4 sm:p-5 space-y-4">
                 <div class="flex justify-between items-center">
                   <span class="font-bold text-white text-sm">Coordenadas TCP (DRO Estable)</span>
                   <span class="text-xs font-mono bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-bold">LIVE RT</span>
@@ -740,15 +775,15 @@
                 <div class="space-y-2 font-mono">
                   <div class="flex justify-between items-center bg-[#0c1322] p-2.5 rounded border border-[#232d42]">
                     <span class="text-red-400 font-bold text-xs">EJE X:</span>
-                    <span class="text-white text-lg font-bold" id="dro-x">${s.dro.x.toFixed(4)} mm</span>
+                    <span class="text-white text-base sm:text-lg font-bold" id="dro-x">${s.dro.x.toFixed(4)} mm</span>
                   </div>
                   <div class="flex justify-between items-center bg-[#0c1322] p-2.5 rounded border border-[#232d42]">
                     <span class="text-emerald-400 font-bold text-xs">EJE Y:</span>
-                    <span class="text-white text-lg font-bold" id="dro-y">${s.dro.y.toFixed(4)} mm</span>
+                    <span class="text-white text-base sm:text-lg font-bold" id="dro-y">${s.dro.y.toFixed(4)} mm</span>
                   </div>
                   <div class="flex justify-between items-center bg-[#0c1322] p-2.5 rounded border border-[#232d42]">
                     <span class="text-blue-400 font-bold text-xs">EJE Z:</span>
-                    <span class="text-white text-lg font-bold" id="dro-z">${s.dro.z.toFixed(4)} mm</span>
+                    <span class="text-white text-base sm:text-lg font-bold" id="dro-z">${s.dro.z.toFixed(4)} mm</span>
                   </div>
                 </div>
 
@@ -759,7 +794,7 @@
                 </div>
               </div>
 
-              <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-5 space-y-3">
+              <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-4 sm:p-5 space-y-3">
                 <div class="flex justify-between items-center">
                   <span class="font-bold text-white text-sm">Jog de Articulaciones</span>
                   <div class="flex space-x-1 text-xs font-mono">
@@ -792,25 +827,25 @@
 
     window.getEditorHTML = function() {
       return `
-        <div class="max-w-6xl mx-auto space-y-6">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[#232d42] gap-4">
+        <div class="max-w-6xl mx-auto space-y-4 sm:space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[#232d42] gap-3 sm:gap-4">
             <div>
-              <div class="text-xs font-mono text-cyan-400 tracking-wider">EDITOR ISO &amp; TRANSPILADOR DE SCRIPTS</div>
-              <h1 class="text-2xl font-bold text-white mt-1">Transpilador Universal G-code a Script Robot</h1>
+              <div class="text-[11px] sm:text-xs font-mono text-cyan-400 tracking-wider font-semibold">EDITOR ISO &amp; TRANSPILADOR DE SCRIPTS</div>
+              <h1 class="text-xl sm:text-2xl font-bold text-white mt-0.5">Transpilador Universal G-code a Script Robot</h1>
             </div>
-            <button type="button" onclick="transpileCode()" class="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg text-sm flex items-center space-x-2 shadow-[0_0_15px_rgba(37,99,235,0.4)] cursor-pointer transition active:scale-95">
+            <button type="button" onclick="transpileCode()" class="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg text-xs sm:text-sm flex items-center justify-center space-x-2 shadow-[0_0_15px_rgba(37,99,235,0.4)] cursor-pointer transition active:scale-95">
               <i data-lucide="play" class="w-4 h-4"></i>
               <span>Transpilar a URScript / KAREL</span>
             </button>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-4 space-y-2">
               <div class="flex justify-between items-center text-xs font-mono text-slate-400">
                 <span>ENTRADA G-CODE (ISO 6983)</span>
                 <span class="text-cyan-400 font-bold">G54 Activo</span>
               </div>
-              <textarea id="src-gcode" class="w-full h-80 bg-[#070e1d] border border-[#232d42] rounded-lg p-3 font-mono text-xs text-slate-200 focus:outline-none focus:border-blue-500 custom-scroll leading-relaxed">O1001 (MECANIZADO PROBETA T01)
+              <textarea id="src-gcode" class="w-full h-72 sm:h-80 bg-[#070e1d] border border-[#232d42] rounded-lg p-3 font-mono text-xs text-slate-200 focus:outline-none focus:border-blue-500 custom-scroll leading-relaxed">O1001 (MECANIZADO PROBETA T01)
 G21 G90 G40 G80
 T01 M06 (FRESA PLANA D10)
 S4500 M03
@@ -830,7 +865,7 @@ M30</textarea>
                 <span>SCRIPT COBOT RESULTANTE</span>
                 <span class="text-emerald-400 font-bold" id="transpile-status">Listo para transpilar</span>
               </div>
-              <textarea id="dst-script" readonly class="w-full h-80 bg-[#070e1d] border border-[#232d42] rounded-lg p-3 font-mono text-xs text-emerald-300 focus:outline-none custom-scroll leading-relaxed"># Haz clic en "Transpilar a URScript / KAREL" para generar la cinemática adaptada al cobot seleccionado.</textarea>
+              <textarea id="dst-script" readonly class="w-full h-72 sm:h-80 bg-[#070e1d] border border-[#232d42] rounded-lg p-3 font-mono text-xs text-emerald-300 focus:outline-none custom-scroll leading-relaxed"># Haz clic en "Transpilar a URScript / KAREL" para generar la cinemática adaptada al cobot seleccionado.</textarea>
             </div>
           </div>
         </div>
@@ -839,38 +874,38 @@ M30</textarea>
 
     window.getAcademyHTML = function() {
       return `
-        <div class="max-w-6xl mx-auto space-y-6">
+        <div class="max-w-6xl mx-auto space-y-4 sm:space-y-6">
           <div class="pb-4 border-b border-[#232d42]">
-            <div class="text-xs font-mono text-cyan-400 tracking-wider">CURRICULUM DIDÁCTICO &amp; RETOS DE TALLER</div>
-            <h1 class="text-2xl font-bold text-white mt-1">Biblioteca de Probetas &amp; Progresión</h1>
+            <div class="text-[11px] sm:text-xs font-mono text-cyan-400 tracking-wider font-semibold">CURRICULUM DIDÁCTICO &amp; RETOS DE TALLER</div>
+            <h1 class="text-xl sm:text-2xl font-bold text-white mt-0.5">Biblioteca de Probetas &amp; Progresión</h1>
             <p class="text-xs text-slate-400 font-mono mt-0.5">Acceso libre sin barreras para aprender robótica colaborativa y mecanizado CNC.</p>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-5 space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+            <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-4 sm:p-5 space-y-3 sm:space-y-4">
               <div class="text-xs font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 inline-block font-bold">NIVEL 1 // BÁSICO</div>
-              <h3 class="font-bold text-white text-lg">Probeta 01: Planeado y Cajera Simple</h3>
+              <h3 class="font-bold text-white text-base sm:text-lg">Probeta 01: Planeado y Cajera Simple</h3>
               <p class="text-xs text-slate-400">Aprende a fijar el origen G54 en mordaza y calibrar TCP plano en Z.</p>
               <button type="button" onclick="loadProbeta('Probeta_01_Cajera', 'ur10e')" class="w-full py-2 bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white rounded-lg text-xs font-mono font-bold border border-blue-500/30 transition cursor-pointer active:scale-95">
-                Cargar en Setup →
+                Cargar en Setup &rarr;
               </button>
             </div>
 
-            <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-5 space-y-4">
+            <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-4 sm:p-5 space-y-3 sm:space-y-4">
               <div class="text-xs font-mono px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 inline-block font-bold">NIVEL 2 // INTERMEDIO</div>
-              <h3 class="font-bold text-white text-lg">Probeta 02: Interpolación Circular</h3>
+              <h3 class="font-bold text-white text-base sm:text-lg">Probeta 02: Interpolación Circular</h3>
               <p class="text-xs text-slate-400">Verificación de desvíos cuadrantales y chequeo de singularidad en muñeca.</p>
               <button type="button" onclick="loadProbeta('Probeta_02_Circular', 'ur10e')" class="w-full py-2 bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white rounded-lg text-xs font-mono font-bold border border-blue-500/30 transition cursor-pointer active:scale-95">
-                Cargar en Setup →
+                Cargar en Setup &rarr;
               </button>
             </div>
 
-            <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-5 space-y-4">
+            <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-4 sm:p-5 space-y-3 sm:space-y-4">
               <div class="text-xs font-mono px-2 py-0.5 rounded bg-purple-500/20 text-purple-400 inline-block font-bold">NIVEL 3 // 5 EJES RTCP</div>
-              <h3 class="font-bold text-white text-lg">Probeta 03: Alabeo Turbina 5X</h3>
+              <h3 class="font-bold text-white text-base sm:text-lg">Probeta 03: Alabeo Turbina 5X</h3>
               <p class="text-xs text-slate-400">Manejo de vector normal de contacto I, J, K y orientación de husillo.</p>
               <button type="button" onclick="loadProbeta('Probeta_03_Turbina', 'dmg5x')" class="w-full py-2 bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white rounded-lg text-xs font-mono font-bold border border-blue-500/30 transition cursor-pointer active:scale-95">
-                Cargar en Setup →
+                Cargar en Setup &rarr;
               </button>
             </div>
           </div>
@@ -966,6 +1001,77 @@ M30</textarea>
       window.showToast("Código G-code transpilado a URScript exitosamente.", "success");
     };
 
+    // --- LÓGICA DE ENCUESTA 14 DÍAS & RETENCIÓN ---
+    window.checkSurveyTrigger = function() {
+      var firstAccess = localStorage.getItem('cnc_first_access');
+      var surveyDismissedUntil = localStorage.getItem('cnc_survey_dismissed_until');
+      var surveyDone = localStorage.getItem('cnc_survey_done');
+
+      if (surveyDone === 'true') return;
+
+      var now = Date.now();
+      if (!firstAccess) {
+        localStorage.setItem('cnc_first_access', now);
+        return;
+      }
+
+      if (surveyDismissedUntil && now < parseInt(surveyDismissedUntil)) {
+        return;
+      }
+
+      var daysPassed = (now - parseInt(firstAccess)) / (1000 * 60 * 60 * 24);
+      var usageCount = parseInt(localStorage.getItem('cnc_usage_count') || '0') + 1;
+      localStorage.setItem('cnc_usage_count', usageCount);
+
+      if (daysPassed >= 14 || usageCount >= 6) {
+        var banner = document.getElementById('survey-floating-banner');
+        if (banner) banner.classList.remove('hidden');
+      }
+    };
+
+    window.triggerSurveyModal = function() {
+      var banner = document.getElementById('survey-floating-banner');
+      if (banner) banner.classList.add('hidden');
+      var modal = document.getElementById('survey-modal');
+      if (modal) modal.classList.remove('hidden');
+    };
+
+    window.closeSurveyModal = function() {
+      var modal = document.getElementById('survey-modal');
+      if (modal) modal.classList.add('hidden');
+    };
+
+    window.dismissSurvey = function(days) {
+      var banner = document.getElementById('survey-floating-banner');
+      if (banner) banner.classList.add('hidden');
+      var postponeTime = Date.now() + (days * 24 * 60 * 60 * 1000);
+      localStorage.setItem('cnc_survey_dismissed_until', postponeTime);
+      window.showToast("Recordatorio pospuesto " + days + " días. ¡Gracias!", "info");
+    };
+
+    window.submitSurvey = function(e) {
+      e.preventDefault();
+      var form = e.target;
+      var profile = form.profile.value;
+      var ease = form.rating_ease.value;
+      var feature = document.getElementById('survey-feature').value;
+      var comments = document.getElementById('survey-comments').value;
+
+      localStorage.setItem('cnc_survey_done', 'true');
+      window.closeSurveyModal();
+
+      var subject = encodeURIComponent("Encuesta Satisfacción [Día 14] - " + profile);
+      var body = encodeURIComponent(
+        "Perfil: " + profile + "\n" +
+        "Facilidad TCP/Cinemática: " + ease + "/5 estrellas\n" +
+        "Función solicitada: " + feature + "\n" +
+        "Comentarios adicionales:\n" + comments
+      );
+
+      window.open("mailto:cnccobot.feedback@gmail.com?subject=" + subject + "&body=" + body, "_blank");
+      window.showToast("¡Encuesta enviada con éxito! Muchas gracias por colaborar.", "success");
+    };
+
     window.showToast = function(message, type) {
       type = type || 'info';
       var container = document.getElementById('toast-container');
@@ -990,10 +1096,12 @@ M30</textarea>
 
     window.addEventListener('DOMContentLoaded', function() {
       window.renderCurrentView();
+      setTimeout(window.checkSurveyTrigger, 2000);
     });
 
     if (document.readyState === 'complete' || document.readyState === 'interactive') {
       window.renderCurrentView();
+      setTimeout(window.checkSurveyTrigger, 2000);
     }
   </script>
 </body>
