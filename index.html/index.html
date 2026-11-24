@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="es" class="h-full bg-slate-950 text-slate-100">
+
+<html class="h-full bg-slate-950 text-slate-100" lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CNC & Cobot Studio v4.7 - Universal Kinematics & Robotics Orchestrator</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CNC &amp; Cobot Studio v4.8 - Universal Kinematics &amp; Robotics Orchestrator</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<style>
     body { font-family: 'Space Grotesk', sans-serif; }
     .font-mono { font-family: 'JetBrains Mono', monospace; }
     .tabular-nums { font-variant-numeric: tabular-nums; }
@@ -19,826 +20,1356 @@
   </style>
 </head>
 <body class="h-full flex flex-col bg-[#070e1d] text-slate-200 antialiased select-none overflow-x-hidden">
-
-  <!-- ==================== CABECERA PRINCIPAL (TOP BAR LIMPIA) ==================== -->
-  <header class="h-16 border-b border-slate-800/80 bg-slate-950/90 backdrop-blur px-4 flex items-center justify-between shrink-0 sticky top-0 z-30">
-    
-    <!-- Identidad y Logotipo Oficial EagleCelest -->
-    <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('home')">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 p-0.5 shadow-lg shadow-blue-500/20 flex items-center justify-center shrink-0">
-        <svg class="w-7 h-7 text-white" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 56h40" stroke="#38bdf8" stroke-width="3"/>
-          <path d="M22 56V48h20v8" fill="#1e293b"/>
-          <circle cx="32" cy="44" r="5" fill="#3b82f6"/>
-          <line x1="32" y1="39" x2="24" y2="28" stroke="#60a5fa" stroke-width="3"/>
-          <circle cx="24" cy="28" r="4" fill="#38bdf8"/>
-          <line x1="24" y1="28" x2="42" y2="18" stroke="#93c5fd" stroke-width="3"/>
-          <circle cx="42" cy="18" r="3.5" fill="#38bdf8"/>
-          <line x1="42" y1="18" x2="48" y2="24" stroke="#e2e8f0" stroke-width="2.5"/>
-          <circle cx="48" cy="24" r="2.5" fill="#10b981"/>
-          <path d="M48 24l8 8" stroke="#10b981" stroke-dasharray="2 2" stroke-width="2"/>
-        </svg>
-      </div>
-      <div>
-        <div class="flex items-center gap-2">
-          <span class="font-bold tracking-tight text-white text-base">CNC & COBOT STUDIO</span>
-          <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 font-semibold border border-blue-500/30">v4.3 PRO</span>
-        </div>
-        <p class="text-[11px] text-slate-400 font-mono">
-          Created by <span class="text-amber-400 font-semibold">EagleCelest</span> · <span data-i18n="badge_title">Universal Orchestrator</span>
-        </p>
-      </div>
-    </div>
-
-    <!-- Centro Técnico: Estados de Bus y Kernel RT -->
-    <div class="hidden lg:flex items-center gap-3 font-mono text-xs">
-      <div class="px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800 flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span class="text-slate-400">BUS:</span>
-        <span class="text-emerald-400 font-semibold">500 Hz RTDE Ok</span>
-      </div>
-      <div class="px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800 flex items-center gap-2">
-        <span class="text-blue-400">⚡ KERNEL:</span>
-        <span class="text-slate-300">0ms · Local RT</span>
-      </div>
-    </div>
-
-    <!-- Derecha: Selector Idioma, Rol, Feedback & E-Stop -->
-    <div class="flex items-center gap-2 sm:gap-3">
-      <!-- SELECTOR BILINGÜE EN / ES -->
-      <div class="flex items-center bg-slate-900/90 border border-slate-700/80 rounded-lg p-0.5 text-xs font-mono shadow-inner">
-        <button id="lang-btn-es" onclick="switchLanguage('es')" 
-                class="flex items-center gap-1 px-2 py-1 rounded bg-blue-600/40 text-blue-300 font-semibold border border-blue-500/50 transition-all">
-          <span>🇪🇸</span>
-          <span>ES</span>
-        </button>
-        <button id="lang-btn-en" onclick="switchLanguage('en')" 
-                class="flex items-center gap-1 px-2 py-1 rounded text-slate-400 hover:text-slate-200 transition-all">
-          <span>🇬🇧</span>
-          <span>EN</span>
-        </button>
-      </div>
-
-      <!-- Selector de Rol -->
-      <div class="hidden sm:flex items-center bg-slate-900 border border-slate-800 rounded-lg p-0.5 text-xs font-mono">
-        <button id="role-student-btn" onclick="setRole('student')" 
-                class="px-2.5 py-1 rounded bg-blue-600 text-white font-medium shadow-sm transition-all flex items-center gap-1.5">
-          <span>🎓</span>
-          <span data-i18n="role_student">Estudiante (0€)</span>
-        </button>
-        <button id="role-pro-btn" onclick="setRole('pro')" 
-                class="px-2.5 py-1 rounded text-slate-400 hover:text-white transition-all flex items-center gap-1.5">
-          <span>🏭</span>
-          <span data-i18n="role_pro">Taller Pro</span>
-        </button>
-      </div>
-
-      <!-- Feedback -->
-      <button onclick="openFeedbackModal()" 
-              class="px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-mono text-slate-300 hover:text-white flex items-center gap-1.5 transition-all"
-              title="cnccobot.feedback@gmail.com">
-        <span>💬</span>
-        <span class="hidden md:inline" data-i18n="btn_feedback">Feedback</span>
-      </button>
-
-      <!-- E-STOP SIL-3 -->
-      <button onclick="triggerEmergencyStop()" 
-              class="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold font-mono tracking-wider flex items-center gap-1.5 shadow-lg shadow-rose-600/30 transition-all active:scale-95">
-        <span class="w-2 h-2 rounded-full bg-white animate-ping"></span>
-        <span>E-STOP</span>
-      </button>
-    </div>
-  </header>
-
-  <!-- ==================== CUERPO PRINCIPAL (SIDEBAR + WORKSPACE) ==================== -->
-  <div class="flex-1 flex overflow-hidden">
-    
-    <!-- Barra Lateral de Navegación (Sidebar) -->
-    <aside class="w-64 border-r border-slate-800/80 bg-slate-950/60 flex flex-col justify-between shrink-0 hidden md:flex">
-      <div class="p-3 space-y-6">
-        <div>
-          <p class="px-3 text-[10px] font-mono tracking-wider text-slate-400 uppercase mb-2" data-i18n="nav_workspace_heading">Módulos de Trabajo</p>
-          <nav class="space-y-1">
-            <button onclick="switchView('home')" id="nav-btn-home" 
-                    class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg bg-blue-600/20 text-blue-300 border border-blue-500/30 text-xs font-medium transition-all text-left">
-              <span class="text-sm">🏠</span>
-              <span data-i18n="mod_home">Inicio & Proyectos</span>
-            </button>
-            <button onclick="switchView('kinematics')" id="nav-btn-kinematics" 
-                    class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-900/80 text-xs font-medium transition-all text-left">
-              <span class="text-sm">🦾</span>
-              <span data-i18n="mod_kinematics">Centro Cinemático 3D</span>
-            </button>
-            <button onclick="switchView('editor')" id="nav-btn-editor" 
-                    class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-900/80 text-xs font-medium transition-all text-left">
-              <span class="text-sm">💻</span>
-              <span data-i18n="mod_editor">Editor & Transpilador</span>
-            </button>
-            <button onclick="switchView('hub')" id="nav-btn-hub" 
-                    class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-900/80 text-xs font-medium transition-all text-left">
-              <span class="text-sm">📖</span>
-              <span data-i18n="mod_hub">Biblioteca & Retos</span>
-            </button>
-          </nav>
-        </div>
-
-        <!-- Misión Formativa -->
-        <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-800 text-xs space-y-2">
-          <div class="flex items-center gap-1.5 text-amber-400 font-semibold">
-            <span>🛡️</span>
-            <span data-i18n="sidebar_mission_title">Misión Educativa</span>
-          </div>
-          <p class="text-[11px] text-slate-400 leading-relaxed" data-i18n="sidebar_mission_desc">
+<!-- ==================== CABECERA PRINCIPAL (TOP BAR LIMPIA) ==================== -->
+<header class="h-16 border-b border-slate-800/80 bg-slate-950/90 backdrop-blur px-4 flex items-center justify-between shrink-0 sticky top-0 z-30"><!-- Identidad y Logotipo Oficial EagleCelest -->
+<div class="flex items-center gap-3 cursor-pointer" onclick="switchView('home')">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 p-0.5 shadow-lg shadow-blue-500/20 flex items-center justify-center shrink-0">
+<svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 64 64">
+<path d="M12 56h40" stroke="#38bdf8" stroke-width="3"></path>
+<path d="M22 56V48h20v8" fill="#1e293b"></path>
+<circle cx="32" cy="44" fill="#3b82f6" r="5"></circle>
+<line stroke="#60a5fa" stroke-width="3" x1="32" x2="24" y1="39" y2="28"></line>
+<circle cx="24" cy="28" fill="#38bdf8" r="4"></circle>
+<line stroke="#93c5fd" stroke-width="3" x1="24" x2="42" y1="28" y2="18"></line>
+<circle cx="42" cy="18" fill="#38bdf8" r="3.5"></circle>
+<line stroke="#e2e8f0" stroke-width="2.5" x1="42" x2="48" y1="18" y2="24"></line>
+<circle cx="48" cy="24" fill="#10b981" r="2.5"></circle>
+<path d="M48 24l8 8" stroke="#10b981" stroke-dasharray="2 2" stroke-width="2"></path>
+</svg>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-bold tracking-tight text-white text-base">CNC &amp; COBOT STUDIO</span>
+<span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 font-semibold border border-blue-500/30">v4.9 PRO</span>
+</div>
+<p class="text-[11px] text-slate-400 font-mono">
+      Created by <span class="text-amber-400 font-semibold">EagleCelest</span> · <span data-i18n="badge_title">Universal Orchestrator</span>
+</p>
+</div>
+</div>
+<!-- Centro Técnico: Estados de Bus y Kernel RT -->
+<div class="hidden lg:flex items-center gap-3 font-mono text-xs">
+<div class="px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+<span class="text-slate-400">BUS:</span>
+<span class="text-emerald-400 font-semibold">500 Hz RTDE Ok</span>
+</div>
+<div class="px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800 flex items-center gap-2">
+<span class="text-blue-400">⚡ KERNEL:</span>
+<span class="text-slate-300">0ms · Local RT</span>
+</div>
+<div class="px-2.5 py-1 rounded-md bg-slate-900 border border-amber-500/30 flex items-center gap-2 cursor-pointer hover:border-amber-500/60 transition-all" id="header-xp-badge" onclick="redeemXpPoints()" title="Haz clic para canjear 100 Puntos = 50 Créditos de Taller">
+<span class="text-amber-400">⭐</span>
+<span class="text-slate-400">XP:</span>
+<span class="text-amber-300 font-bold tabular-nums" id="user-xp-points">350 pts</span>
+<span class="text-[10px] px-1 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-semibold">Canjear</span>
+</div></div>
+<!-- Derecha: Ver Código GitHub, Idioma, Rol, Feedback & E-Stop -->
+<div class="flex items-center gap-2 sm:gap-3">
+<!-- Botón Ver Código Fuente Completo (index.html) -->
+<button class="px-2.5 py-1.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/30 text-emerald-300 text-xs font-mono font-medium flex items-center gap-1.5 transition-all shadow-sm" onclick="openSourceCodeModal()" title="Ver y copiar HTML completo para GitHub">
+<span>💾</span>
+<span class="hidden md:inline" data-i18n="btn_view_source">Código index.html</span>
+</button>
+<!-- SELECTOR BILINGÜE EN / ES -->
+<div class="flex items-center bg-slate-900/90 border border-slate-700/80 rounded-lg p-0.5 text-xs font-mono shadow-inner">
+<button class="flex items-center gap-1 px-2 py-1 rounded bg-blue-600/40 text-blue-300 font-semibold border border-blue-500/50 transition-all" id="lang-btn-es" onclick="switchLanguage('es')">
+<span>🇪🇸</span>
+<span>ES</span>
+</button>
+<button class="flex items-center gap-1 px-2 py-1 rounded text-slate-400 hover:text-slate-200 transition-all" id="lang-btn-en" onclick="switchLanguage('en')">
+<span>🇬🇧</span>
+<span>EN</span>
+</button>
+</div>
+<!-- Selector de Rol -->
+<div class="hidden sm:flex items-center bg-slate-900 border border-slate-800 rounded-lg p-0.5 text-xs font-mono">
+<button class="px-2.5 py-1 rounded bg-blue-600 text-white font-medium shadow-sm transition-all flex items-center gap-1.5" id="role-student-btn" onclick="setRole('student')">
+<span>🎓</span>
+<span data-i18n="role_student">Estudiante (0€)</span>
+</button>
+<button class="px-2.5 py-1 rounded text-slate-400 hover:text-white transition-all flex items-center gap-1.5" id="role-pro-btn" onclick="setRole('pro')">
+<span>🏭</span>
+<span data-i18n="role_pro">Taller Pro</span>
+</button>
+</div>
+<!-- Feedback -->
+<button class="px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-mono text-slate-300 hover:text-white flex items-center gap-1.5 transition-all" onclick="openFeedbackModal()" title="cnccobot.feedback@gmail.com">
+<span>💬</span>
+<span class="hidden md:inline" data-i18n="btn_feedback">Feedback</span>
+</button>
+<!-- E-STOP SIL-3 -->
+<button class="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold font-mono tracking-wider flex items-center gap-1.5 shadow-lg shadow-rose-600/30 transition-all active:scale-95" onclick="triggerEmergencyStop()">
+<span class="w-2 h-2 rounded-full bg-white animate-ping"></span>
+<span>E-STOP</span>
+</button>
+</div></header>
+<!-- ==================== CUERPO PRINCIPAL (SIDEBAR + WORKSPACE) ==================== -->
+<div class="flex-1 flex overflow-hidden">
+<!-- Barra Lateral de Navegación (Sidebar) -->
+<aside class="w-64 border-r border-slate-800/80 bg-slate-950/60 flex flex-col justify-between shrink-0 hidden md:flex">
+<div class="p-3 space-y-6">
+<div>
+<p class="px-3 text-[10px] font-mono tracking-wider text-slate-400 uppercase mb-2" data-i18n="nav_workspace_heading">Módulos de Trabajo</p>
+<nav class="space-y-1">
+<button class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg bg-blue-600/20 text-blue-300 border border-blue-500/30 text-xs font-medium transition-all text-left" id="nav-btn-home" onclick="switchView('home')">
+<span class="text-sm">🏠</span>
+<span data-i18n="mod_home">Inicio &amp; Proyectos</span>
+</button>
+<button class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-900/80 text-xs font-medium transition-all text-left" id="nav-btn-kinematics" onclick="switchView('kinematics')">
+<span class="text-sm">🦾</span>
+<span data-i18n="mod_kinematics">Centro Cinemático 3D</span>
+</button>
+<button class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-900/80 text-xs font-medium transition-all text-left" id="nav-btn-editor" onclick="switchView('editor')">
+<span class="text-sm">💻</span>
+<span data-i18n="mod_editor">Editor &amp; Transpilador</span>
+</button>
+<button class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-900/80 text-xs font-medium transition-all text-left" id="nav-btn-hub" onclick="switchView('hub')"><span class="text-sm">📖</span>
+<span data-i18n="mod_hub">Biblioteca</span></button>
+</nav>
+</div>
+<!-- Misión Formativa -->
+<div class="p-3 rounded-xl bg-slate-900/90 border border-slate-800 text-xs space-y-2">
+<div class="flex items-center gap-1.5 text-amber-400 font-semibold">
+<span>🛡️</span>
+<span data-i18n="sidebar_mission_title">Misión Educativa</span>
+</div>
+<p class="text-[11px] text-slate-400 leading-relaxed" data-i18n="sidebar_mission_desc">
             Acceso libre para estudiantes, autónomos y talleres. Democratizando la robótica con EagleCelest.
           </p>
-        </div>
-      </div>
-
-      <!-- Pie de Sidebar -->
-      <div class="p-3 border-t border-slate-800/80 bg-slate-950 font-mono text-[11px] space-y-2">
-        <div class="flex items-center justify-between text-slate-400">
-          <span data-i18n="hardware_status">HARDWARE ACTIVO:</span>
-          <span class="text-emerald-400 font-semibold">● CONECTADO</span>
-        </div>
-        <p class="text-slate-300 font-medium truncate">UR10e Cobot (6-DOF)</p>
-        <div class="flex justify-between text-[10px] text-slate-400">
-          <span>Interlock SIL-3:</span>
-          <span class="text-emerald-400 font-semibold">ARMADO</span>
-        </div>
-        <button onclick="openFeedbackModal()" class="w-full py-1.5 px-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-amber-500/30 text-amber-300 text-[10px] text-center transition-all">
+</div>
+</div>
+<!-- Pie de Sidebar -->
+<div class="p-3 border-t border-slate-800/80 bg-slate-950 font-mono text-[11px] space-y-2">
+<div class="flex items-center justify-between text-slate-400">
+<span data-i18n="hardware_status">HARDWARE ACTIVO:</span>
+<span class="text-emerald-400 font-semibold">● CONECTADO</span>
+</div>
+<p class="text-slate-300 font-medium truncate">UR10e Cobot (6-DOF)</p>
+<div class="flex justify-between text-[10px] text-slate-400">
+<span>Interlock SIL-3:</span>
+<span class="text-emerald-400 font-semibold">ARMADO</span>
+</div>
+<button class="w-full py-1.5 px-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-amber-500/30 text-amber-300 text-[10px] text-center transition-all" onclick="openFeedbackModal()">
           ✨ [Enviar Feedback / Encuesta]
         </button>
-        <div class="pt-1 text-center text-[10px] text-slate-400">
+<div class="pt-1 text-center text-[10px] text-slate-400">
           Created by <strong class="text-amber-400">EagleCelest</strong>
-        </div>
-      </div>
-    </aside>
-
-    <!-- ==================== ÁREA DINÁMICA DE CONTENIDO ==================== -->
-    <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 pb-20 md:pb-8">
-
-      <!-- ============================================================
+</div>
+</div>
+</aside>
+<!-- ==================== ÁREA DINÁMICA DE CONTENIDO ==================== -->
+<main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 pb-20 md:pb-8">
+<!-- ============================================================
            VISTA 1: INICIO & PROYECTOS (view-home)
       ============================================================ -->
-      <div id="view-home" class="space-y-6">
-        
-        <!-- Cabecera de Página Actual -->
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
-          <div>
-            <span class="text-blue-400 font-mono text-xs uppercase tracking-wider font-semibold" data-i18n="step_01">
-              PASO 01 // CONFIGURACIÓN INICIAL & CINEMÁTICA
+<div class="space-y-6" id="view-home">
+<!-- Cabecera de Página Actual -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+<div>
+<span class="text-blue-400 font-mono text-xs uppercase tracking-wider font-semibold" data-i18n="step_01">
+              PASO 01 // CONFIGURACIÓN INICIAL &amp; CINEMÁTICA
             </span>
-            <h1 class="text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1" data-i18n="title_main">
-              Nuevo Proyecto & Selector de Máquina
+<h1 class="text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1" data-i18n="title_main">
+              Nuevo Proyecto &amp; Selector de Máquina
             </h1>
-            <p class="text-sm text-slate-400 mt-1 max-w-2xl" data-i18n="subtitle_main">
+<p class="text-sm text-slate-400 mt-1 max-w-2xl" data-i18n="subtitle_main">
               Democratización técnica para estudiantes, autónomos y talleres.
             </p>
-          </div>
-          <div class="flex items-center gap-3 shrink-0">
-            <button onclick="exportProjectFile()" 
-                    class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-mono text-slate-200 flex items-center gap-2 transition-all">
-              <span>📥</span>
-              <span data-i18n="btn_export">Exportar .CNCPROJ</span>
-            </button>
-            <button onclick="launchConfiguredProject()" 
-                    class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs font-mono flex items-center gap-2 shadow-lg shadow-blue-600/30 transition-all active:scale-95">
-              <span>▶</span>
-              <span data-i18n="btn_start">Iniciar Proyecto Ahora →</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- ==================== 4 ACCIONES MAESTRAS DE ENTRADA ==================== -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-mono text-xs">
-          <!-- Acción 1: Nuevo Proyecto -->
-          <div onclick="selectHubAction('new')" id="action-card-new" 
-               class="p-4 rounded-xl bg-slate-900/90 border-2 border-blue-500 cursor-pointer transition-all hover:bg-slate-900 relative shadow-lg shadow-blue-500/10">
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-2xl">✨</span>
-              <span id="badge-hub-new" class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-blue-500 text-slate-950">ACTIVO</span>
-            </div>
-            <h3 class="text-sm font-bold text-white" data-i18n="act_new_title">Iniciar Proyecto Nuevo</h3>
-            <p class="text-[11px] text-slate-400 mt-1 font-sans" data-i18n="act_new_desc">Configura parámetros, casos guiados o arranca de cero.</p>
-          </div>
-
-          <!-- Acción 2: Proyecto Guardado -->
-          <div onclick="selectHubAction('saved')" id="action-card-saved" 
-               class="p-4 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/40 relative">
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-2xl">📂</span>
-              <span id="badge-hub-saved" class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">MEMORIA</span>
-            </div>
-            <h3 class="text-sm font-bold text-white" data-i18n="act_saved_title">Proyecto Guardado</h3>
-            <p class="text-[11px] text-slate-400 mt-1 font-sans" data-i18n="act_saved_desc">Recupera: Mecanizado_Probeta.cncproj de tu sesión previa.</p>
-          </div>
-
-          <!-- Acción 3: Importar Proyecto -->
-          <div onclick="selectHubAction('import')" id="action-card-import" 
-               class="p-4 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/40 relative">
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-2xl">📥</span>
-              <span id="badge-hub-import" class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">LOCAL</span>
-            </div>
-            <h3 class="text-sm font-bold text-white" data-i18n="act_import_title">Importar Proyecto</h3>
-            <p class="text-[11px] text-slate-400 mt-1 font-sans" data-i18n="act_import_desc">Carga archivos .cncproj, rutinas ISO o scripts de robot.</p>
-          </div>
-
-          <!-- Acción 4: Exportar Respaldo -->
-          <div onclick="selectHubAction('export')" id="action-card-export" 
-               class="p-4 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/40 relative">
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-2xl">📤</span>
-              <span id="badge-hub-export" class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">DESCARGA</span>
-            </div>
-            <h3 class="text-sm font-bold text-white" data-i18n="act_export_title">Exportar Proyecto</h3>
-            <p class="text-[11px] text-slate-400 mt-1 font-sans" data-i18n="act_export_desc">Genera archivo descargable con origen, piezas y herramientas.</p>
-          </div>
-        </div>
-
-        <!-- ==================== CONTENEDOR DESPLEGABLE DE PARÁMETROS ==================== -->
-        <div id="drawer-project-setup" class="space-y-6 pt-2 transition-all">
-          
-          <!-- SECCIÓN 00: CASOS PRÁCTICOS DIDÁCTICOS -->
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2 text-xs font-mono text-blue-400 uppercase tracking-wider">
-                <span>📚</span>
-                <span data-i18n="cases_heading">00 // TIPO DE OPERACIÓN & CASO PRÁCTICO DIDÁCTICO</span>
-              </div>
-              <span class="text-[11px] text-slate-400 hidden sm:inline" data-i18n="cases_hint">Selecciona una plantilla guiada para precargar cinemática, herramientas y parámetros óptimos:</span>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              
-              <!-- Caso 1 -->
-              <div onclick="selectPracticalCase('mecanizado')" id="case-mecanizado" 
-                   class="p-4 rounded-xl bg-slate-900/90 border-2 border-blue-500 cursor-pointer transition-all hover:bg-slate-900 relative">
-                <div class="flex items-center justify-between mb-2">
-                  <span class="text-xl">🔩</span>
-                  <span id="case-badge-mecanizado" class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-500 text-slate-950">ACTIVO</span>
-                </div>
-                <h3 class="text-sm font-bold text-white leading-snug" data-i18n="case1_title">Mecanizado de Probeta Didáctica</h3>
-                <p class="text-[11px] text-slate-400 mt-1" data-i18n="case1_desc">(Contorneado & Cajera CNC)</p>
-                <div class="mt-3 pt-2.5 border-t border-slate-800 text-[10px] font-mono flex flex-wrap gap-1.5">
-                  <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">CNC 3E/5X</span>
-                  <span class="px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300">AL-6061 T6</span>
-                  <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">Fresa D10</span>
-                </div>
-              </div>
-
-              <!-- Caso 2 -->
-              <div onclick="selectPracticalCase('pickplace')" id="case-pickplace" 
-                   class="p-4 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/40 relative">
-                <div class="flex items-center justify-between mb-2">
-                  <span class="text-xl">🦾</span>
-                  <span id="case-badge-pickplace" class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">CASO 02</span>
-                </div>
-                <h3 class="text-sm font-bold text-white leading-snug" data-i18n="case2_title">Pick & Place Industrial</h3>
-                <p class="text-[11px] text-slate-400 mt-1" data-i18n="case2_desc">& Dispensado Adhesivo</p>
-                <div class="mt-3 pt-2.5 border-t border-slate-800 text-[10px] font-mono flex flex-wrap gap-1.5">
-                  <span class="px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300">Cobot 6-DOF UR10e</span>
-                  <span class="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300">TCP Pinza/Boquilla</span>
-                  <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">Frame Base</span>
-                </div>
-              </div>
-
-              <!-- Caso 3 -->
-              <div onclick="selectPracticalCase('torno')" id="case-torno" 
-                   class="p-4 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/40 relative">
-                <div class="flex items-center justify-between mb-2">
-                  <span class="text-xl">🔄</span>
-                  <span id="case-badge-torno" class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">CASO 03</span>
-                </div>
-                <h3 class="text-sm font-bold text-white leading-snug" data-i18n="case3_title">Carga Automática de Torno CNC</h3>
-                <p class="text-[11px] text-slate-400 mt-1" data-i18n="case3_desc">con Celda Robotizada</p>
-                <div class="mt-3 pt-2.5 border-t border-slate-800 text-[10px] font-mono flex flex-wrap gap-1.5">
-                  <span class="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300">Torno Mazak + Cobot</span>
-                  <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">M10/M11 Interlock</span>
-                </div>
-              </div>
-
-              <!-- Caso 4 -->
-              <div onclick="selectPracticalCase('libre')" id="case-libre" 
-                   class="p-4 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/40 relative">
-                <div class="flex items-center justify-between mb-2">
-                  <span class="text-xl">📝</span>
-                  <span id="case-badge-libre" class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">CASO 04</span>
-                </div>
-                <h3 class="text-sm font-bold text-white leading-snug" data-i18n="case4_title">Proyecto Libre</h3>
-                <p class="text-[11px] text-slate-400 mt-1" data-i18n="case4_desc">Carga de Código Propio (.CNC / .SRC)</p>
-                <div class="mt-3 pt-2.5 border-t border-slate-800 text-[10px] font-mono flex flex-wrap gap-1.5">
-                  <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">G-Code ISO</span>
-                  <span class="px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300">URScript Custom</span>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          <!-- FILA 1: Identificación, Origen de Partida y Herramienta -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
-            
-            <div class="p-4 rounded-xl bg-slate-900/70 border border-slate-800 space-y-3">
-              <div class="flex items-center justify-between">
-                <span class="text-slate-400" data-i18n="card1_title">01 // IDENTIFICACIÓN</span>
-                <span class="text-emerald-400 text-[10px] bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20" data-i18n="card1_autosave">✓ AUTO-GUARDADO</span>
-              </div>
-              <div>
-                <label class="block text-[11px] text-slate-400 mb-1" data-i18n="card1_label">Nombre del Archivo / Setup</label>
-                <div class="flex items-center bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white">
-                  <input id="project-name-input" type="text" value="Probeta_Didactica_CNC" class="bg-transparent border-none outline-none w-full font-mono text-xs">
-                  <span class="text-slate-400">.cncproj</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="p-4 rounded-xl bg-slate-900/70 border border-slate-800 space-y-3">
-              <div class="text-slate-400" data-i18n="card2_title">02 // ORIGEN DE PARTIDA (DATUM)</div>
-              <div class="grid grid-cols-3 gap-2">
-                <button onclick="selectDatum('G54')" id="datum-g54" class="py-2 rounded-lg bg-blue-600/40 border border-blue-500/60 text-white font-bold text-center">G54</button>
-                <button onclick="selectDatum('G55')" id="datum-g55" class="py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-400 hover:text-white text-center">G55</button>
-                <button onclick="selectDatum('BASE')" id="datum-base" class="py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-400 hover:text-white text-center">BASE</button>
-              </div>
-              <p id="datum-desc" class="text-[11px] text-slate-400" data-i18n="card2_desc">G54: Origen fijado en mordaza de amarre rápido.</p>
-            </div>
-
-            <div class="p-4 rounded-xl bg-slate-900/70 border border-slate-800 space-y-3">
-              <div class="text-slate-400" data-i18n="card3_title">03 // HERRAMIENTA & BRUTO</div>
-              <div class="grid grid-cols-2 gap-2">
-                <div class="p-2 rounded bg-blue-600/20 border border-blue-500/40 text-blue-200">
-                  <p class="font-bold">T01</p>
-                  <p class="text-[10px] text-slate-300">Fresa Plana D10</p>
-                </div>
-                <div class="p-2 rounded bg-slate-950 border border-slate-800 text-slate-400">
-                  <p class="font-bold">T02</p>
-                  <p class="text-[10px]">Fresa Esférica R3</p>
-                </div>
-              </div>
-              <div class="flex justify-between items-center text-[11px] pt-1">
-                <span class="text-slate-400">Material Bruto:</span>
-                <span class="text-white font-semibold">AL-6061 T6</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- FILA 2: Selector de Cinemática -->
-          <div class="space-y-3">
-            <div class="flex items-center gap-2 text-xs font-mono text-slate-400 uppercase tracking-wider">
-              <span>🤖</span>
-              <span data-i18n="kinematics_selector_title">04 // SELECCIÓN DE CINEMÁTICA & HARDWARE DE TALLER</span>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              
-              <div onclick="selectMachine('cobot')" id="mach-cobot" 
-                   class="p-4 rounded-xl bg-slate-900/90 border-2 border-blue-500 cursor-pointer transition-all hover:bg-slate-900 relative">
-                <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30" data-i18n="tag_6dof">
+</div>
+<div class="flex items-center gap-3 shrink-0">
+<button class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-mono text-slate-200 flex items-center gap-2 transition-all" onclick="exportProjectFile()">
+<span>📥</span>
+<span data-i18n="btn_export">Exportar .CNCPROJ</span>
+</button>
+<button class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs font-mono flex items-center gap-2 shadow-lg shadow-blue-600/30 transition-all active:scale-95" onclick="launchConfiguredProject()">
+<span>▶</span>
+<span data-i18n="btn_start">Iniciar Proyecto Ahora →</span>
+</button>
+</div>
+</div>
+<!-- ==================== 4 ACCIONES MAESTRAS DE ENTRADA ==================== -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-mono text-xs">
+<!-- Acción 1: Nuevo Proyecto -->
+<div class="p-4 rounded-xl bg-slate-900/90 border-2 border-blue-500 cursor-pointer transition-all hover:bg-slate-900 relative shadow-lg shadow-blue-500/10" id="action-card-new" onclick="selectHubAction('new')">
+<div class="flex items-center justify-between mb-2">
+<span class="text-2xl">✨</span>
+<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-blue-500 text-slate-950" id="badge-hub-new">ACTIVO</span>
+</div>
+<h3 class="text-sm font-bold text-white" data-i18n="act_new_title">Iniciar Proyecto Nuevo</h3>
+<p class="text-[11px] text-slate-400 mt-1 font-sans" data-i18n="act_new_desc">Configura parámetros, casos guiados o arranca de cero.</p>
+</div>
+<!-- Acción 2: Proyecto Guardado -->
+<div class="p-4 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/40 relative" id="action-card-saved" onclick="selectHubAction('saved')">
+<div class="flex items-center justify-between mb-2">
+<span class="text-2xl">📂</span>
+<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400" id="badge-hub-saved">MEMORIA</span>
+</div>
+<h3 class="text-sm font-bold text-white" data-i18n="act_saved_title">Proyecto Guardado</h3>
+<p class="text-[11px] text-slate-400 mt-1 font-sans" data-i18n="act_saved_desc">Recupera: Mecanizado_Probeta.cncproj de tu sesión previa.</p>
+</div>
+<!-- Acción 3: Importar Proyecto -->
+<div class="p-4 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/40 relative" id="action-card-import" onclick="selectHubAction('import')">
+<div class="flex items-center justify-between mb-2">
+<span class="text-2xl">📥</span>
+<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400" id="badge-hub-import">LOCAL</span>
+</div>
+<h3 class="text-sm font-bold text-white" data-i18n="act_import_title">Importar Proyecto</h3>
+<p class="text-[11px] text-slate-400 mt-1 font-sans" data-i18n="act_import_desc">Carga archivos .cncproj, rutinas ISO o scripts de robot.</p>
+</div>
+<!-- Acción 4: Exportar Respaldo -->
+<div class="p-4 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/40 relative" id="action-card-export" onclick="selectHubAction('export')">
+<div class="flex items-center justify-between mb-2">
+<span class="text-2xl">📤</span>
+<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400" id="badge-hub-export">DESCARGA</span>
+</div>
+<h3 class="text-sm font-bold text-white" data-i18n="act_export_title">Exportar Proyecto</h3>
+<p class="text-[11px] text-slate-400 mt-1 font-sans" data-i18n="act_export_desc">Genera archivo descargable con origen, piezas y herramientas.</p>
+</div>
+</div>
+<!-- ==================== CONTENEDOR DESPLEGABLE DE PARÁMETROS ==================== -->
+<div class="space-y-6 pt-2 transition-all" id="drawer-project-setup">
+<!-- SECCIÓN 00: CASOS PRÁCTICOS DIDÁCTICOS -->
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2 text-xs font-mono text-blue-400 uppercase tracking-wider">
+<span>📚</span>
+<span data-i18n="cases_heading">00 // TIPO DE OPERACIÓN &amp; CASO PRÁCTICO DIDÁCTICO</span>
+</div>
+<span class="text-[11px] text-slate-400 hidden sm:inline" data-i18n="cases_hint">Selecciona una plantilla guiada para precargar cinemática, herramientas y parámetros óptimos:</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Caso 1 -->
+<div class="p-4 rounded-xl bg-slate-900/90 border-2 border-blue-500 cursor-pointer transition-all hover:bg-slate-900 relative" id="case-mecanizado" onclick="selectPracticalCase('mecanizado')">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xl">🔩</span>
+<span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-500 text-slate-950" id="case-badge-mecanizado">ACTIVO</span>
+</div>
+<h3 class="text-sm font-bold text-white leading-snug" data-i18n="case1_title">Mecanizado de Probeta Didáctica</h3>
+<p class="text-[11px] text-slate-400 mt-1" data-i18n="case1_desc">(Contorneado &amp; Cajera CNC)</p>
+<div class="mt-3 pt-2.5 border-t border-slate-800 text-[10px] font-mono flex flex-wrap gap-1.5">
+<span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">CNC 3E/5X</span>
+<span class="px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300">AL-6061 T6</span>
+<span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">Fresa D10</span>
+</div>
+</div>
+<!-- Caso 2 -->
+<div class="p-4 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/40 relative" id="case-pickplace" onclick="selectPracticalCase('pickplace')">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xl">🦾</span>
+<span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400" id="case-badge-pickplace">CASO 02</span>
+</div>
+<h3 class="text-sm font-bold text-white leading-snug" data-i18n="case2_title">Pick &amp; Place Industrial</h3>
+<p class="text-[11px] text-slate-400 mt-1" data-i18n="case2_desc">&amp; Dispensado Adhesivo</p>
+<div class="mt-3 pt-2.5 border-t border-slate-800 text-[10px] font-mono flex flex-wrap gap-1.5">
+<span class="px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300">Cobot 6-DOF UR10e</span>
+<span class="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300">TCP Pinza/Boquilla</span>
+<span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">Frame Base</span>
+</div>
+</div>
+<!-- Caso 3 -->
+<div class="p-4 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/40 relative" id="case-torno" onclick="selectPracticalCase('torno')">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xl">🔄</span>
+<span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400" id="case-badge-torno">CASO 03</span>
+</div>
+<h3 class="text-sm font-bold text-white leading-snug" data-i18n="case3_title">Carga Automática de Torno CNC</h3>
+<p class="text-[11px] text-slate-400 mt-1" data-i18n="case3_desc">con Celda Robotizada</p>
+<div class="mt-3 pt-2.5 border-t border-slate-800 text-[10px] font-mono flex flex-wrap gap-1.5">
+<span class="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300">Torno Mazak + Cobot</span>
+<span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">M10/M11 Interlock</span>
+</div>
+</div>
+<!-- Caso 4 -->
+<div class="p-4 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/40 relative" id="case-libre" onclick="selectPracticalCase('libre')">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xl">📝</span>
+<span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400" id="case-badge-libre">CASO 04</span>
+</div>
+<h3 class="text-sm font-bold text-white leading-snug" data-i18n="case4_title">Proyecto Libre</h3>
+<p class="text-[11px] text-slate-400 mt-1" data-i18n="case4_desc">Carga de Código Propio (.CNC / .SRC)</p>
+<div class="mt-3 pt-2.5 border-t border-slate-800 text-[10px] font-mono flex flex-wrap gap-1.5">
+<span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">G-Code ISO</span>
+<span class="px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300">URScript Custom</span>
+</div>
+</div>
+</div>
+</div>
+<!-- FILA 1: Identificación, Origen de Partida y Herramienta -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
+<div class="p-4 rounded-xl bg-slate-900/70 border border-slate-800 space-y-3">
+<div class="flex items-center justify-between">
+<span class="text-slate-400" data-i18n="card1_title">01 // IDENTIFICACIÓN</span>
+<span class="text-emerald-400 text-[10px] bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20" data-i18n="card1_autosave">✓ AUTO-GUARDADO</span>
+</div>
+<div>
+<label class="block text-[11px] text-slate-400 mb-1" data-i18n="card1_label">Nombre del Archivo / Setup</label>
+<div class="flex items-center bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white">
+<input class="bg-transparent border-none outline-none w-full font-mono text-xs" id="project-name-input" type="text" value="Probeta_Didactica_CNC"/>
+<span class="text-slate-400">.cncproj</span>
+</div>
+</div>
+</div>
+<div class="p-4 rounded-xl bg-slate-900/70 border border-slate-800 space-y-3">
+<div class="text-slate-400" data-i18n="card2_title">02 // ORIGEN DE PARTIDA (DATUM)</div>
+<div class="grid grid-cols-3 gap-2">
+<button class="py-2 rounded-lg bg-blue-600/40 border border-blue-500/60 text-white font-bold text-center" id="datum-g54" onclick="selectDatum('G54')">G54</button>
+<button class="py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-400 hover:text-white text-center" id="datum-g55" onclick="selectDatum('G55')">G55</button>
+<button class="py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-400 hover:text-white text-center" id="datum-base" onclick="selectDatum('BASE')">BASE</button>
+</div>
+<p class="text-[11px] text-slate-400" data-i18n="card2_desc" id="datum-desc">G54: Origen fijado en mordaza de amarre rápido.</p>
+</div>
+<div class="p-4 rounded-xl bg-slate-900/70 border border-slate-800 space-y-3">
+<div class="text-slate-400" data-i18n="card3_title">03 // HERRAMIENTA &amp; BRUTO</div>
+<div class="grid grid-cols-2 gap-2">
+<div class="p-2 rounded bg-blue-600/20 border border-blue-500/40 text-blue-200">
+<p class="font-bold">T01</p>
+<p class="text-[10px] text-slate-300">Fresa Plana D10</p>
+</div>
+<div class="p-2 rounded bg-slate-950 border border-slate-800 text-slate-400">
+<p class="font-bold">T02</p>
+<p class="text-[10px]">Fresa Esférica R3</p>
+</div>
+</div>
+<div class="flex justify-between items-center text-[11px] pt-1">
+<span class="text-slate-400">Material Bruto:</span>
+<span class="text-white font-semibold">AL-6061 T6</span>
+</div>
+</div>
+</div>
+<!-- FILA 2: Selector de Cinemática -->
+<div class="space-y-3">
+<div class="flex items-center gap-2 text-xs font-mono text-slate-400 uppercase tracking-wider">
+<span>🤖</span>
+<span data-i18n="kinematics_selector_title">04 // SELECCIÓN DE CINEMÁTICA &amp; HARDWARE DE TALLER</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="p-4 rounded-xl bg-slate-900/90 border-2 border-blue-500 cursor-pointer transition-all hover:bg-slate-900 relative" id="mach-cobot" onclick="selectMachine('cobot')">
+<span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30" data-i18n="tag_6dof">
                   6-DOF COBOT
                 </span>
-                <h3 class="text-base font-bold text-white mt-2" data-i18n="mach1_name">Cobot 6-DOF</h3>
-                <p class="text-xs text-slate-400 font-mono">UR10e / Fanuc CRX</p>
-                <div class="mt-4 pt-3 border-t border-slate-800/80 font-mono text-xs space-y-1.5">
-                  <div class="flex justify-between"><span class="text-slate-400">Payload:</span><span class="text-slate-200">12.5 kg</span></div>
-                  <div class="flex justify-between"><span class="text-slate-400">Reach:</span><span class="text-slate-200">1300 mm</span></div>
-                  <div class="flex justify-between"><span class="text-slate-400">Repeatability:</span><span class="text-emerald-400">± 0.03 mm</span></div>
-                </div>
-              </div>
-
-              <div onclick="selectMachine('fresadora')" id="mach-fresadora" 
-                   class="p-4 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/40">
-                <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-300" data-i18n="tag_3axis">
+<h3 class="text-base font-bold text-white mt-2" data-i18n="mach1_name">Cobot 6-DOF</h3>
+<p class="text-xs text-slate-400 font-mono">UR10e / Fanuc CRX</p>
+<div class="mt-4 pt-3 border-t border-slate-800/80 font-mono text-xs space-y-1.5">
+<div class="flex justify-between"><span class="text-slate-400">Payload:</span><span class="text-slate-200">12.5 kg</span></div>
+<div class="flex justify-between"><span class="text-slate-400">Reach:</span><span class="text-slate-200">1300 mm</span></div>
+<div class="flex justify-between"><span class="text-slate-400">Repeatability:</span><span class="text-emerald-400">± 0.03 mm</span></div>
+</div>
+</div>
+<div class="p-4 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/40" id="mach-fresadora" onclick="selectMachine('fresadora')">
+<span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-300" data-i18n="tag_3axis">
                   3-AXIS CNC
                 </span>
-                <h3 class="text-base font-bold text-white mt-2" data-i18n="mach2_name">3-Axis CNC Mill</h3>
-                <p class="text-xs text-slate-400 font-mono">Haas VF-2 / Robodrill</p>
-                <div class="mt-4 pt-3 border-t border-slate-800/80 font-mono text-xs space-y-1.5">
-                  <div class="flex justify-between"><span class="text-slate-400">Z Travel:</span><span class="text-slate-200">508 mm</span></div>
-                  <div class="flex justify-between"><span class="text-slate-400">Spindle:</span><span class="text-slate-200">12,000 RPM</span></div>
-                  <div class="flex justify-between"><span class="text-slate-400">Power:</span><span class="text-blue-400">22.4 kW</span></div>
-                </div>
-              </div>
-
-              <div onclick="selectMachine('5ejes')" id="mach-5ejes" 
-                   class="p-4 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/40">
-                <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30" data-i18n="tag_5axis">
+<h3 class="text-base font-bold text-white mt-2" data-i18n="mach2_name">3-Axis CNC Mill</h3>
+<p class="text-xs text-slate-400 font-mono">Haas VF-2 / Robodrill</p>
+<div class="mt-4 pt-3 border-t border-slate-800/80 font-mono text-xs space-y-1.5">
+<div class="flex justify-between"><span class="text-slate-400">Z Travel:</span><span class="text-slate-200">508 mm</span></div>
+<div class="flex justify-between"><span class="text-slate-400">Spindle:</span><span class="text-slate-200">12,000 RPM</span></div>
+<div class="flex justify-between"><span class="text-slate-400">Power:</span><span class="text-blue-400">22.4 kW</span></div>
+</div>
+</div>
+<div class="p-4 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/40" id="mach-5ejes" onclick="selectMachine('5ejes')">
+<span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30" data-i18n="tag_5axis">
                   5-AXIS RTCP
                 </span>
-                <h3 class="text-base font-bold text-white mt-2" data-i18n="mach3_name">5-Axis RTCP</h3>
-                <p class="text-xs text-slate-400 font-mono">DMG MORI / Hermle</p>
-                <div class="mt-4 pt-3 border-t border-slate-800/80 font-mono text-xs space-y-1.5">
-                  <div class="flex justify-between"><span class="text-slate-400">Rotary A:</span><span class="text-slate-200">-120° / +30°</span></div>
-                  <div class="flex justify-between"><span class="text-slate-400">G43.4 RTCP:</span><span class="text-emerald-400">Active</span></div>
-                  <div class="flex justify-between"><span class="text-slate-400">Spindle:</span><span class="text-slate-200">18,000 RPM</span></div>
-                </div>
-              </div>
-
-              <div onclick="selectMachine('torno')" id="mach-torno" 
-                   class="p-4 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/40">
-                <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30" data-i18n="tag_lathe">
-                  LATHE & HYBRID
+<h3 class="text-base font-bold text-white mt-2" data-i18n="mach3_name">5-Axis RTCP</h3>
+<p class="text-xs text-slate-400 font-mono">DMG MORI / Hermle</p>
+<div class="mt-4 pt-3 border-t border-slate-800/80 font-mono text-xs space-y-1.5">
+<div class="flex justify-between"><span class="text-slate-400">Rotary A:</span><span class="text-slate-200">-120° / +30°</span></div>
+<div class="flex justify-between"><span class="text-slate-400">G43.4 RTCP:</span><span class="text-emerald-400">Active</span></div>
+<div class="flex justify-between"><span class="text-slate-400">Spindle:</span><span class="text-slate-200">18,000 RPM</span></div>
+</div>
+</div>
+<div class="p-4 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/40" id="mach-torno" onclick="selectMachine('torno')">
+<span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30" data-i18n="tag_lathe">
+                  LATHE &amp; HYBRID
                 </span>
-                <h3 class="text-base font-bold text-white mt-2" data-i18n="mach4_name">Lathe & Hybrid Cell</h3>
-                <p class="text-xs text-slate-400 font-mono">Mazak QT / Cobot Loader</p>
-                <div class="mt-4 pt-3 border-t border-slate-800/80 font-mono text-xs space-y-1.5">
-                  <div class="flex justify-between"><span class="text-slate-400">Turret:</span><span class="text-slate-200">12 Stations</span></div>
-                  <div class="flex justify-between"><span class="text-slate-400">Loader:</span><span class="text-blue-400">Digital I/O</span></div>
-                  <div class="flex justify-between"><span class="text-slate-400">Interlock:</span><span class="text-emerald-400">M10/M11 Ok</span></div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-
-      <!-- ============================================================
+<h3 class="text-base font-bold text-white mt-2" data-i18n="mach4_name">Lathe &amp; Hybrid Cell</h3>
+<p class="text-xs text-slate-400 font-mono">Mazak QT / Cobot Loader</p>
+<div class="mt-4 pt-3 border-t border-slate-800/80 font-mono text-xs space-y-1.5">
+<div class="flex justify-between"><span class="text-slate-400">Turret:</span><span class="text-slate-200">12 Stations</span></div>
+<div class="flex justify-between"><span class="text-slate-400">Loader:</span><span class="text-blue-400">Digital I/O</span></div>
+<div class="flex justify-between"><span class="text-slate-400">Interlock:</span><span class="text-emerald-400">M10/M11 Ok</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- ============================================================
            VISTA 2: CENTRO CINEMÁTICO 3D (view-kinematics)
       ============================================================ -->
-      <div id="view-kinematics" class="hidden space-y-6">
-        
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
-          <div>
-            <span class="text-emerald-400 font-mono text-xs uppercase tracking-wider font-semibold" data-i18n="kin_step">
-              MÓDULO 02 // CINEMÁTICA 3D & SAFETY SIL-3
-            </span>
-            <h1 class="text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1" data-i18n="kin_title">
-              Centro Cinemático 3D & Monitor Cobot
-            </h1>
-            <p id="kin-subtitle" class="text-sm text-slate-400 mt-1 max-w-2xl" data-i18n="kin_subtitle">
-              Simulación de trayectoria continua, monitoreo cartesiano del TCP y prevención de colisión ISO/TS 15066.
-            </p>
-          </div>
-          <div class="flex items-center gap-3 shrink-0">
-            <button onclick="toggleKinematicsSim()" id="btn-toggle-sim" 
-                    class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs font-mono flex items-center gap-2 shadow-lg shadow-emerald-600/30 transition-all">
-              <span>▶</span>
-              <span id="txt-sim-run" data-i18n="kin_btn_run">Ejecutar Simulación</span>
-            </button>
-            <button onclick="switchView('editor')" 
-                    class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-mono text-slate-200 flex items-center gap-2 transition-all">
-              <span data-i18n="kin_btn_to_editor">Abrir en Editor G-Code →</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- SIMULADOR 3D + TELEMETRÍA ARTICULAR -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
-          <!-- Visor Gráfico 3D -->
-          <div class="lg:col-span-2 rounded-2xl bg-slate-950 border border-slate-800 p-4 flex flex-col justify-between relative overflow-hidden h-[420px] shadow-2xl">
-            <!-- Barra Superior del Visor -->
-            <div class="flex items-center justify-between font-mono text-xs z-10">
-              <div class="flex items-center gap-2">
-                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
-                <span class="text-emerald-400 font-bold">VIEWPORT CINEMÁTICO EN VIVO</span>
-                <span class="text-slate-500">|</span>
-                <span id="visor-active-case" class="text-blue-300">Caso Activo: Probeta Didáctica</span>
-              </div>
-              <div class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30 text-[10px]">
-                NURBS SPLINE: G01 X-15.55 Y15.55 Z30.60
-              </div>
-            </div>
-
-            <!-- Gráfico Vectorial Interactivo del Robot y Trayectoria -->
-            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <!-- Rejilla de Fondo -->
-              <div class="w-full h-full opacity-10 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:20px_20px]"></div>
-              
-              <!-- Representación Cinemática del Cobot -->
-              <svg id="cobot-svg" class="w-96 h-96 text-blue-500 transition-all duration-300" viewBox="0 0 200 200">
-                <!-- Base Mundial -->
-                <circle cx="100" cy="160" r="14" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
-                <rect x="70" y="172" width="60" height="10" rx="3" fill="#0f172a" stroke="#475569" stroke-width="1.5"/>
-                
-                <!-- Eslabon 1 (J1-J2) -->
-                <line id="link-1" x1="100" y1="160" x2="80" y2="105" stroke="#3b82f6" stroke-width="6" stroke-linecap="round"/>
-                <circle cx="80" cy="105" r="7" fill="#2563eb" stroke="#93c5fd" stroke-width="2"/>
-                
-                <!-- Eslabon 2 (J2-J3) -->
-                <line id="link-2" x1="80" y1="105" x2="135" y2="60" stroke="#60a5fa" stroke-width="5" stroke-linecap="round"/>
-                <circle cx="135" cy="60" r="6" fill="#38bdf8" stroke="#ffffff" stroke-width="2"/>
-                
-                <!-- Eslabon 3 (J3-J4 Muñeca) -->
-                <line id="link-3" x1="135" y1="60" x2="155" y2="85" stroke="#93c5fd" stroke-width="4" stroke-linecap="round"/>
-                <circle cx="155" cy="85" r="5" fill="#10b981"/>
-                
-                <!-- Herramienta TCP & Haz Láser -->
-                <line x1="155" y1="85" x2="165" y2="105" stroke="#10b981" stroke-width="2.5" stroke-dasharray="2 2"/>
-                <circle cx="165" cy="105" r="3" fill="#10b981" class="animate-pulse"/>
-                
-                <!-- Trayectoria de Corte Simulada -->
-                <path d="M120 120 Q 145 95, 165 105 T 180 130" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3 3"/>
-              </svg>
-            </div>
-
-            <!-- Panel Inferior de Coordenadas TCP en Tiempo Real -->
-            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 bg-slate-900/90 border border-slate-800 rounded-xl p-2.5 font-mono text-[11px] z-10 shadow-lg">
-              <div><span class="text-slate-500">X:</span> <span id="tcp-x" class="text-white font-bold tabular-nums">142.50</span></div>
-              <div><span class="text-slate-500">Y:</span> <span id="tcp-y" class="text-white font-bold tabular-nums">-35.20</span></div>
-              <div><span class="text-slate-500">Z:</span> <span id="tcp-z" class="text-white font-bold tabular-nums">218.45</span></div>
-              <div><span class="text-slate-500">Rx:</span> <span class="text-blue-400 tabular-nums">179.8°</span></div>
-              <div><span class="text-slate-500">Ry:</span> <span class="text-blue-400 tabular-nums">-0.05°</span></div>
-              <div><span class="text-slate-500">Rz:</span> <span class="text-emerald-400 tabular-nums">45.2°</span></div>
-            </div>
-          </div>
-
-          <!-- Tarjeta de Control Articular J1-J6 -->
-          <div class="rounded-2xl bg-slate-900/80 border border-slate-800 p-5 font-mono text-xs space-y-4 shadow-xl">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-              <span class="font-bold text-white text-sm" data-i18n="kin_joints_title">Telemetría Articular J1-J6</span>
-              <span class="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">ZONA SEGURA</span>
-            </div>
-
-            <div class="space-y-3">
-              <div>
-                <div class="flex justify-between text-slate-400 mb-1">
-                  <span>J1 (Base Pan):</span>
-                  <span id="val-j1" class="text-white font-bold tabular-nums">-12.4°</span>
-                </div>
-                <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800">
-                  <div id="bar-j1" class="bg-blue-500 h-full w-[45%] transition-all"></div>
-                </div>
-              </div>
-
-              <div>
-                <div class="flex justify-between text-slate-400 mb-1">
-                  <span>J2 (Hombro):</span>
-                  <span id="val-j2" class="text-white font-bold tabular-nums">-85.0°</span>
-                </div>
-                <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800">
-                  <div id="bar-j2" class="bg-blue-500 h-full w-[60%] transition-all"></div>
-                </div>
-              </div>
-
-              <div>
-                <div class="flex justify-between text-slate-400 mb-1">
-                  <span>J3 (Codo):</span>
-                  <span id="val-j3" class="text-white font-bold tabular-nums">+92.3°</span>
-                </div>
-                <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800">
-                  <div id="bar-j3" class="bg-blue-500 h-full w-[70%] transition-all"></div>
-                </div>
-              </div>
-
-              <div>
-                <div class="flex justify-between text-slate-400 mb-1">
-                  <span>J4 (Muñeca 1):</span>
-                  <span id="val-j4" class="text-white font-bold tabular-nums">-97.2°</span>
-                </div>
-                <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800">
-                  <div id="bar-j4" class="bg-indigo-500 h-full w-[52%] transition-all"></div>
-                </div>
-              </div>
-
-              <div>
-                <div class="flex justify-between text-slate-400 mb-1">
-                  <span>J5 (Muñeca 2):</span>
-                  <span class="text-white font-bold tabular-nums">+89.6°</span>
-                </div>
-                <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800">
-                  <div class="bg-indigo-500 h-full w-[48%]"></div>
-                </div>
-              </div>
-
-              <div>
-                <div class="flex justify-between text-slate-400 mb-1">
-                  <span>J6 (Brida TCP):</span>
-                  <span class="text-emerald-400 font-bold tabular-nums">0.00°</span>
-                </div>
-                <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800">
-                  <div class="bg-emerald-500 h-full w-[50%]"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="pt-3 border-t border-slate-800 flex justify-between text-[11px] text-slate-400">
-              <span>Riesgo de Colisión:</span>
-              <span class="text-emerald-400 font-bold">0.0% (Despejado)</span>
-            </div>
-          </div>
-
-        </div>
-
+<div class="hidden space-y-6" id="view-kinematics"><!-- Cabecera Cinemática y Controles Principales -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+<div>
+<span class="text-emerald-400 font-mono text-xs uppercase tracking-wider font-semibold" data-i18n="kin_step">
+      MÓDULO 02 // CINEMÁTICA 3D, JOG MANUAL &amp; SAFETY SIL-3
+    </span>
+<h1 class="text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1" data-i18n="kin_title">
+      Centro Cinemático 3D &amp; Control Manual Jog
+    </h1>
+<p class="text-sm text-slate-400 mt-1 max-w-2xl" data-i18n="kin_subtitle" id="kin-subtitle">
+      Simulación de trayectoria continua, Jog Manual Articular J1-J6, calibración directa del TCP y prevención de colisión ISO/TS 15066.
+    </p>
+</div>
+<div class="flex items-center gap-3 shrink-0 flex-wrap">
+<!-- Selector de Modo de Control Cinemático -->
+<div class="flex items-center bg-slate-900 border border-slate-800 rounded-xl p-0.5 text-xs font-mono">
+<button class="px-3 py-2 rounded-lg bg-emerald-600 text-white font-medium transition-all flex items-center gap-1.5" id="tab-mode-sim" onclick="setKinMode('sim')">
+<span>🔄</span>
+<span data-i18n="mode_sim">Simulación Continua</span>
+</button>
+<button class="px-3 py-2 rounded-lg text-slate-400 hover:text-white transition-all flex items-center gap-1.5" id="tab-mode-jog" onclick="setKinMode('jog')">
+<span>🕹️</span>
+<span data-i18n="mode_jog">Jog Manual &amp; TCP Setup</span>
+</button>
+</div>
+<button class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs font-mono flex items-center gap-2 shadow-lg shadow-emerald-600/30 transition-all" id="btn-toggle-sim" onclick="toggleKinematicsSim()">
+<span>▶</span>
+<span data-i18n="kin_btn_run" id="txt-sim-run">Ejecutar Simulación</span>
+</button>
+<button class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-mono text-slate-200 flex items-center gap-2 transition-all" onclick="switchView('editor')">
+<span data-i18n="kin_btn_to_editor">Abrir en Editor G-Code →</span>
+</button>
+</div>
+</div>
+<!-- SIMULADOR 3D + TELEMETRÍA / JOG -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Visor Gráfico Cinemático Completo con Eslabones Conectados -->
+<div class="lg:col-span-2 rounded-2xl bg-slate-950 border border-slate-800 p-4 flex flex-col justify-between relative overflow-hidden h-[420px] shadow-2xl">
+<!-- Barra Superior del Visor -->
+<div class="flex items-center justify-between font-mono text-xs z-10 flex-wrap gap-2">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+<span class="text-emerald-400 font-bold">VIEWPORT CINEMÁTICO EN VIVO</span>
+<span class="text-slate-500">|</span>
+<span class="text-blue-300" id="visor-active-case">Caso Activo: Probeta Didáctica</span>
+</div>
+<div class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30 text-[10px]" id="visor-status-tag">
+        NURBS SPLINE: G01 X-15.55 Y15.55 Z30.60
       </div>
-
-      <!-- ============================================================
+</div>
+<!-- Gráfico Vectorial Interactivo del Robot y Trayectoria -->
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<!-- Rejilla de Fondo -->
+<div class="w-full h-full opacity-10 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:20px_20px]"></div>
+<!-- Representación Cinemática Robusta del Cobot (UR10e 6-DOF) -->
+<svg class="w-[420px] h-[420px] text-blue-500 transition-all duration-75" id="cobot-svg" viewbox="0 0 240 240">
+<!-- Base Mundial -->
+<circle cx="120" cy="190" fill="#1e293b" r="16" stroke="#38bdf8" stroke-width="2.5"></circle>
+<rect fill="#0f172a" height="12" rx="3" stroke="#475569" stroke-width="1.5" width="70" x="85" y="202"></rect>
+<circle cx="120" cy="190" fill="#38bdf8" r="5"></circle>
+<!-- Eslabón 1 (Base J1 a Hombro J2) -->
+<line id="link-1" stroke="#3b82f6" stroke-linecap="round" stroke-width="7" x1="120" x2="100" y1="190" y2="135"></line>
+<circle cx="100" cy="135" fill="#2563eb" id="joint-1" r="8" stroke="#93c5fd" stroke-width="2"></circle>
+<!-- Eslabón 2 (Hombro J2 a Codo J3) -->
+<line id="link-2" stroke="#60a5fa" stroke-linecap="round" stroke-width="6" x1="100" x2="155" y1="135" y2="85"></line>
+<circle cx="155" cy="85" fill="#38bdf8" id="joint-2" r="7" stroke="#ffffff" stroke-width="2"></circle>
+<!-- Eslabón 3 (Codo J3 a Muñeca 1 J4) -->
+<line id="link-3" stroke="#93c5fd" stroke-linecap="round" stroke-width="5" x1="155" x2="180" y1="85" y2="110"></line>
+<circle cx="180" cy="110" fill="#10b981" id="joint-3" r="6" stroke="#a7f3d0" stroke-width="2"></circle>
+<!-- Eslabón 4 / TCP Tool Assembly (Muñeca a Punta Activa) -->
+<line id="link-tcp" stroke="#10b981" stroke-linecap="round" stroke-width="3.5" x1="180" x2="195" y1="110" y2="130"></line>
+<circle cx="195" cy="130" fill="#10b981" id="joint-tcp" r="4.5" stroke="#ffffff" stroke-width="1.5"></circle>
+<!-- Haz Láser / Foco de Proceso -->
+<line id="laser-beam" stroke="#34d399" stroke-dasharray="2 2" stroke-width="2" x1="195" x2="202" y1="130" y2="140"></line>
+<circle class="animate-pulse" cx="202" cy="140" fill="#34d399" id="laser-tip" r="3"></circle>
+<!-- Trayectoria de Corte Simulada -->
+<path d="M140 145 Q 170 120, 195 130 T 215 155" fill="none" id="trajectory-path" stroke="#f59e0b" stroke-dasharray="3 3" stroke-width="1.5"></path>
+</svg>
+</div>
+<!-- Panel Inferior de Coordenadas TCP en Tiempo Real -->
+<div class="grid grid-cols-3 sm:grid-cols-6 gap-2 bg-slate-900/90 border border-slate-800 rounded-xl p-2.5 font-mono text-[11px] z-10 shadow-lg">
+<div><span class="text-slate-500">X:</span> <span class="text-white font-bold tabular-nums" id="tcp-x">142.50</span></div>
+<div><span class="text-slate-500">Y:</span> <span class="text-white font-bold tabular-nums" id="tcp-y">-35.20</span></div>
+<div><span class="text-slate-500">Z:</span> <span class="text-white font-bold tabular-nums" id="tcp-z">218.45</span></div>
+<div><span class="text-slate-500">Rx:</span> <span class="text-blue-400 tabular-nums" id="tcp-rx">179.8°</span></div>
+<div><span class="text-slate-500">Ry:</span> <span class="text-blue-400 tabular-nums" id="tcp-ry">-0.05°</span></div>
+<div><span class="text-slate-500">Rz:</span> <span class="text-emerald-400 tabular-nums" id="tcp-rz">45.2°</span></div>
+</div>
+</div>
+<!-- COLUMNA DERECHA: PANEL DE CONTROL DE ARTICULACIONES / JOG MANUAL -->
+<div class="rounded-2xl bg-slate-900/80 border border-slate-800 p-5 font-mono text-xs space-y-4 shadow-xl flex flex-col justify-between">
+<div>
+<!-- Encabezado y Selector de Jog Step -->
+<div class="flex items-center justify-between border-b border-slate-800 pb-3">
+<div>
+<span class="font-bold text-white text-sm block" data-i18n="kin_joints_title">Control Articular J1-J6</span>
+<span class="text-[10px] text-slate-400">Resolución de Jog Paso a Paso</span>
+</div>
+<div class="flex items-center gap-1 bg-slate-950 p-1 rounded-lg border border-slate-800 text-[10px]">
+<button class="px-1.5 py-0.5 rounded text-slate-400 hover:text-white" id="res-01" onclick="setJogResolution(0.1)">0.1°</button>
+<button class="px-1.5 py-0.5 rounded bg-blue-600 text-white font-bold" id="res-1" onclick="setJogResolution(1.0)">1.0°</button>
+<button class="px-1.5 py-0.5 rounded text-slate-400 hover:text-white" id="res-5" onclick="setJogResolution(5.0)">5.0°</button>
+<button class="px-1.5 py-0.5 rounded text-slate-400 hover:text-white" id="res-10" onclick="setJogResolution(10.0)">10°</button>
+</div>
+</div>
+<!-- Lista de 6 Articulaciones con Botones [-] y [+] para Jogging Directo -->
+<div class="space-y-2.5 mt-3">
+<!-- J1 Base Pan -->
+<div>
+<div class="flex justify-between items-center text-slate-400 mb-1">
+<span>J1 (Base Pan):</span>
+<div class="flex items-center gap-1.5">
+<button class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-white font-bold text-center active:scale-95" onclick="jogJoint(1, -1)">-</button>
+<span class="text-white font-bold tabular-nums w-14 text-center" id="val-j1">-12.4°</span>
+<button class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-white font-bold text-center active:scale-95" onclick="jogJoint(1, 1)">+</button>
+</div>
+</div>
+<div class="w-full bg-slate-950 h-1.5 rounded-full overflow-hidden border border-slate-800">
+<div class="bg-blue-500 h-full w-[45%] transition-all" id="bar-j1"></div>
+</div>
+</div>
+<!-- J2 Hombro -->
+<div>
+<div class="flex justify-between items-center text-slate-400 mb-1">
+<span>J2 (Hombro):</span>
+<div class="flex items-center gap-1.5">
+<button class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-white font-bold text-center active:scale-95" onclick="jogJoint(2, -1)">-</button>
+<span class="text-white font-bold tabular-nums w-14 text-center" id="val-j2">-85.0°</span>
+<button class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-white font-bold text-center active:scale-95" onclick="jogJoint(2, 1)">+</button>
+</div>
+</div>
+<div class="w-full bg-slate-950 h-1.5 rounded-full overflow-hidden border border-slate-800">
+<div class="bg-blue-500 h-full w-[60%] transition-all" id="bar-j2"></div>
+</div>
+</div>
+<!-- J3 Codo -->
+<div>
+<div class="flex justify-between items-center text-slate-400 mb-1">
+<span>J3 (Codo):</span>
+<div class="flex items-center gap-1.5">
+<button class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-white font-bold text-center active:scale-95" onclick="jogJoint(3, -1)">-</button>
+<span class="text-white font-bold tabular-nums w-14 text-center" id="val-j3">+92.3°</span>
+<button class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-white font-bold text-center active:scale-95" onclick="jogJoint(3, 1)">+</button>
+</div>
+</div>
+<div class="w-full bg-slate-950 h-1.5 rounded-full overflow-hidden border border-slate-800">
+<div class="bg-blue-500 h-full w-[70%] transition-all" id="bar-j3"></div>
+</div>
+</div>
+<!-- J4 Muñeca 1 -->
+<div>
+<div class="flex justify-between items-center text-slate-400 mb-1">
+<span>J4 (Muñeca 1):</span>
+<div class="flex items-center gap-1.5">
+<button class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-white font-bold text-center active:scale-95" onclick="jogJoint(4, -1)">-</button>
+<span class="text-white font-bold tabular-nums w-14 text-center" id="val-j4">-97.2°</span>
+<button class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-white font-bold text-center active:scale-95" onclick="jogJoint(4, 1)">+</button>
+</div>
+</div>
+<div class="w-full bg-slate-950 h-1.5 rounded-full overflow-hidden border border-slate-800">
+<div class="bg-indigo-500 h-full w-[52%] transition-all" id="bar-j4"></div>
+</div>
+</div>
+<!-- J5 Muñeca 2 -->
+<div>
+<div class="flex justify-between items-center text-slate-400 mb-1">
+<span>J5 (Muñeca 2):</span>
+<div class="flex items-center gap-1.5">
+<button class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-white font-bold text-center active:scale-95" onclick="jogJoint(5, -1)">-</button>
+<span class="text-white font-bold tabular-nums w-14 text-center" id="val-j5">+89.6°</span>
+<button class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-white font-bold text-center active:scale-95" onclick="jogJoint(5, 1)">+</button>
+</div>
+</div>
+<div class="w-full bg-slate-950 h-1.5 rounded-full overflow-hidden border border-slate-800">
+<div class="bg-indigo-500 h-full w-[48%] transition-all" id="bar-j5"></div>
+</div>
+</div>
+<!-- J6 Brida TCP -->
+<div>
+<div class="flex justify-between items-center text-slate-400 mb-1">
+<span>J6 (Brida TCP):</span>
+<div class="flex items-center gap-1.5">
+<button class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-white font-bold text-center active:scale-95" onclick="jogJoint(6, -1)">-</button>
+<span class="text-emerald-400 font-bold tabular-nums w-14 text-center" id="val-j6">0.00°</span>
+<button class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-white font-bold text-center active:scale-95" onclick="jogJoint(6, 1)">+</button>
+</div>
+</div>
+<div class="w-full bg-slate-950 h-1.5 rounded-full overflow-hidden border border-slate-800">
+<div class="bg-emerald-500 h-full w-[50%] transition-all" id="bar-j6"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Botón FreeDrive & Reset Pose -->
+<div class="pt-3 border-t border-slate-800 space-y-2">
+<div class="flex items-center justify-between">
+<button class="w-full py-2 px-3 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-700 text-slate-300 font-bold text-xs flex items-center justify-center gap-2 transition-all" id="btn-freedrive" onclick="toggleFreeDrive()">
+<span>🔓</span>
+<span id="txt-freedrive">Activar FreeDrive (Gravedad Cero)</span>
+</button>
+</div>
+<div class="flex justify-between items-center text-[10px] text-slate-400">
+<span>Estado SIL-3:</span>
+<span class="text-emerald-400 font-bold">Monitor de Esfuerzo Activo (0.0 Nm)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- PANEL EXTENDIDO DE CONFIGURACIÓN CARTESIANA TCP & WAYPOINTS -->
+<div class="rounded-2xl bg-slate-900/70 border border-slate-800 p-5 font-mono text-xs space-y-4 shadow-xl">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+<div class="flex items-center gap-2">
+<span class="text-amber-400 text-base">🎯</span>
+<div>
+<h3 class="text-sm font-bold text-white">Ajuste Cartesiano Manual de Pose TCP (Tool Center Point)</h3>
+<p class="text-[11px] text-slate-400">Modifica coordenadas milimétricas y ángulos de orientación de herramienta en tiempo real.</p>
+</div>
+</div>
+<!-- Selector de Marco de Referencia -->
+<div class="flex items-center gap-2 text-xs">
+<span class="text-slate-400">Marco:</span>
+<select class="px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-blue-300 outline-none" id="sel-tcp-frame" onchange="changeTcpFrame(this.value)">
+<option value="BASE">BASE (Mundo Robot [0,0,0])</option>
+<option value="TOOL">TOOL / TCP (Herramienta Activa)</option>
+<option value="G54">G54 (Mordaza CNC Taller)</option>
+</select>
+</div>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+<!-- Eje X -->
+<div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+<div class="flex justify-between text-slate-400 text-[11px]">
+<span class="font-bold text-white">Eje X</span>
+<span>mm</span>
+</div>
+<input class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-white font-bold text-xs outline-none" id="input-cart-x" oninput="onCartesianInput()" step="0.5" type="number" value="142.50"/>
+<div class="flex gap-1 pt-1">
+<button class="flex-1 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-[10px] text-slate-300" onclick="nudgeCartesian('x', -10)">-10</button>
+<button class="flex-1 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-[10px] text-slate-300" onclick="nudgeCartesian('x', -1)">-1</button>
+<button class="flex-1 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-[10px] text-slate-300" onclick="nudgeCartesian('x', 1)">+1</button>
+<button class="flex-1 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-[10px] text-slate-300" onclick="nudgeCartesian('x', 10)">+10</button>
+</div>
+</div>
+<!-- Eje Y -->
+<div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+<div class="flex justify-between text-slate-400 text-[11px]">
+<span class="font-bold text-white">Eje Y</span>
+<span>mm</span>
+</div>
+<input class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-white font-bold text-xs outline-none" id="input-cart-y" oninput="onCartesianInput()" step="0.5" type="number" value="-35.20"/>
+<div class="flex gap-1 pt-1">
+<button class="flex-1 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-[10px] text-slate-300" onclick="nudgeCartesian('y', -10)">-10</button>
+<button class="flex-1 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-[10px] text-slate-300" onclick="nudgeCartesian('y', -1)">-1</button>
+<button class="flex-1 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-[10px] text-slate-300" onclick="nudgeCartesian('y', 1)">+1</button>
+<button class="flex-1 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-[10px] text-slate-300" onclick="nudgeCartesian('y', 10)">+10</button>
+</div>
+</div>
+<!-- Eje Z -->
+<div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+<div class="flex justify-between text-slate-400 text-[11px]">
+<span class="font-bold text-white">Eje Z</span>
+<span>mm</span>
+</div>
+<input class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-white font-bold text-xs outline-none" id="input-cart-z" oninput="onCartesianInput()" step="0.5" type="number" value="218.45"/>
+<div class="flex gap-1 pt-1">
+<button class="flex-1 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-[10px] text-slate-300" onclick="nudgeCartesian('z', -10)">-10</button>
+<button class="flex-1 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-[10px] text-slate-300" onclick="nudgeCartesian('z', -1)">-1</button>
+<button class="flex-1 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-[10px] text-slate-300" onclick="nudgeCartesian('z', 1)">+1</button>
+<button class="flex-1 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-[10px] text-slate-300" onclick="nudgeCartesian('z', 10)">+10</button>
+</div>
+</div>
+<!-- Rx -->
+<div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+<div class="flex justify-between text-slate-400 text-[11px]">
+<span class="font-bold text-blue-300">Rot Rx</span>
+<span>grados</span>
+</div>
+<input class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-white font-bold text-xs outline-none" id="input-cart-rx" oninput="onCartesianInput()" step="1" type="number" value="180.0"/>
+<div class="flex gap-1 pt-1">
+<button class="flex-1 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-[10px] text-slate-300" onclick="nudgeCartesian('rx', -5)">-5°</button>
+<button class="flex-1 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-[10px] text-slate-300" onclick="nudgeCartesian('rx', 5)">+5°</button>
+</div>
+</div>
+<!-- Ry -->
+<div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+<div class="flex justify-between text-slate-400 text-[11px]">
+<span class="font-bold text-blue-300">Rot Ry</span>
+<span>grados</span>
+</div>
+<input class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-white font-bold text-xs outline-none" id="input-cart-ry" oninput="onCartesianInput()" step="1" type="number" value="0.0"/>
+<div class="flex gap-1 pt-1">
+<button class="flex-1 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-[10px] text-slate-300" onclick="nudgeCartesian('ry', -5)">-5°</button>
+<button class="flex-1 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-[10px] text-slate-300" onclick="nudgeCartesian('ry', 5)">+5°</button>
+</div>
+</div>
+<!-- Rz -->
+<div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+<div class="flex justify-between text-slate-400 text-[11px]">
+<span class="font-bold text-emerald-300">Rot Rz</span>
+<span>grados</span>
+</div>
+<input class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-white font-bold text-xs outline-none" id="input-cart-rz" oninput="onCartesianInput()" step="1" type="number" value="45.0"/>
+<div class="flex gap-1 pt-1">
+<button class="flex-1 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-[10px] text-slate-300" onclick="nudgeCartesian('rz', -5)">-5°</button>
+<button class="flex-1 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-[10px] text-slate-300" onclick="nudgeCartesian('rz', 5)">+5°</button>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-2 flex-wrap gap-2">
+<div class="text-[11px] text-slate-400">
+<span>Waypoint actual: </span>
+<span class="text-emerald-400 font-bold font-mono" id="active-waypoint-name">P_APPROACH_01</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs transition-all" onclick="resetRobotPose()">
+        Restablecer Pose Cero
+      </button>
+<button class="px-4 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center gap-1.5 transition-all shadow-md" onclick="saveCurrentWaypoint()">
+<span>📌</span>
+<span>Guardar Pose como Waypoint</span>
+</button>
+</div>
+</div>
+</div></div>
+<!-- ============================================================
            VISTA 3: EDITOR & TRANSPILADOR (view-editor)
       ============================================================ -->
-      <div id="view-editor" class="hidden space-y-6">
-        
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
-          <div>
-            <span class="text-indigo-400 font-mono text-xs uppercase tracking-wider font-semibold" data-i18n="ed_step">
-              MÓDULO 03 // POSTPROCESADOR & TRANSPILADOR ROBOT
+<div class="hidden space-y-6" id="view-editor">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+<div>
+<span class="text-indigo-400 font-mono text-xs uppercase tracking-wider font-semibold" data-i18n="ed_step">
+              MÓDULO 03 // POSTPROCESADOR &amp; TRANSPILADOR ROBOT
             </span>
-            <h1 class="text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1" data-i18n="ed_title">
-              Editor & Transpilador de Código
+<h1 class="text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1" data-i18n="ed_title">
+              Editor &amp; Transpilador de Código
             </h1>
-            <p class="text-sm text-slate-400 mt-1 max-w-2xl" data-i18n="ed_subtitle">
+<p class="text-sm text-slate-400 mt-1 max-w-2xl" data-i18n="ed_subtitle">
               Convierte rutinas ISO G-code a scripts nativos para Universal Robots y Fanuc CRX.
             </p>
-          </div>
-          <div class="flex items-center gap-3 shrink-0">
-            <button onclick="copyGeneratedScript()" 
-                    class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-mono text-slate-200 flex items-center gap-2 transition-all">
-              <span>📋</span>
-              <span data-i18n="ed_btn_copy">Copiar Script</span>
-            </button>
-            <button onclick="switchView('hub')" 
-                    class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs font-mono flex items-center gap-2 shadow-lg shadow-blue-600/30 transition-all">
-              <span data-i18n="ed_btn_to_hub">Ir a Biblioteca & Retos →</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- EDITOR DUAL: G-CODE A LA IZQUIERDA, SCRIPT ROBOT A LA DERECHA -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 font-mono text-xs">
-          
-          <!-- Bloque ISO G-code -->
-          <div class="rounded-2xl bg-slate-950 border border-slate-800 overflow-hidden flex flex-col shadow-xl">
-            <div class="px-4 py-3 bg-slate-900/80 border-b border-slate-800 flex justify-between items-center">
-              <span class="text-slate-300 font-bold">📄 Código ISO G-Code (Entrada)</span>
-              <span class="text-[10px] text-blue-400">Dialecto ISO Universal</span>
-            </div>
-            <div class="p-4 bg-slate-950 text-slate-300 overflow-x-auto space-y-1 leading-relaxed">
-              <p class="text-slate-500">%</p>
-              <p class="text-blue-400">O1001 (EAGLECELEST_MECANIZADO_PROBETA)</p>
-              <p><span class="text-amber-400">G21 G90 G40 G80</span> (Métrico, Absoluto, Cancelación)</p>
-              <p><span class="text-amber-400">G54</span> (Origen Mordaza Taller)</p>
-              <p><span class="text-emerald-400">T01 M06</span> (Fresa Plana D10)</p>
-              <p><span class="text-amber-400">S12000 M03</span></p>
-              <p><span class="text-purple-400">G00 X0.000 Y0.000 Z50.000</span></p>
-              <p><span class="text-purple-400">G01 Z-5.000 F800</span></p>
-              <p><span class="text-purple-400">G01 X100.000 Y0.000 F1500</span></p>
-              <p><span class="text-purple-400">G02 X150.000 Y50.000 R50.000</span></p>
-              <p><span class="text-purple-400">G01 Z50.000</span></p>
-              <p class="text-slate-500">M30</p>
-              <p class="text-slate-500">%</p>
-            </div>
-          </div>
-
-          <!-- Bloque Transpilado Robot Script -->
-          <div class="rounded-2xl bg-slate-950 border border-blue-500/40 overflow-hidden flex flex-col shadow-xl">
-            <div class="px-4 py-3 bg-blue-950/40 border-b border-blue-500/30 flex justify-between items-center">
-              <span class="text-blue-300 font-bold">🤖 Script Nativo Universal Robots (URScript)</span>
-              <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/30 font-bold">TRANSPILADO OK</span>
-            </div>
-            <div id="robot-script-code" class="p-4 bg-slate-950 text-slate-300 overflow-x-auto space-y-1 leading-relaxed">
-              <p class="text-blue-400">def EagleCelest_Routine():</p>
-              <p class="pl-4 text-slate-500"># Calibración TCP y masa de herramienta</p>
-              <p class="pl-4 text-emerald-400">set_tcp(p[0.1425, 0.0, 0.2184, 0.0, 0.0, 0.0])</p>
-              <p class="pl-4 text-emerald-400">set_payload(1.2, [0.0, 0.0, 0.05])</p>
-              <p class="pl-4 text-slate-500"># MoveJ a punto de aproximación seguro</p>
-              <p class="pl-4 text-amber-300">movej([-0.216, -1.48, 1.61, -1.69, 1.56, 0.0], a=1.2, v=0.5)</p>
-              <p class="pl-4 text-slate-500"># MoveL trayectoria cartesiana de corte</p>
-              <p class="pl-4 text-purple-300">movel(p[0.0, 0.0, 0.05, 3.1415, 0.0, 0.785], a=0.8, v=0.025)</p>
-              <p class="pl-4 text-purple-300">movel(p[0.10, 0.0, 0.05, 3.1415, 0.0, 0.785], a=0.8, v=0.025)</p>
-              <p class="pl-4 text-purple-300">movec(p[0.15, 0.05, 0.05, 3.1415, 0.0, 0.785], r=0.05)</p>
-              <p class="pl-4 text-blue-400">end</p>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-
-      <!-- ============================================================
+</div>
+<div class="flex items-center gap-3 shrink-0">
+<button class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-mono text-slate-200 flex items-center gap-2 transition-all" onclick="copyGeneratedScript()">
+<span>📋</span>
+<span data-i18n="ed_btn_copy">Copiar Script</span>
+</button>
+<button class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs font-mono flex items-center gap-2 shadow-lg shadow-blue-600/30 transition-all" onclick="switchView('hub')"><span data-i18n="ed_btn_to_hub">Ir a Biblioteca →</span></button>
+</div>
+</div>
+<!-- EDITOR DUAL: G-CODE A LA IZQUIERDA, SCRIPT ROBOT A LA DERECHA -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 font-mono text-xs">
+<!-- Bloque ISO G-code -->
+<div class="rounded-2xl bg-slate-950 border border-slate-800 overflow-hidden flex flex-col shadow-xl">
+<div class="px-4 py-3 bg-slate-900/80 border-b border-slate-800 flex justify-between items-center">
+<span class="text-slate-300 font-bold">📄 Código ISO G-Code (Entrada)</span>
+<span class="text-[10px] text-blue-400">Dialecto ISO Universal</span>
+</div>
+<div class="p-4 bg-slate-950 text-slate-300 overflow-x-auto space-y-1 leading-relaxed">
+<p class="text-slate-500">%</p>
+<p class="text-blue-400">O1001 (EAGLECELEST_MECANIZADO_PROBETA)</p>
+<p><span class="text-amber-400">G21 G90 G40 G80</span> (Métrico, Absoluto, Cancelación)</p>
+<p><span class="text-amber-400">G54</span> (Origen Mordaza Taller)</p>
+<p><span class="text-emerald-400">T01 M06</span> (Fresa Plana D10)</p>
+<p><span class="text-amber-400">S12000 M03</span></p>
+<p><span class="text-purple-400">G00 X0.000 Y0.000 Z50.000</span></p>
+<p><span class="text-purple-400">G01 Z-5.000 F800</span></p>
+<p><span class="text-purple-400">G01 X100.000 Y0.000 F1500</span></p>
+<p><span class="text-purple-400">G02 X150.000 Y50.000 R50.000</span></p>
+<p><span class="text-purple-400">G01 Z50.000</span></p>
+<p class="text-slate-500">M30</p>
+<p class="text-slate-500">%</p>
+</div>
+</div>
+<!-- Bloque Transpilado Robot Script -->
+<div class="rounded-2xl bg-slate-950 border border-blue-500/40 overflow-hidden flex flex-col shadow-xl">
+<div class="px-4 py-3 bg-blue-950/40 border-b border-blue-500/30 flex justify-between items-center">
+<span class="text-blue-300 font-bold">🤖 Script Nativo Universal Robots (URScript)</span>
+<span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/30 font-bold">TRANSPILADO OK</span>
+</div>
+<div class="p-4 bg-slate-950 text-slate-300 overflow-x-auto space-y-1 leading-relaxed" id="robot-script-code">
+<p class="text-blue-400">def EagleCelest_Routine():</p>
+<p class="pl-4 text-slate-500"># Calibración TCP y masa de herramienta</p>
+<p class="pl-4 text-emerald-400">set_tcp(p[0.1425, 0.0, 0.2184, 0.0, 0.0, 0.0])</p>
+<p class="pl-4 text-emerald-400">set_payload(1.2, [0.0, 0.0, 0.05])</p>
+<p class="pl-4 text-slate-500"># MoveJ a punto de aproximación seguro</p>
+<p class="pl-4 text-amber-300">movej([-0.216, -1.48, 1.61, -1.69, 1.56, 0.0], a=1.2, v=0.5)</p>
+<p class="pl-4 text-slate-500"># MoveL trayectoria cartesiana de corte</p>
+<p class="pl-4 text-purple-300">movel(p[0.0, 0.0, 0.05, 3.1415, 0.0, 0.785], a=0.8, v=0.025)</p>
+<p class="pl-4 text-purple-300">movel(p[0.10, 0.0, 0.05, 3.1415, 0.0, 0.785], a=0.8, v=0.025)</p>
+<p class="pl-4 text-purple-300">movec(p[0.15, 0.05, 0.05, 3.1415, 0.0, 0.785], r=0.05)</p>
+<p class="pl-4 text-blue-400">end</p>
+</div>
+</div>
+</div>
+</div>
+<!-- ============================================================
            VISTA 4: HUB DE APRENDIZAJE & BIBLIOTECA (view-hub)
       ============================================================ -->
-      <div id="view-hub" class="hidden space-y-6">
-        
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
-          <div>
-            <span class="text-amber-400 font-mono text-xs uppercase tracking-wider font-semibold" data-i18n="hub_step">
-              CURRICULUM DIDÁCTICO & RETOS DE TALLER
-            </span>
-            <h1 class="text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1" data-i18n="hub_title">
-              Biblioteca de Probetas & Progresión
-            </h1>
-            <p class="text-sm text-slate-400 mt-1 max-w-2xl" data-i18n="hub_subtitle">
-              Acceso libre sin barreras para aprender robótica colaborativa y mecanizado CNC.
-            </p>
-          </div>
-          <div class="flex items-center gap-3 shrink-0">
-            <button onclick="switchView('home')" 
-                    class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs font-mono flex items-center gap-2 shadow-lg shadow-blue-600/30 transition-all">
-              <span data-i18n="hub_btn_back_setup">← Volver a Inicio & Proyectos</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- TARJETAS FORMATIVAS -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          
-          <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3">
-            <span class="text-2xl">🧭</span>
-            <h3 class="font-bold text-white text-base">TCP vs Coordenadas de Base</h3>
-            <p class="text-xs text-slate-400 leading-relaxed">
-              Matrices de transformación homogénea para trasladar la cinemática desde el pedestal del robot (Base) hasta la punta de corte o pinza activa (TCP).
-            </p>
-            <div class="pt-2">
-              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30">NIVEL 1 // BÁSICO</span>
-            </div>
-          </div>
-
-          <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3">
-            <span class="text-2xl">⚡</span>
-            <h3 class="font-bold text-white text-base">MoveJ (Articular) vs MoveL (Lineal)</h3>
-            <p class="text-xs text-slate-400 leading-relaxed">
-              MoveJ mueve cada motor por su trayectoria más rápida minimizando esfuerzo. MoveL fuerza al TCP en línea recta euclídea, esencial para sellado o mecanizado.
-            </p>
-            <div class="pt-2">
-              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">NIVEL 2 // INTERMEDIO</span>
-            </div>
-          </div>
-
-          <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3">
-            <span class="text-2xl">🛡️</span>
-            <h3 class="font-bold text-white text-base">Seguridad ISO/TS 15066 Cobots</h3>
-            <p class="text-xs text-slate-400 leading-relaxed">
-              Límites biomecánicos de fuerza y presión en caso de contacto accidental, sensores de par articular e interlocks virtuales SIL-3 de parada segura.
-            </p>
-            <div class="pt-2">
-              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30">NIVEL 3 // TALLER PRO</span>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-
-    </main>
-  </div>
-
-  <!-- ==================== BARRA TÁCTIL INFERIOR PARA MÓVIL ==================== -->
-  <nav class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-slate-950/95 border-t border-slate-800 backdrop-blur z-40 flex items-center justify-around px-2 text-[11px] font-mono">
-    <button onclick="switchView('home')" id="mob-btn-home" class="flex flex-col items-center gap-1 text-blue-400">
-      <span class="text-base">🏠</span>
-      <span>Inicio</span>
+<div class="hidden space-y-6" id="view-hub"><!-- Encabezado del Módulo de Aprendizaje -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+<div>
+<div class="flex items-center gap-2 text-amber-400 font-mono text-xs uppercase tracking-wider font-semibold">
+<span>📖</span>
+<span data-i18n="hub_step">ENCICLOPEDIA TÉCNICA &amp; GUÍA DIDÁCTICA INDUSTRIAL</span>
+<span class="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded border border-amber-500/30 font-bold">EAGLECELEST ACADEMY</span>
+</div>
+<h1 class="text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1" data-i18n="hub_title">
+      Manual Didáctico: Cinemática, TCP, Trayectorias &amp; CNC
+    </h1>
+<p class="text-sm text-slate-400 mt-1 max-w-3xl" data-i18n="hub_subtitle">
+      Acceso libre sin barreras. Domina la robótica colaborativa industrial (UR10e / Fanuc CRX), sistemas de referencia cartesianos, dinámicas de mecanizado CNC 5-Ejes RTCP y normativas de seguridad ISO/TS 15066.
+    </p>
+</div>
+<div class="flex items-center gap-3 shrink-0">
+<button class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs font-mono flex items-center gap-2 shadow-lg shadow-emerald-600/30 transition-all" onclick="switchView('kinematics')">
+<span>🦾</span>
+<span>Ir al Simulador 3D</span>
+</button>
+<button class="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 font-semibold text-xs font-mono flex items-center gap-2 transition-all" onclick="switchView('home')">
+<span data-i18n="hub_btn_back_setup">← Volver a Proyectos</span>
+</button>
+</div>
+</div>
+<!-- BARRA RÁPIDA DE FILTRADO / NAVEGACIÓN TEMÁTICA -->
+<div class="p-4 rounded-xl bg-gradient-to-r from-amber-500/10 via-slate-900 to-blue-900/20 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 font-mono text-xs shadow-lg">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 flex items-center justify-center text-xl shrink-0 font-bold">⭐</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="text-white font-bold text-sm">Sistema de XP Formativa &amp; Créditos de Taller</span>
+<span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-bold">ACTIVO</span>
+</div>
+<p class="text-slate-400 text-[11px] font-sans mt-0.5">Gana XP completando simulaciones 3D, calibraciones de TCP y retos CNC. Canjea <strong class="text-amber-300">100 Puntos = 50 Créditos de Taller / Simulación</strong>.</p>
+</div>
+</div>
+<div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+<div class="text-right">
+<span class="text-slate-400 text-[10px] block uppercase">Puntos Acumulados</span>
+<span class="text-amber-300 font-bold text-base tabular-nums" id="hub-xp-display">350 XP</span>
+</div>
+<button class="px-3.5 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs flex items-center gap-1.5 transition-all shadow-md active:scale-95" onclick="redeemXpPoints()">
+<span>🎁</span>
+<span>Canjear por Créditos</span>
+</button>
+</div>
+</div><div class="flex items-center gap-2 overflow-x-auto pb-2 font-mono text-xs border-b border-slate-800/80">
+<span class="text-slate-500 text-[11px] uppercase mr-2">Capítulos:</span>
+<a class="px-3 py-1.5 rounded-lg bg-blue-600/20 border border-blue-500/40 text-blue-300 hover:bg-blue-600/30 whitespace-nowrap" href="#cap-kinematics">1. Cinemática 6-DOF (J1-J6)</a>
+<a class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white whitespace-nowrap" href="#cap-tcp-frames">2. TCP vs Marcos de Referencia</a>
+<a class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white whitespace-nowrap" href="#cap-move-types">3. MoveJ, MoveL, MoveP &amp; FreeDrive</a>
+<a class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white whitespace-nowrap" href="#cap-cnc-rtcp">4. CNC 3X vs 5-Axis RTCP</a>
+<a class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white whitespace-nowrap" href="#cap-safety">5. Seguridad ISO/TS 15066 &amp; SIL-3</a>
+</div>
+<!-- =========================================================================
+     BLOQUE 1: CINEMÁTICA COBOT 6-DOF & GIRO ARTICULAR J1-J6
+     ========================================================================= -->
+<section class="p-5 sm:p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-5 shadow-xl" id="cap-kinematics">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 border border-blue-500/30 flex items-center justify-center text-xl shrink-0 font-bold font-mono">01</div>
+<div>
+<h2 class="text-lg font-bold text-white tracking-tight flex items-center gap-2">
+          Cinemática Cobot 6-DOF &amp; Articulaciones J1-J6
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30">UR10e / FANUC CRX</span>
+</h2>
+<p class="text-xs text-slate-400 mt-0.5">Función mecánica de cada servomotor rotativo, envolvente de trabajo esférica y prevención de singularidades críticas.</p>
+</div>
+</div>
+<button class="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs font-semibold flex items-center gap-2 shadow-md transition-all self-start sm:self-auto active:scale-95" onclick="launchKinematicsAction('6dof_overview')">
+<span>🎮</span> Probar Cinemática en Simulador
     </button>
-    <button onclick="switchView('kinematics')" id="mob-btn-kinematics" class="flex flex-col items-center gap-1 text-slate-400">
-      <span class="text-base">🦾</span>
-      <span>3D Kin</span>
+</div>
+<!-- Explicación de los 6 Ejes en Grid de Tarjetas -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 font-mono text-xs">
+<!-- J1 -->
+<div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+<div class="flex justify-between items-center text-blue-400 font-bold">
+<span>J1 // Base / Cintura (Pan)</span>
+<span class="text-[10px] text-slate-400">±360° (±120°/s)</span>
+</div>
+<p class="text-[11px] font-sans text-slate-300 leading-relaxed">
+        Gira todo el manipulador sobre el plano horizontal de anclaje. Determina la orientación del área de trabajo cilíndrica-esférica y el cuadrante activo de celda.
+      </p>
+</div>
+<!-- J2 -->
+<div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+<div class="flex justify-between items-center text-blue-400 font-bold">
+<span>J2 // Hombro (Shoulder)</span>
+<span class="text-[10px] text-slate-400">±360° (±120°/s)</span>
+</div>
+<p class="text-[11px] font-sans text-slate-300 leading-relaxed">
+        Eje de elevación principal del brazo superior. Soporta el mayor par estático y dinámico junto a la masa transportada (payload).
+      </p>
+</div>
+<!-- J3 -->
+<div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+<div class="flex justify-between items-center text-blue-400 font-bold">
+<span>J3 // Codo (Elbow)</span>
+<span class="text-[10px] text-slate-400">±360° (±180°/s)</span>
+</div>
+<p class="text-[11px] font-sans text-slate-300 leading-relaxed">
+        Ajusta la extensión longitudinal del antebrazo hacia el objetivo. Si J2 y J3 se alinean a 180°, se produce la temida singularidad de codo extendido.
+      </p>
+</div>
+<!-- J4 -->
+<div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+<div class="flex justify-between items-center text-indigo-400 font-bold">
+<span>J4 // Muñeca 1 (Pitch / Cabeceo)</span>
+<span class="text-[10px] text-slate-400">±360° (±180°/s)</span>
+</div>
+<p class="text-[11px] font-sans text-slate-300 leading-relaxed">
+        Inclina el cabezal hacia arriba/abajo (eje de elevación de la muñeca). Ajusta el ángulo de ataque contra la mordaza o pieza de trabajo.
+      </p>
+</div>
+<!-- J5 -->
+<div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+<div class="flex justify-between items-center text-indigo-400 font-bold">
+<span>J5 // Muñeca 2 (Yaw / Guiñada)</span>
+<span class="text-[10px] text-slate-400">±360° (±180°/s)</span>
+</div>
+<p class="text-[11px] font-sans text-slate-300 leading-relaxed">
+        Giro lateral de la muñeca. Si J5 = 0° (eje de J4 y J6 en línea paralela), se produce una singularidad de muñeca que puede descontrolar la velocidad angular.
+      </p>
+</div>
+<!-- J6 -->
+<div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+<div class="flex justify-between items-center text-emerald-400 font-bold">
+<span>J6 // Brida TCP (Roll / Giro)</span>
+<span class="text-[10px] text-slate-400">±360° continuo</span>
+</div>
+<p class="text-[11px] font-sans text-slate-300 leading-relaxed">
+        Rotación axial infinita de la herramienta o pinza de amarre. Permite atornillado continuo, rotación de antorcha o reorientación de probetas.
+      </p>
+</div>
+</div>
+<!-- Sub-bloque: Singularidades Mecánicas -->
+<div class="p-4 rounded-xl bg-slate-950/80 border border-amber-500/30 text-xs font-mono space-y-2">
+<div class="flex items-center gap-2 text-amber-300 font-bold">
+<span>⚠️</span> ALERTA INDUSTRIAL: ¿Qué es una Singularidad Cinemática y cómo evitarla?
+    </div>
+<p class="text-slate-300 font-sans text-xs leading-relaxed">
+      Ocurre cuando dos o más ejes de rotación se alinean collinearmente perdiendo un grado de libertad instantáneo (determinante Jacobiano = 0). En ese instante, para mantener una velocidad lineal constante en el TCP (MoveL), el controlador exigiría velocidades articulares teóricamente infinitas, disparando el freno por sobrecorriente. <strong class="text-amber-400">Solución didáctica:</strong> planificar waypoints con codo semi-flexionado (J3 ≠ 0°) y muñeca desalineada de la vertical (J5 ≠ 0°).
+    </p>
+</div>
+</section>
+<!-- =========================================================================
+     BLOQUE 2: TCP (TOOL CENTER POINT) VS MARCOS DE REFERENCIA
+     ========================================================================= -->
+<section class="p-5 sm:p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-5 shadow-xl" id="cap-tcp-frames">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-xl shrink-0 font-bold font-mono">02</div>
+<div>
+<h2 class="text-lg font-bold text-white tracking-tight flex items-center gap-2">
+          TCP (Tool Center Point) vs Sistemas de Referencia
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">MATRICES HOMOGÉNEAS</span>
+</h2>
+<p class="text-xs text-slate-400 mt-0.5">Vector cartesiano de compensación de herramienta (X, Y, Z, Rx, Ry, Rz) y modos de desplazamiento (Tool Frame vs Base Frame vs Datum Pieza).</p>
+</div>
+</div>
+<button class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-mono text-xs font-semibold flex items-center gap-2 shadow-md transition-all self-start sm:self-auto active:scale-95" onclick="launchKinematicsAction('tcp_calibration')">
+<span>🎯</span> Probar Calibración TCP en 3D
     </button>
-    <button onclick="switchView('editor')" id="mob-btn-editor" class="flex flex-col items-center gap-1 text-slate-400">
-      <span class="text-base">💻</span>
-      <span>Editor</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
+<!-- Tool Frame -->
+<div class="p-4 rounded-xl bg-slate-950 border border-blue-500/40 space-y-3">
+<div class="flex items-center justify-between text-blue-300 font-bold">
+<span class="text-sm">1. Tool Frame (Marco Herramienta)</span>
+<span class="px-1.5 py-0.5 rounded bg-blue-500/20 text-[10px]">TCP ACTIVO</span>
+</div>
+<p class="font-sans text-slate-300 text-xs leading-relaxed">
+        Los ejes <span class="text-blue-400 font-mono font-bold">+Z_tool, +X_tool, +Y_tool</span> se desplazan anclados a la orientación física de la herramienta activa (punta de fresa, ventosa o pinza).
+      </p>
+<div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800 text-[11px] text-slate-400 space-y-1">
+<p><strong class="text-white">Aplicación práctica:</strong> Penetración vertical en taladrado, avance en bisel o inserción de componentes sin importar la inclinación del cobot.</p>
+</div>
+</div>
+<!-- Base / World Frame -->
+<div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3">
+<div class="flex items-center justify-between text-emerald-400 font-bold">
+<span class="text-sm">2. Base Frame (Mundo / Suelo)</span>
+<span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 text-[10px]">[0, 0, 0]</span>
+</div>
+<p class="font-sans text-slate-300 text-xs leading-relaxed">
+        Ejes fijos anclados permanentemente en el centro de la brida inferior del pedestal. El eje <span class="text-emerald-400 font-mono font-bold">+Z_base</span> siempre apunta estrictamente perpendicular al suelo celeste.
+      </p>
+<div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800 text-[11px] text-slate-400 space-y-1">
+<p><strong class="text-white">Aplicación práctica:</strong> Elevaciones de seguridad (Z+ despeje), traslados horizontales paralelos a la bancada de trabajo.</p>
+</div>
+</div>
+<!-- Workpiece / Datum G54 -->
+<div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3">
+<div class="flex items-center justify-between text-amber-300 font-bold">
+<span class="text-sm">3. Workpiece (Datum G54/G55)</span>
+<span class="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[10px]">CNC WCS</span>
+</div>
+<p class="font-sans text-slate-300 text-xs leading-relaxed">
+        Origen fijado sobre la esquina superior de la mordaza o el tocho de aluminio en bruto. El código ISO G-Code opera enteramente relativo a este punto cero pieza.
+      </p>
+<div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800 text-[11px] text-slate-400 space-y-1">
+<p><strong class="text-white">Aplicación práctica:</strong> Cambio rápido de utillaje. Al mover la mordaza solo se recalibra el Datum G54 sin reprogramar las líneas de código G-Code.</p>
+</div>
+</div>
+</div>
+<!-- Ecuación de Transformación Didáctica -->
+<div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs font-mono">
+<div class="flex items-center gap-2 text-slate-300">
+<span class="text-blue-400 font-bold">T_base^tcp = T_base^flange × T_flange^tcp</span>
+<span class="text-slate-500">|</span>
+<span class="text-slate-400 font-sans">URScript: <code class="text-emerald-400 font-mono">set_tcp(p[X, Y, Z, Rx, Ry, Rz])</code></span>
+</div>
+<span class="text-[11px] text-slate-400">Vector activo probeta: X=142.5mm · Y=0.0mm · Z=218.45mm</span>
+</div>
+</section>
+<!-- =========================================================================
+     BLOQUE 3: TIPOS DE MOVIMIENTOS: MOVEJ, MOVEL, MOVEP & FREEDRIVE
+     ========================================================================= -->
+<section class="p-5 sm:p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-5 shadow-xl" id="cap-move-types">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 border border-purple-500/30 flex items-center justify-center text-xl shrink-0 font-bold font-mono">03</div>
+<div>
+<h2 class="text-lg font-bold text-white tracking-tight flex items-center gap-2">
+          Tipos de Movimientos Cinemáticos Robot
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">CONTROL DE TRAYECTORIA</span>
+</h2>
+<p class="text-xs text-slate-400 mt-0.5">Diferencias críticas entre interpolación articular rápida, cinemática lineal cartesiana, perfiles de proceso con blend y flotación libre.</p>
+</div>
+</div>
+<button class="px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-semibold flex items-center gap-2 shadow-md transition-all self-start sm:self-auto active:scale-95" onclick="launchKinematicsAction('trajectory_sim')">
+<span>📈</span> Simular Trayectorias en 3D
     </button>
-    <button onclick="switchView('hub')" id="mob-btn-hub" class="flex flex-col items-center gap-1 text-slate-400">
-      <span class="text-base">📖</span>
-      <span>Retos</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 font-mono text-xs">
+<!-- MoveJ -->
+<div class="p-4 rounded-xl bg-slate-950 border border-slate-800 flex flex-col justify-between space-y-3">
+<div>
+<div class="flex justify-between items-center text-amber-300 font-bold mb-1">
+<span class="text-sm">MoveJ (Articular)</span>
+<span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20">RÁPIDO</span>
+</div>
+<p class="font-sans text-slate-300 text-xs leading-relaxed">
+          Todos los motores arrancan y frenan en sincronía perfecta. La punta del robot describe una <strong class="text-amber-300">curva libre en el espacio</strong>, nunca una línea recta.
+        </p>
+<ul class="mt-2 text-[11px] font-sans text-slate-400 space-y-1 list-disc list-inside">
+<li>Sin riesgo de singularidad en trayectoria</li>
+<li>Máxima aceleración y menor desgaste motor</li>
+<li>Uso: Movimientos en vacío entre estaciones</li>
+</ul>
+</div>
+<div class="p-2 bg-slate-900 rounded border border-slate-800 text-[10px] text-amber-400">
+<code>movej([q1..q6], a=1.4, v=1.0)</code>
+</div>
+</div>
+<!-- MoveL -->
+<div class="p-4 rounded-xl bg-slate-950 border border-blue-500/40 flex flex-col justify-between space-y-3">
+<div>
+<div class="flex justify-between items-center text-blue-300 font-bold mb-1">
+<span class="text-sm">MoveL (Lineal)</span>
+<span class="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/20">RECTA PURA</span>
+</div>
+<p class="font-sans text-slate-300 text-xs leading-relaxed">
+          El controlador calcula en tiempo real cinemática inversa continua para forzar al TCP a describir una <strong class="text-blue-300">línea euclídea exacta</strong>.
+        </p>
+<ul class="mt-2 text-[11px] font-sans text-slate-400 space-y-1 list-disc list-inside">
+<li>Velocidad cartesiana constante (m/s)</li>
+<li>Riesgo de parada si cruza una singularidad</li>
+<li>Uso: Inserción, corte G01, fresado CNC</li>
+</ul>
+</div>
+<div class="p-2 bg-slate-900 rounded border border-slate-800 text-[10px] text-blue-300">
+<code>movel(p[X,Y,Z,Rx,Ry,Rz], a=0.8, v=0.1)</code>
+</div>
+</div>
+<!-- MoveP -->
+<div class="p-4 rounded-xl bg-slate-950 border border-slate-800 flex flex-col justify-between space-y-3">
+<div>
+<div class="flex justify-between items-center text-emerald-300 font-bold mb-1">
+<span class="text-sm">MoveP (Proceso)</span>
+<span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20">BLEND SUAVE</span>
+</div>
+<p class="font-sans text-slate-300 text-xs leading-relaxed">
+          Movimiento lineal con radio de empalme (<em class="text-emerald-300">blend radius</em>). El robot no se detiene en los vértices intermedios garantizando cordón uniforme.
+        </p>
+<ul class="mt-2 text-[11px] font-sans text-slate-400 space-y-1 list-disc list-inside">
+<li>Velocidad de avance constante garantizada</li>
+<li>Evita marcas por sobrecalentamiento de antorcha</li>
+<li>Uso: Soldadura MIG, sellado, desbarbado</li>
+</ul>
+</div>
+<div class="p-2 bg-slate-900 rounded border border-slate-800 text-[10px] text-emerald-400">
+<code>movep(p[..], r=0.02, v=0.05)</code>
+</div>
+</div>
+<!-- FreeDrive -->
+<div class="p-4 rounded-xl bg-slate-950 border border-slate-800 flex flex-col justify-between space-y-3">
+<div>
+<div class="flex justify-between items-center text-purple-300 font-bold mb-1">
+<span class="text-sm">FreeDrive (Gravedad 0)</span>
+<span class="text-[10px] px-1.5 py-0.5 rounded bg-purple-500/20">MANUAL</span>
+</div>
+<p class="font-sans text-slate-300 text-xs leading-relaxed">
+          Los motores compensan exactamente el peso del brazo y la carga calibrada. El operario puede mover el robot con la punta de los dedos para memorizar puntos.
+        </p>
+<ul class="mt-2 text-[11px] font-sans text-slate-400 space-y-1 list-disc list-inside">
+<li>Lectura continua de sensores de par en articulaciones</li>
+<li>Programación didáctica Lead-Through sin teclado</li>
+<li>Uso: Ajuste rápido de piezas y palpado táctil</li>
+</ul>
+</div>
+<div class="p-2 bg-slate-900 rounded border border-slate-800 text-[10px] text-purple-300">
+<code>freedrive_mode() // Sensorless torque</code>
+</div>
+</div>
+</div>
+</section>
+<!-- =========================================================================
+     BLOQUE 4: CNC 3 EJES VS 5 EJES CONTINUO (RTCP / TRAORI / G43.4)
+     ========================================================================= -->
+<section class="p-5 sm:p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-5 shadow-xl" id="cap-cnc-rtcp">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center text-xl shrink-0 font-bold font-mono">04</div>
+<div>
+<h2 class="text-lg font-bold text-white tracking-tight flex items-center gap-2">
+          Mecanizado CNC 3 Ejes vs 5-Ejes RTCP Continuo
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">G43.4 / TRAORI</span>
+</h2>
+<p class="text-xs text-slate-400 mt-0.5">Compensación dinámica de la longitud de herramienta al inclinar los ejes rotativos A/B o C en centros de mecanizado simultáneo.</p>
+</div>
+</div>
+<button class="px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-mono text-xs font-semibold flex items-center gap-2 shadow-md transition-all self-start sm:self-auto active:scale-95" onclick="launchKinematicsAction('rtcp_5axis')">
+<span>⚙️</span> Cargar Config 5-Ejes RTCP
     </button>
-  </nav>
-
-  <!-- ==================== MODAL DE FEEDBACK ==================== -->
-  <div id="feedback-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl font-mono text-xs">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <div class="flex items-center gap-2">
-          <span class="text-base">💬</span>
-          <span class="text-sm font-bold text-white" data-i18n="modal_feedback_title">Enviar Feedback / Sugerencias</span>
-        </div>
-        <button onclick="closeFeedbackModal()" class="text-slate-400 hover:text-white">✕</button>
-      </div>
-
-      <div class="space-y-3">
-        <div>
-          <label class="block text-slate-400 mb-1" data-i18n="modal_field_to">Canal directo:</label>
-          <div class="px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-blue-300">
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 font-mono text-xs">
+<!-- CNC 3 Ejes Estándar -->
+<div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3">
+<div class="flex items-center justify-between text-slate-200 font-bold">
+<span class="text-sm">CNC 3 Ejes (X, Y, Z Cartesiano)</span>
+<span class="text-[10px] text-slate-400 font-mono">Haas / Robodrill</span>
+</div>
+<p class="font-sans text-slate-300 text-xs leading-relaxed">
+        El husillo permanece siempre estrictamente vertical (∠ 90° relativo a la mesa). Para mecanizar zonas rebajadas o cajeras inclinadas se requiere amarrar la probeta en múltiples orientaciones manuales aumentando tolerancias acumulativas.
+      </p>
+<div class="p-3 bg-slate-900 rounded-lg border border-slate-800 font-mono text-[11px] text-blue-300 space-y-1">
+<p>G01 X50.0 Y20.0 Z-5.0 F1200</p>
+<p class="text-slate-500">; Herramienta perpendicular sin orientación angular</p>
+</div>
+</div>
+<!-- CNC 5 Ejes con RTCP -->
+<div class="p-4 rounded-xl bg-slate-950 border border-amber-500/40 space-y-3">
+<div class="flex items-center justify-between text-amber-300 font-bold">
+<span class="text-sm">CNC 5 Ejes Continuo (RTCP / TRAORI)</span>
+<span class="text-[10px] bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded font-bold">G43.4 ACTIVO</span>
+</div>
+<p class="font-sans text-slate-300 text-xs leading-relaxed">
+<strong class="text-amber-300">RTCP (Rotary Tool Center Point):</strong> El CNC compensa en microsegundos el movimiento cinemático de los ejes X/Y/Z cuando la mesa rotativa bascula (Ejes A/B/C). La punta exacta de corte nunca se desvía del perfil programado.
+      </p>
+<div class="p-3 bg-slate-900 rounded-lg border border-slate-800 font-mono text-[11px] text-amber-300 space-y-1">
+<p>G43.4 H01 (Activar RTCP automático)</p>
+<p>G01 X50.0 Y20.0 Z-5.0 <span class="text-emerald-400">A-25.0 C45.0</span> F1800</p>
+</div>
+</div>
+</div>
+</section>
+<!-- =========================================================================
+     BLOQUE 5: SEGURIDAD COLABORATIVA ISO/TS 15066 & SIL-3 INTERLOCK
+     ========================================================================= -->
+<section class="p-5 sm:p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-5 shadow-xl" id="cap-safety">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 border border-rose-500/30 flex items-center justify-center text-xl shrink-0 font-bold font-mono">05</div>
+<div>
+<h2 class="text-lg font-bold text-white tracking-tight flex items-center gap-2">
+          Seguridad Colaborativa ISO/TS 15066 &amp; SIL-3 Interlocks
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30">NORMATIVA CE</span>
+</h2>
+<p class="text-xs text-slate-400 mt-0.5">Parada de emergencia certificada, límites biomecánicos de fuerza/presión y monitoreo colaborativo en contacto con el humano.</p>
+</div>
+</div>
+<button class="px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-mono text-xs font-semibold flex items-center gap-2 shadow-md transition-all self-start sm:self-auto active:scale-95" onclick="triggerEmergencyStop()">
+<span>🚨</span> Test de Parada E-STOP SIL-3
+    </button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
+<div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+<div class="flex items-center gap-2 text-rose-400 font-bold">
+<span>1. Límites de Fuerza &amp; Potencia (PFL)</span>
+</div>
+<p class="font-sans text-slate-300 text-xs leading-relaxed">
+        ISO/TS 15066 estipula que la fuerza máxima en impacto accidental con mano o tórax nunca debe exceder <strong class="text-white">140 N</strong> ni una presión de <strong class="text-white">150 N/cm²</strong>. El cobot invierte la marcha en ≤ 12 ms.
+      </p>
+</div>
+<div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+<div class="flex items-center gap-2 text-emerald-400 font-bold">
+<span>2. Monitoreo de Velocidad &amp; Separación</span>
+</div>
+<p class="font-sans text-slate-300 text-xs leading-relaxed">
+        Mediante escáner láser de seguridad perimetral (Safety Zone). El cobot reduce automáticamente su velocidad del 100% al 25% (Modo Reducido) si un operario cruza la zona de precaución.
+      </p>
+</div>
+<div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+<div class="flex items-center gap-2 text-blue-400 font-bold">
+<span>3. Interlock M10/M11 Celda Torno</span>
+</div>
+<p class="font-sans text-slate-300 text-xs leading-relaxed">
+        Señales de seguridad cruzadas de doble canal (Cat. 4 / PL e). El plato del torno CNC jamás puede arrancar el giro mientras el brazo robótico permanezca en el interior del recinto de trabajo.
+      </p>
+</div>
+</div>
+</section>
+<!-- =========================================================================
+     BLOQUE 6: RETOS DIDÁCTICOS PRÁCTICOS PARA ESTUDIANTES Y TALLER
+     ========================================================================= -->
+<section class="p-5 sm:p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-5 shadow-xl">
+<div class="flex items-center justify-between border-b border-slate-800 pb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-xl shrink-0 font-bold font-mono">🏆</div>
+<div>
+<h2 class="text-lg font-bold text-white tracking-tight">Retos Prácticos &amp; Progresión Formativa EagleCelest</h2>
+<p class="text-xs text-slate-400 mt-0.5">Completa los 3 ejercicios guiados para certificar tus conocimientos en cinemática robótica y transpilación CNC.</p>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
+<!-- Reto 1 -->
+<div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-center mb-1">
+<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">RETO 01 // BÁSICO</span>
+<span class="text-emerald-400 text-xs">+100 pts</span>
+</div>
+<h3 class="text-sm font-bold text-white mt-2">Calibración de TCP de 4 Puntos</h3>
+<p class="font-sans text-slate-300 text-xs mt-1 leading-relaxed">
+          Toca una punta fija desde 4 orientaciones angulares distintas para calcular por mínimos cuadrados el centro de la herramienta.
+        </p>
+</div>
+<button class="w-full py-2 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-2 transition-all" onclick="startChallenge(1, 'mecanizado', 100)">
+<span>🚀</span> Iniciar Reto 01
+      </button>
+</div>
+<!-- Reto 2 -->
+<div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-center mb-1">
+<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">RETO 02 // INTERMEDIO</span>
+<span class="text-emerald-400 text-xs">+250 pts</span>
+</div>
+<h3 class="text-sm font-bold text-white mt-2">Cajera CNC &amp; Evasión de Singularidad</h3>
+<p class="font-sans text-slate-300 text-xs mt-1 leading-relaxed">
+          Programa una cajera rectangular de 100x50 mm garantizando que J5 permanezca desalineado &gt; 15° para evitar colapso de muñeca.
+        </p>
+</div>
+<button class="w-full py-2 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-2 transition-all" onclick="startChallenge(2, 'pickplace', 250)">
+<span>🚀</span> Iniciar Reto 02
+      </button>
+</div>
+<!-- Reto 3 -->
+<div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-center mb-1">
+<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">RETO 03 // AVANZADO</span>
+<span class="text-emerald-400 text-xs">+500 pts</span>
+</div>
+<h3 class="text-sm font-bold text-white mt-2">Sincronización Celda Torno M10/M11</h3>
+<p class="font-sans text-slate-300 text-xs mt-1 leading-relaxed">
+          Diseña la secuencia I/O de apertura de puerta neumática, extracción de probeta con pinza doble y rearme del ciclo de mecanizado.
+        </p>
+</div>
+<button class="w-full py-2 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-2 transition-all" onclick="startChallenge(3, 'torno', 500)">
+<span>🚀</span> Iniciar Reto 03
+      </button>
+</div>
+</div>
+</section></div>
+</main>
+</div>
+<!-- ==================== BARRA TÁCTIL INFERIOR PARA MÓVIL ==================== -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-slate-950/95 border-t border-slate-800 backdrop-blur z-40 flex items-center justify-around px-2 text-[11px] font-mono">
+<button class="flex flex-col items-center gap-1 text-blue-400" id="mob-btn-home" onclick="switchView('home')">
+<span class="text-base">🏠</span>
+<span>Inicio</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400" id="mob-btn-kinematics" onclick="switchView('kinematics')">
+<span class="text-base">🦾</span>
+<span>3D Kin</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400" id="mob-btn-editor" onclick="switchView('editor')">
+<span class="text-base">💻</span>
+<span>Editor</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400" id="mob-btn-hub" onclick="switchView('hub')"><span class="text-base">📖</span>
+<span>Biblioteca</span></button>
+</nav>
+<!-- ==================== MODAL DE FEEDBACK ==================== -->
+<div class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden" id="feedback-modal">
+<div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl font-mono text-xs">
+<div class="flex items-center justify-between border-b border-slate-800 pb-3">
+<div class="flex items-center gap-2">
+<span class="text-base">💬</span>
+<span class="text-sm font-bold text-white" data-i18n="modal_feedback_title">Enviar Feedback / Sugerencias</span>
+</div>
+<button class="text-slate-400 hover:text-white" onclick="closeFeedbackModal()">✕</button>
+</div>
+<div class="space-y-3">
+<div>
+<label class="block text-slate-400 mb-1" data-i18n="modal_field_to">Canal directo:</label>
+<div class="px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-blue-300">
             cnccobot.feedback@gmail.com
           </div>
-        </div>
-        <div>
-          <label class="block text-slate-400 mb-1" data-i18n="modal_field_type">Categoría del mensaje:</label>
-          <select id="feedback-type" class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-white outline-none">
-            <option value="Sugerencia">Sugerencia de Mejora</option>
-            <option value="Error">Informe de Error / Bug</option>
-            <option value="Educacion">Consulta Educativa / Universidad</option>
-            <option value="General">Consulta General</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-slate-400 mb-1" data-i18n="modal_field_msg">Tus impresiones o consulta:</label>
-          <textarea id="feedback-text" rows="4" placeholder="Escribe aquí tu sugerencia o duda..." class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-white placeholder-slate-500 outline-none"></textarea>
-        </div>
-      </div>
-
-      <div class="flex justify-end gap-2 pt-2">
-        <button onclick="closeFeedbackModal()" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300" data-i18n="modal_btn_cancel">
+</div>
+<div>
+<label class="block text-slate-400 mb-1" data-i18n="modal_field_type">Categoría del mensaje:</label>
+<select class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-white outline-none" id="feedback-type">
+<option value="Sugerencia">Sugerencia de Mejora</option>
+<option value="Error">Informe de Error / Bug</option>
+<option value="Educacion">Consulta Educativa / Universidad</option>
+<option value="General">Consulta General</option>
+</select>
+</div>
+<div>
+<label class="block text-slate-400 mb-1" data-i18n="modal_field_msg">Tus impresiones o consulta:</label>
+<textarea class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-white placeholder-slate-500 outline-none" id="feedback-text" placeholder="Escribe aquí tu sugerencia o duda..." rows="4"></textarea>
+</div>
+</div>
+<div class="flex justify-end gap-2 pt-2">
+<button class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300" data-i18n="modal_btn_cancel" onclick="closeFeedbackModal()">
           Cancelar
         </button>
-        <button onclick="sendFeedback()" class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold" data-i18n="modal_btn_send">
+<button class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold" data-i18n="modal_btn_send" onclick="sendFeedback()">
           Enviar por Email
         </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==================== LÓGICA JAVASCRIPT ==================== -->
-  <script>
+</div>
+</div>
+</div><!-- ==================== MODAL DE CÓDIGO FUENTE COMPLETO (index.html) ==================== -->
+<div class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden" id="source-code-modal">
+<div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-4xl w-full p-6 space-y-4 shadow-2xl font-mono text-xs max-h-[90vh] flex flex-col">
+<div class="flex items-center justify-between border-b border-slate-800 pb-3">
+<div class="flex items-center gap-2">
+<span class="text-base text-emerald-400">💾</span>
+<div>
+<span class="text-sm font-bold text-white">Código Fuente HTML Completo (index.html)</span>
+<span class="text-[10px] text-slate-400 block">Listo para copiar y subir directamente a tu repositorio de GitHub</span>
+</div>
+</div>
+<button class="text-slate-400 hover:text-white text-base px-2" onclick="closeSourceCodeModal()">✕</button>
+</div>
+<div class="text-[11px] text-slate-400 flex items-center justify-between">
+<span>Archivo: <strong class="text-blue-300">index.html</strong> (Single-file autónomo sin dependencias de backend)</span>
+<span class="text-emerald-400 font-semibold">100% Funcional</span>
+</div>
+<div class="flex-1 overflow-hidden rounded-xl border border-slate-800 bg-slate-950 flex flex-col">
+<textarea class="w-full flex-1 p-4 bg-transparent text-slate-300 font-mono text-[11px] leading-relaxed resize-none outline-none select-all" id="source-code-view" readonly=""></textarea>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-slate-800">
+<span class="text-[10px] text-slate-500">EagleCelest Orchestrator · CNC &amp; Cobot Studio v4.9 PRO</span>
+<div class="flex gap-2">
+<button class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium" onclick="closeSourceCodeModal()">
+          Cerrar
+        </button>
+<button class="px-5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold flex items-center gap-2 shadow-lg shadow-emerald-600/30 transition-all" onclick="copyFullSourceCode()">
+<span>📋</span>
+<span>Copiar Todo el Código</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- ==================== LÓGICA JAVASCRIPT ==================== -->
+<script>
     /* ------------------------------------------------------------
        DICCIONARIO DE TRADUCCIÓN BILINGÜE (i18n ES / EN)
     ------------------------------------------------------------ */
@@ -1147,11 +1678,161 @@
     }
 
     /* ------------------------------------------------------------
-       SIMULADOR CINEMÁTICO 3D INTERACTIVO
+       SIMULADOR CINEMÁTICO DIRECTO CON CADENA CINEMÁTICA REAL
+       Todos los eslabones permanecen 100% conectados de Base a TCP
     ------------------------------------------------------------ */
     let simInterval = null;
     let simRunning = false;
     let simStep = 0;
+
+    // Dimensiones de eslabones en el espacio 2D del viewport SVG (longitudes constantes)
+    const L1 = 58;  // Hombro a Codo
+    const L2 = 64;  // Codo a Muñeca
+    const L3 = 28;  // Muñeca a TCP
+    const Ltool = 14; // TCP a punta láser
+    const baseP = { x: 120, y: 190 }; // Posición fija del pedestal
+
+    function updateRobotKinematics(t) {
+      // Ángulos articulares continuos en radianes
+      const q1 = -1.95 + Math.sin(t * 0.9) * 0.28;   // Eslabón 1 (Hombro J2)
+      const q2 = 1.05 + Math.cos(t * 0.7) * 0.35;    // Eslabón 2 relativo a Eslabón 1 (Codo J3)
+      const q3 = 0.85 + Math.sin(t * 1.2) * 0.25;    // Eslabón 3 relativo a Eslabón 2 (Muñeca J4)
+      const qTool = 0.55;                             // Orientación fija del cabezal
+
+      // Cinemática directa (Forward Kinematics): cada punto depende estrictamente del anterior
+      const j1 = {
+        x: baseP.x + L1 * Math.cos(q1),
+        y: baseP.y + L1 * Math.sin(q1)
+      };
+
+      const angle2 = q1 + q2;
+      const j2 = {
+        x: j1.x + L2 * Math.cos(angle2),
+        y: j1.y + L2 * Math.sin(angle2)
+      };
+
+      const angle3 = angle2 + q3;
+      const j3 = {
+        x: j2.x + L3 * Math.cos(angle3),
+        y: j2.y + L3 * Math.sin(angle3)
+      };
+
+      const angleTool = angle3 + qTool;
+      const jLaser = {
+        x: j3.x + Ltool * Math.cos(angleTool),
+        y: j3.y + Ltool * Math.sin(angleTool)
+      };
+
+      // 1. Actualizar Eslabón 1 (Base -> Joint 1)
+      const link1 = document.getElementById('link-1');
+      const joint1 = document.getElementById('joint-1');
+      if (link1 && joint1) {
+        link1.setAttribute('x1', baseP.x);
+        link1.setAttribute('y1', baseP.y);
+        link1.setAttribute('x2', j1.x);
+        link1.setAttribute('y2', j1.y);
+        joint1.setAttribute('cx', j1.x);
+        joint1.setAttribute('cy', j1.y);
+      }
+
+      // 2. Actualizar Eslabón 2 (Joint 1 -> Joint 2)
+      const link2 = document.getElementById('link-2');
+      const joint2 = document.getElementById('joint-2');
+      if (link2 && joint2) {
+        link2.setAttribute('x1', j1.x);
+        link2.setAttribute('y1', j1.y);
+        link2.setAttribute('x2', j2.x);
+        link2.setAttribute('y2', j2.y);
+        joint2.setAttribute('cx', j2.x);
+        joint2.setAttribute('cy', j2.y);
+      }
+
+      // 3. Actualizar Eslabón 3 (Joint 2 -> Joint 3 Muñeca)
+      const link3 = document.getElementById('link-3');
+      const joint3 = document.getElementById('joint-3');
+      if (link3 && joint3) {
+        link3.setAttribute('x1', j2.x);
+        link3.setAttribute('y1', j2.y);
+        link3.setAttribute('x2', j3.x);
+        link3.setAttribute('y2', j3.y);
+        joint3.setAttribute('cx', j3.x);
+        joint3.setAttribute('cy', j3.y);
+      }
+
+      // 4. Actualizar Eslabón TCP (Joint 3 -> Brida/Punta TCP)
+      const linkTcp = document.getElementById('link-tcp');
+      const jointTcp = document.getElementById('joint-tcp');
+      if (linkTcp && jointTcp) {
+        linkTcp.setAttribute('x1', j3.x);
+        linkTcp.setAttribute('y1', j3.y);
+        linkTcp.setAttribute('x2', jLaser.x);
+        linkTcp.setAttribute('y2', jLaser.y);
+        jointTcp.setAttribute('cx', jLaser.x);
+        jointTcp.setAttribute('cy', jLaser.y);
+      }
+
+      // 5. Actualizar Haz Láser
+      const beam = document.getElementById('laser-beam');
+      const tip = document.getElementById('laser-tip');
+      if (beam && tip) {
+        const beamEndX = jLaser.x + 8 * Math.cos(angleTool);
+        const beamEndY = jLaser.y + 8 * Math.sin(angleTool);
+        beam.setAttribute('x1', jLaser.x);
+        beam.setAttribute('y1', jLaser.y);
+        beam.setAttribute('x2', beamEndX);
+        beam.setAttribute('y2', beamEndY);
+        tip.setAttribute('cx', beamEndX);
+        tip.setAttribute('cy', beamEndY);
+      }
+
+      // Actualizar Telemetría Cartesiana en milímetros
+      const tcpX = (130 + (jLaser.x - 180) * 1.5).toFixed(2);
+      const tcpY = (-30 + Math.sin(t * 0.8) * 15).toFixed(2);
+      const tcpZ = (210 - (jLaser.y - 130) * 1.8).toFixed(2);
+
+      const elX = document.getElementById('tcp-x');
+      const elY = document.getElementById('tcp-y');
+      const elZ = document.getElementById('tcp-z');
+      if (elX) elX.textContent = tcpX;
+      if (elY) elY.textContent = tcpY;
+      if (elZ) elZ.textContent = tcpZ;
+
+      // Telemetría articular J1-J6 (en grados estándar)
+      const degJ1 = (-12.4 + Math.sin(t * 0.8) * 14).toFixed(1);
+      const degJ2 = ((q1 + Math.PI / 2) * 180 / Math.PI - 90).toFixed(1);
+      const degJ3 = (q2 * 180 / Math.PI).toFixed(1);
+      const degJ4 = (q3 * 180 / Math.PI - 90).toFixed(1);
+      const degJ5 = (89.6 + Math.cos(t) * 6).toFixed(1);
+      const degJ6 = (Math.sin(t * 1.5) * 15).toFixed(1);
+
+      const valJ1 = document.getElementById('val-j1');
+      const valJ2 = document.getElementById('val-j2');
+      const valJ3 = document.getElementById('val-j3');
+      const valJ4 = document.getElementById('val-j4');
+      const valJ5 = document.getElementById('val-j5');
+      const valJ6 = document.getElementById('val-j6');
+
+      if (valJ1) valJ1.textContent = degJ1 + "°";
+      if (valJ2) valJ2.textContent = degJ2 + "°";
+      if (valJ3) valJ3.textContent = degJ3 + "°";
+      if (valJ4) valJ4.textContent = degJ4 + "°";
+      if (valJ5) valJ5.textContent = degJ5 + "°";
+      if (valJ6) valJ6.textContent = degJ6 + "°";
+
+      const barJ1 = document.getElementById('bar-j1');
+      const barJ2 = document.getElementById('bar-j2');
+      const barJ3 = document.getElementById('bar-j3');
+      const barJ4 = document.getElementById('bar-j4');
+      const barJ5 = document.getElementById('bar-j5');
+      const barJ6 = document.getElementById('bar-j6');
+
+      if (barJ1) barJ1.style.width = Math.min(100, Math.max(10, 50 + parseFloat(degJ1) * 1.5)) + '%';
+      if (barJ2) barJ2.style.width = Math.min(100, Math.max(10, 50 + parseFloat(degJ2) * 0.8)) + '%';
+      if (barJ3) barJ3.style.width = Math.min(100, Math.max(10, 50 + parseFloat(degJ3) * 0.6)) + '%';
+      if (barJ4) barJ4.style.width = Math.min(100, Math.max(10, 50 + parseFloat(degJ4) * 0.6)) + '%';
+      if (barJ5) barJ5.style.width = Math.min(100, Math.max(10, 50 + (parseFloat(degJ5) - 90) * 1.5)) + '%';
+      if (barJ6) barJ6.style.width = Math.min(100, Math.max(10, 50 + parseFloat(degJ6) * 1.2)) + '%';
+    }
 
     function toggleKinematicsSim() {
       const btn = document.getElementById('btn-toggle-sim');
@@ -1163,33 +1844,9 @@
         txt.textContent = currentLanguage === 'es' ? "Pausar Simulación" : "Pause Simulation";
 
         simInterval = setInterval(() => {
-          simStep += 0.08;
-          const xVal = (140 + Math.sin(simStep) * 20).toFixed(2);
-          const yVal = (-30 + Math.cos(simStep) * 25).toFixed(2);
-          const zVal = (210 + Math.sin(simStep * 0.5) * 15).toFixed(2);
-          
-          document.getElementById('tcp-x').textContent = xVal;
-          document.getElementById('tcp-y').textContent = yVal;
-          document.getElementById('tcp-z').textContent = zVal;
-
-          const j1 = (-12 + Math.sin(simStep) * 15).toFixed(1);
-          const j2 = (-85 + Math.cos(simStep * 0.7) * 10).toFixed(1);
-          const j3 = (92 + Math.sin(simStep * 0.5) * 12).toFixed(1);
-          const j4 = (-97 + Math.cos(simStep) * 8).toFixed(1);
-
-          document.getElementById('val-j1').textContent = j1 + "°";
-          document.getElementById('val-j2').textContent = j2 + "°";
-          document.getElementById('val-j3').textContent = j3 + "°";
-          document.getElementById('val-j4').textContent = j4 + "°";
-
-          const link2 = document.getElementById('link-2');
-          if (link2) {
-            const newX = 135 + Math.sin(simStep) * 10;
-            const newY = 60 + Math.cos(simStep) * 10;
-            link2.setAttribute('x2', newX);
-            link2.setAttribute('y2', newY);
-          }
-        }, 100);
+          simStep += 0.05;
+          updateRobotKinematics(simStep);
+        }, 50);
       } else {
         simRunning = false;
         clearInterval(simInterval);
@@ -1260,7 +1917,7 @@
         datum: "G54",
         tool: "T01_Flat_D10",
         author: "EagleCelest",
-        version: "4.7"
+        version: "4.8"
       };
       const blob = new Blob([JSON.stringify(proj, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
@@ -1294,7 +1951,7 @@
     function sendFeedback() {
       const type = document.getElementById('feedback-type').value;
       const text = document.getElementById('feedback-text').value;
-      const subject = encodeURIComponent("[CNC & Cobot Studio v4.7] " + type);
+      const subject = encodeURIComponent("[CNC & Cobot Studio v4.8] " + type);
       const body = encodeURIComponent(text + "\n\n---\nEnviado desde CNC & Cobot Studio Web App");
       window.location.href = `mailto:cnccobot.feedback@gmail.com?subject=${subject}&body=${body}`;
       closeFeedbackModal();
@@ -1317,6 +1974,7 @@
     document.addEventListener('DOMContentLoaded', () => {
       const savedLang = localStorage.getItem('cnc_cobot_lang') || 'es';
       switchLanguage(savedLang);
+      updateRobotKinematics(0);
     });
   </script>
 </body>
