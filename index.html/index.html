@@ -1,1108 +1,738 @@
 <!DOCTYPE html>
-<html lang="es" class="dark">
+<html lang="es" class="h-full bg-slate-950 text-slate-100">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CNC & Cobot Studio - Created by EagleCelest</title>
-  
-  <!-- Tailwind CSS CDN -->
+  <title>CNC & Cobot Studio v4.3 - Universal Kinematics & Robotics Orchestrator</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Google Fonts & Iconos Lucide -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-  <script src="https://unpkg.com/lucide@latest"></script>
-
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Space Grotesk"', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'monospace']
-          }
-        }
-      }
-    }
-  </script>
-
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      background-color: #070e1d;
-      color: #e2e8f0;
-      font-family: 'Space Grotesk', sans-serif;
-      overflow-x: hidden;
-    }
-    .custom-scroll::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    .custom-scroll::-webkit-scrollbar-track {
-      background: #0c1322;
-    }
-    .custom-scroll::-webkit-scrollbar-thumb {
-      background: #232d42;
-      border-radius: 3px;
-    }
-    .grid-bg {
-      background-size: 24px 24px;
-      background-image: 
-        linear-gradient(to right, rgba(35, 45, 66, 0.3) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(35, 45, 66, 0.3) 1px, transparent 1px);
-    }
-    .pulse-dot {
-      box-shadow: 0 0 10px rgba(34, 197, 94, 0.7);
-    }
+    body { font-family: 'Space Grotesk', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .tabular-nums { font-variant-numeric: tabular-nums; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #070e1d; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col bg-[#070e1d] text-slate-200 antialiased selection:bg-blue-600 selection:text-white pb-16 md:pb-0">
+<body class="h-full flex flex-col bg-[#070e1d] text-slate-200 antialiased select-none overflow-x-hidden">
 
-  <!-- TOP BAR GLOBAL -->
-  <header class="h-16 border-b border-[#232d42] bg-[#0c1322]/95 backdrop-blur sticky top-0 z-40 flex items-center justify-between px-3 sm:px-4">
-    <div class="flex items-center space-x-2 sm:space-x-4">
-      
-      <!-- LOGO OFICIAL EMBEBIDO + TÍTULOS -->
-      <div class="flex items-center space-x-2.5 sm:space-x-3 cursor-pointer" onclick="switchView('setup')">
-        <div class="relative w-9 h-9 sm:w-10 sm:h-10 flex-shrink-0 rounded-xl overflow-hidden border border-cyan-500/30 bg-slate-900 shadow-lg shadow-cyan-500/10 flex items-center justify-center p-0.5">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" class="w-full h-full">
-            <defs>
-              <linearGradient id="hdrCobotBg" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#0a101f"/>
-                <stop offset="100%" stop-color="#030712"/>
-              </linearGradient>
-              <linearGradient id="hdrCyanBlue" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#00f2fe"/>
-                <stop offset="50%" stop-color="#4facfe"/>
-                <stop offset="100%" stop-color="#2563eb"/>
-              </linearGradient>
-              <filter id="hdrCobotGlow" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="6" result="blur"/>
-                <feComposite in="SourceGraphic" in2="blur" operator="over"/>
-              </filter>
-            </defs>
-            <rect width="400" height="400" rx="48" fill="url(#hdrCobotBg)"/>
-            <rect width="400" height="400" rx="48" fill="none" stroke="#1e293b" stroke-width="3"/>
-            <circle cx="200" cy="200" r="140" fill="none" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="4 8"/>
-            <circle cx="200" cy="200" r="90" fill="none" stroke="#2563eb" stroke-width="1" stroke-opacity="0.3"/>
-            <path d="M 140 310 L 260 310 L 245 285 L 155 285 Z" fill="#1e293b" stroke="#38bdf8" stroke-width="2.5"/>
-            <circle cx="200" cy="265" r="22" fill="#0f172a" stroke="url(#hdrCyanBlue)" stroke-width="4"/>
-            <circle cx="200" cy="265" r="9" fill="#38bdf8"/>
-            <path d="M 190 265 L 135 175 L 158 160 L 210 252 Z" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
-            <circle cx="145" cy="170" r="26" fill="#0b1329" stroke="url(#hdrCyanBlue)" stroke-width="4.5" filter="url(#hdrCobotGlow)"/>
-            <circle cx="145" cy="170" r="10" fill="#00f2fe"/>
-            <path d="M 145 170 L 255 110 L 268 128 L 155 188 Z" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
-            <circle cx="260" cy="120" r="18" fill="#0b1329" stroke="url(#hdrCyanBlue)" stroke-width="3.5"/>
-            <circle cx="260" cy="120" r="7" fill="#38bdf8"/>
-            <path d="M 260 120 L 290 145" stroke="#94a3b8" stroke-width="8" stroke-linecap="round"/>
-            <circle cx="295" cy="150" r="12" fill="#0f172a" stroke="#10b981" stroke-width="3"/>
-            <path d="M 290 162 L 285 180 L 295 180" fill="none" stroke="#38bdf8" stroke-width="3"/>
-            <path d="M 300 162 L 305 180 L 295 180" fill="none" stroke="#38bdf8" stroke-width="3"/>
-            <circle cx="295" cy="195" r="4" fill="#10b981" filter="url(#hdrCobotGlow)"/>
-            <path d="M 295 195 C 330 250, 270 290, 200 290" fill="none" stroke="#10b981" stroke-width="2" stroke-dasharray="4 4"/>
-          </svg>
-        </div>
-        <div>
-          <div class="flex items-center gap-1.5 sm:gap-2">
-            <span class="text-white text-xs sm:text-base leading-none font-bold tracking-wider font-mono">CNC &amp; COBOT STUDIO</span>
-            <span class="px-1.5 py-0.5 text-[9px] sm:text-[10px] font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 rounded font-mono">v4.2 PRO</span>
-          </div>
-          <span class="text-slate-400 text-[10px] sm:text-[11px] block font-mono tracking-wide mt-0.5 truncate max-w-[170px] sm:max-w-none">Created by EagleCelest &middot; Universal Orchestrator</span>
-        </div>
+  <!-- ==================== BANNER MÓVIL INFORMATIVO (Visible solo en smartphones) ==================== -->
+  <div class="md:hidden bg-gradient-to-r from-blue-900/90 via-indigo-950 to-slate-900 border-b border-blue-500/30 px-3 py-2 text-xs flex items-center justify-between text-blue-200">
+    <div class="flex items-center gap-2">
+      <span class="text-sm">📱</span>
+      <span><strong class="text-white">Modo Portátil:</strong> Optimizado para Tablet y PC de taller. Próximamente app nativa.</span>
+    </div>
+    <span class="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 font-mono">v4.3</span>
+  </div>
+
+  <!-- ==================== CABECERA PRINCIPAL (TOP BAR) ==================== -->
+  <header class="h-16 border-b border-slate-800/80 bg-slate-950/90 backdrop-blur px-4 flex items-center justify-between shrink-0 sticky top-0 z-30">
+    
+    <!-- Identidad y Logotipo Oficial EagleCelest -->
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 p-0.5 shadow-lg shadow-blue-500/20 flex items-center justify-center">
+        <!-- SVG Logotipo Oficial: Brazo Cobot 6-DOF + Láser TCP -->
+        <svg class="w-7 h-7 text-white" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 56h40" stroke="#38bdf8" stroke-width="3"/>
+          <path d="M22 56V48h20v8" fill="#1e293b"/>
+          <circle cx="32" cy="44" r="5" fill="#3b82f6"/>
+          <line x1="32" y1="39" x2="24" y2="28" stroke="#60a5fa" stroke-width="3"/>
+          <circle cx="24" cy="28" r="4" fill="#38bdf8"/>
+          <line x1="24" y1="28" x2="42" y2="18" stroke="#93c5fd" stroke-width="3"/>
+          <circle cx="42" cy="18" r="3.5" fill="#38bdf8"/>
+          <line x1="42" y1="18" x2="48" y2="24" stroke="#e2e8f0" stroke-width="2.5"/>
+          <circle cx="48" cy="24" r="2.5" fill="#10b981"/>
+          <path d="M48 24l8 8" stroke="#10b981" stroke-dasharray="2 2" stroke-width="2"/>
+        </svg>
       </div>
-
-      <!-- BADGE DE OPTIMIZACIÓN PLATAFORMAS (HEADER PILL) -->
-      <div class="hidden xl:flex items-center space-x-2 px-2.5 py-1 rounded-full bg-[#141b2b] border border-cyan-500/30 text-[11px] font-mono text-cyan-300">
-        <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
-        <span class="text-slate-300">Optimizado para Web &amp; Tablet</span>
-        <span class="text-slate-600">|</span>
-        <span class="text-slate-400">Próximamente App Móvil Nativa</span>
-      </div>
-
-      <div class="hidden lg:flex items-center space-x-3 text-xs font-mono border-l border-[#232d42] pl-4">
-        <div class="flex items-center space-x-1.5 bg-[#141b2b] px-2.5 py-1 rounded border border-[#232d42]">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-dot"></span>
-          <span class="text-slate-400">BUS:</span>
-          <span class="text-emerald-400 font-semibold">500 Hz RTDE Ok</span>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="font-bold tracking-tight text-white text-base">CNC & COBOT STUDIO</span>
+          <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 font-semibold border border-blue-500/30">v4.3 PRO</span>
         </div>
-        <div class="flex items-center space-x-1.5 bg-[#141b2b] px-2.5 py-1 rounded border border-[#232d42]">
-          <i data-lucide="zap" class="w-3.5 h-3.5 text-blue-400"></i>
-          <span class="text-slate-400">KERNEL:</span>
-          <span class="text-blue-400 font-semibold">0ms &bull; WASM Local RT</span>
-        </div>
+        <p class="text-[11px] text-slate-400 font-mono">
+          Created by <span class="text-amber-400 font-semibold">EagleCelest</span> · <span data-i18n="badge_title">Universal Orchestrator</span>
+        </p>
       </div>
     </div>
 
-    <!-- ACCIONES SUPERIORES (ROLES, FEEDBACK, ESTOP) -->
-    <div class="flex items-center space-x-2 sm:space-x-3">
-      <!-- Selector de Rol (Estudiante 0€ vs Taller Pro) -->
-      <div class="hidden sm:flex bg-[#141b2b] p-0.5 rounded-lg border border-[#232d42] text-xs font-medium">
-        <button id="btn-mode-edu" onclick="setAppMode('edu')" class="px-2.5 sm:px-3 py-1.5 rounded bg-blue-600 text-white shadow font-semibold flex items-center space-x-1.5 transition">
-          <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>
-          <span>Estudiante (0€)</span>
+    <!-- Centro Técnico: Estados de Bus y Kernel RT -->
+    <div class="hidden lg:flex items-center gap-3 font-mono text-xs">
+      <div class="px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800 flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="text-slate-400">BUS:</span>
+        <span class="text-emerald-400 font-semibold">500 Hz RTDE Ok</span>
+      </div>
+      <div class="px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800 flex items-center gap-2">
+        <span class="text-blue-400">⚡ KERNEL:</span>
+        <span class="text-slate-300">0ms · WASM Local RT</span>
+      </div>
+    </div>
+
+    <!-- Derecha: Selector Idioma, Selector de Rol, Feedback & E-Stop -->
+    <div class="flex items-center gap-2 sm:gap-3">
+      
+      <!-- SELECTOR BILINGÜE ES / EN -->
+      <div class="flex items-center bg-slate-900/90 border border-slate-700/80 rounded-lg p-0.5 text-xs font-mono shadow-inner">
+        <button id="lang-btn-es" onclick="switchLanguage('es')" 
+                class="flex items-center gap-1 px-2 py-1 rounded bg-blue-600/40 text-blue-300 font-semibold border border-blue-500/50 transition-all">
+          <span>🇪🇸</span>
+          <span>ES</span>
         </button>
-        <button id="btn-mode-pro" onclick="setAppMode('pro')" class="px-2.5 sm:px-3 py-1.5 rounded text-slate-400 hover:text-white transition flex items-center space-x-1.5">
-          <i data-lucide="factory" class="w-3.5 h-3.5"></i>
-          <span>Taller Pro</span>
+        <button id="lang-btn-en" onclick="switchLanguage('en')" 
+                class="flex items-center gap-1 px-2 py-1 rounded text-slate-400 hover:text-slate-200 transition-all">
+          <span>🇬🇧</span>
+          <span>EN</span>
         </button>
       </div>
 
-      <!-- Botón de Feedback Beta -->
-      <a href="mailto:cnccobot.feedback@gmail.com?subject=Feedback%20CNC%26Cobot%20Studio%20v4.2" target="_blank" class="hidden sm:flex items-center space-x-1.5 bg-[#141b2b] hover:bg-[#1b2438] px-3 py-1.5 rounded-lg border border-[#232d42] text-xs font-mono text-cyan-300 transition">
-        <i data-lucide="message-square" class="w-3.5 h-3.5 text-cyan-400"></i>
-        <span>Feedback Beta</span>
-      </a>
+      <!-- Selector de Rol (Estudiante / Taller Pro) -->
+      <div class="hidden sm:flex items-center bg-slate-900 border border-slate-800 rounded-lg p-0.5 text-xs font-mono">
+        <button id="role-student-btn" onclick="setRole('student')" 
+                class="px-2.5 py-1 rounded bg-blue-600 text-white font-medium shadow-sm transition-all flex items-center gap-1.5">
+          <span>🎓</span>
+          <span data-i18n="role_student">Estudiante (0€)</span>
+        </button>
+        <button id="role-pro-btn" onclick="setRole('pro')" 
+                class="px-2.5 py-1 rounded text-slate-400 hover:text-white transition-all flex items-center gap-1.5">
+          <span>🏭</span>
+          <span data-i18n="role_pro">Taller Pro</span>
+        </button>
+      </div>
 
-      <!-- E-STOP -->
-      <button id="btn-estop" onclick="triggerEStop()" class="bg-red-600 hover:bg-red-700 text-white font-bold px-3 sm:px-4 py-1.5 rounded-lg flex items-center space-x-1.5 sm:space-x-2 border border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.4)] transition active:scale-95">
-        <i data-lucide="octagon-alert" class="w-4 h-4"></i>
-        <span class="font-mono text-xs tracking-wider">E-STOP</span>
+      <!-- Botón de Feedback Directo -->
+      <button onclick="openFeedbackModal()" 
+              class="px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-mono text-slate-300 hover:text-white flex items-center gap-1.5 transition-all"
+              title="cnccobot.feedback@gmail.com">
+        <span>💬</span>
+        <span class="hidden md:inline" data-i18n="btn_feedback">Feedback</span>
+      </button>
+
+      <!-- Botón E-STOP SIL-3 -->
+      <button onclick="triggerEmergencyStop()" 
+              class="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold font-mono tracking-wider flex items-center gap-1.5 shadow-lg shadow-rose-600/30 transition-all active:scale-95">
+        <span class="w-2 h-2 rounded-full bg-white animate-ping"></span>
+        <span>E-STOP</span>
       </button>
     </div>
   </header>
 
-  <!-- CUERPO PRINCIPAL: SIDEBAR + VISTAS DINÁMICAS -->
+  <!-- ==================== CUERPO PRINCIPAL (SIDEBAR + WORKSPACE) ==================== -->
   <div class="flex-1 flex overflow-hidden">
     
-    <!-- BARRA LATERAL (Visible en tablets/escritorio 'md:flex', oculta en móviles 'hidden') -->
-    <aside class="hidden md:flex w-64 bg-[#0c1322] border-r border-[#232d42] flex-col justify-between shrink-0 select-none">
-      <div class="p-4 space-y-6">
-        <div class="text-[11px] font-mono text-slate-500 uppercase tracking-wider font-semibold">Módulos de Trabajo</div>
-        
-        <nav class="space-y-1.5" id="sidebar-nav">
-          <button onclick="switchView('setup')" id="nav-setup" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium bg-blue-600/15 text-blue-400 border border-blue-500/30 transition text-left">
-            <i data-lucide="folder-plus" class="w-4 h-4 shrink-0"></i>
-            <span>Nuevo Proyecto &amp; Setup</span>
-          </button>
-          
-          <button onclick="switchView('console')" id="nav-console" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-[#141b2b] transition text-left">
-            <i data-lucide="activity" class="w-4 h-4 shrink-0"></i>
-            <span>Centro Cinemático 3D</span>
-          </button>
+    <!-- Barra Lateral de Navegación (Sidebar) -->
+    <aside class="w-64 border-r border-slate-800/80 bg-slate-950/60 flex flex-col justify-between shrink-0 hidden md:flex">
+      <div class="p-3 space-y-6">
+        <div>
+          <p class="px-3 text-[10px] font-mono tracking-wider text-slate-400 uppercase mb-2" data-i18n="nav_workspace_heading">Módulos de Trabajo</p>
+          <nav class="space-y-1">
+            <button onclick="switchView('setup')" id="nav-btn-setup" 
+                    class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg bg-blue-600/20 text-blue-300 border border-blue-500/30 text-xs font-medium transition-all text-left">
+              <span class="text-sm">📁</span>
+              <span data-i18n="mod_new_project">Nuevo Proyecto & Setup</span>
+            </button>
+            <button onclick="switchView('kinematics')" id="nav-btn-kinematics" 
+                    class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-900/80 text-xs font-medium transition-all text-left">
+              <span class="text-sm">🦾</span>
+              <span data-i18n="mod_kinematics">Centro Cinemático 3D</span>
+            </button>
+            <button onclick="switchView('editor')" id="nav-btn-editor" 
+                    class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-900/80 text-xs font-medium transition-all text-left">
+              <span class="text-sm">💻</span>
+              <span data-i18n="mod_editor">Editor & Transpilador</span>
+            </button>
+            <button onclick="switchView('hub')" id="nav-btn-hub" 
+                    class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-900/80 text-xs font-medium transition-all text-left">
+              <span class="text-sm">📖</span>
+              <span data-i18n="mod_hub">Hub de Aprendizaje</span>
+            </button>
+          </nav>
+        </div>
 
-          <button onclick="switchView('editor')" id="nav-editor" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-[#141b2b] transition text-left">
-            <i data-lucide="code" class="w-4 h-4 shrink-0"></i>
-            <span>Editor &amp; Transpilador</span>
-          </button>
-
-          <button onclick="switchView('academy')" id="nav-academy" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-[#141b2b] transition text-left">
-            <i data-lucide="book-open" class="w-4 h-4 shrink-0"></i>
-            <span>Hub de Aprendizaje</span>
-          </button>
-        </nav>
+        <!-- Misión Formativa EagleCelest -->
+        <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-800 text-xs space-y-2">
+          <div class="flex items-center gap-1.5 text-amber-400 font-semibold">
+            <span>🛡️</span>
+            <span data-i18n="sidebar_mission_title">Misión Educativa</span>
+          </div>
+          <p class="text-[11px] text-slate-400 leading-relaxed" data-i18n="sidebar_mission_desc">
+            Acceso libre y 100% gratuito para estudiantes y autónomos. Democratización técnica por EagleCelest.
+          </p>
+        </div>
       </div>
 
-      <div class="p-4 border-t border-[#232d42] bg-[#070e1d] text-xs font-mono space-y-2">
-        <div class="flex justify-between items-center text-slate-400">
-          <span>HARDWARE ACTIVO:</span>
-          <span class="text-emerald-400 font-bold flex items-center" id="badge-hw-status">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block mr-1.5 pulse-dot"></span>CONECTADO
-          </span>
+      <!-- Pie de Sidebar: Estado de Hardware e Info -->
+      <div class="p-3 border-t border-slate-800/80 bg-slate-950 font-mono text-[11px] space-y-2">
+        <div class="flex items-center justify-between text-slate-400">
+          <span data-i18n="hardware_status">HARDWARE:</span>
+          <span class="text-emerald-400 font-semibold">● ONLINE</span>
         </div>
-        <div class="text-slate-200 font-bold text-sm truncate" id="side-machine-name">UR10e Cobot (6-DOF)</div>
-        <div class="flex justify-between text-[11px] text-slate-500">
+        <p class="text-slate-300 font-medium truncate">UR10e Cobot (6-DOF)</p>
+        <div class="flex justify-between text-[10px] text-slate-400">
           <span>Interlock SIL-3:</span>
           <span class="text-emerald-400 font-semibold">ARMADO</span>
         </div>
-
-        <button onclick="window.triggerSurveyModal()" class="w-full mt-2 py-1.5 px-2 bg-[#141b2b] hover:bg-[#1b2438] border border-amber-500/30 text-amber-300 rounded text-[11px] font-mono flex items-center justify-center space-x-1.5 transition">
-          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-400"></i>
-          <span>[Simular 14 Días / Encuesta]</span>
-        </button>
-
-        <div class="pt-2 border-t border-[#232d42]/60 text-[10px] text-slate-400 text-center font-mono">
-          Creado por <span class="text-blue-400 font-bold">EagleCelest</span>
+        <div class="pt-1 text-center text-[10px] text-slate-400">
+          Creado por <strong class="text-amber-400">EagleCelest</strong>
         </div>
       </div>
     </aside>
 
-    <!-- ÁREA PRINCIPAL CON BANNER RESPONSIVE Y VISTAS -->
-    <main class="flex-1 overflow-y-auto custom-scroll p-3 sm:p-6 bg-[#070e1d]" id="main-content-view">
+    <!-- Espacio Central de Trabajo Dinámico -->
+    <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6">
+
+      <!-- BANNER DE ENCUESTA DIFERIDA (14 Días / Inteligente) -->
+      <div id="survey-banner" class="hidden rounded-xl bg-gradient-to-r from-amber-500/10 via-slate-900 to-blue-950 border border-amber-500/30 p-4 relative text-xs">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">⭐</span>
+            <div>
+              <p class="font-bold text-white text-sm" data-i18n="survey_title">¿Cómo está siendo tu experiencia con CNC & Cobot Studio?</p>
+              <p class="text-slate-300" data-i18n="survey_desc">Ayúdanos a perfeccionar la herramienta con 1 minuto de tu opinión.</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <button onclick="openFeedbackModal('Encuesta')" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold font-mono transition-all" data-i18n="btn_survey_start">
+              Completar Encuesta
+            </button>
+            <button onclick="dismissSurvey()" class="px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300" title="Cerrar">✕</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cabecera de Página Actual -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+        <div>
+          <span class="text-blue-400 font-mono text-xs uppercase tracking-wider font-semibold" data-i18n="step_01">
+            PASO 01 // CONFIGURACIÓN INICIAL & CINEMÁTICA
+          </span>
+          <h1 class="text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1" data-i18n="title_main">
+            Nuevo Proyecto & Selector de Máquina
+          </h1>
+          <p class="text-sm text-slate-400 mt-1 max-w-2xl" data-i18n="subtitle_main">
+            Democratización técnica para estudiantes, autónomos y talleres.
+          </p>
+        </div>
+        <div class="flex items-center gap-3 shrink-0">
+          <button onclick="exportProjectFile()" 
+                  class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-mono text-slate-200 flex items-center gap-2 transition-all">
+            <span>📥</span>
+            <span data-i18n="btn_export">Exportar .CNCPROJ</span>
+          </button>
+          <button onclick="startProject()" 
+                  class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs font-mono flex items-center gap-2 shadow-lg shadow-blue-600/30 transition-all active:scale-95">
+            <span>▶</span>
+            <span data-i18n="btn_start">Iniciar Proyecto Ahora →</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- FILA 1: Identificación, Origen de Partida y Material Bruto -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
+        
+        <!-- Tarjeta 01: Identificación -->
+        <div class="p-4 rounded-xl bg-slate-900/70 border border-slate-800 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-slate-400" data-i18n="card1_title">01 // IDENTIFICACIÓN</span>
+            <span class="text-emerald-400 text-[10px] bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20" data-i18n="card1_autosave">✓ AUTO-GUARDADO</span>
+          </div>
+          <div>
+            <label class="block text-[11px] text-slate-400 mb-1" data-i18n="card1_label">Nombre del Archivo / Setup</label>
+            <div class="flex items-center bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white">
+              <input id="project-name-input" type="text" value="Mecanizado_Probeta" class="bg-transparent border-none outline-none w-full font-mono text-xs">
+              <span class="text-slate-400">.cncproj</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tarjeta 02: Origen de Partida (Datum) -->
+        <div class="p-4 rounded-xl bg-slate-900/70 border border-slate-800 space-y-3">
+          <div class="text-slate-400" data-i18n="card2_title">02 // ORIGEN DE PARTIDA (DATUM)</div>
+          <div class="grid grid-cols-3 gap-2">
+            <button onclick="selectDatum('G54')" id="datum-g54" class="py-2 rounded-lg bg-blue-600/40 border border-blue-500/60 text-white font-bold text-center">G54</button>
+            <button onclick="selectDatum('G55')" id="datum-g55" class="py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-400 hover:text-white text-center">G55</button>
+            <button onclick="selectDatum('BASE')" id="datum-base" class="py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-400 hover:text-white text-center">BASE</button>
+          </div>
+          <p id="datum-desc" class="text-[11px] text-slate-400" data-i18n="card2_desc">G54: Origen fijado en mordaza de amarre rápido.</p>
+        </div>
+
+        <!-- Tarjeta 03: Bruto & Precisión -->
+        <div class="p-4 rounded-xl bg-slate-900/70 border border-slate-800 space-y-3">
+          <div class="text-slate-400" data-i18n="card3_title">03 // BRUTO & PRECISIÓN</div>
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-slate-400" data-i18n="card3_material">Material Bruto:</span>
+            <span class="text-white font-semibold">AL-6061 T6</span>
+          </div>
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-slate-400" data-i18n="card3_interp">Interpolación:</span>
+            <span class="text-emerald-400 font-semibold">NURBS + RTCP (0.001mm)</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- FILA 2: Selector de Cinemática & Hardware de Taller -->
+      <div class="space-y-3">
+        <div class="flex items-center gap-2 text-xs font-mono text-slate-400 uppercase tracking-wider">
+          <span>🤖</span>
+          <span data-i18n="kinematics_selector_title">04 // SELECCIÓN DE CINEMÁTICA & HARDWARE DE TALLER</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          
+          <!-- Opción 1: Brazo Cobot 6-DOF -->
+          <div onclick="selectMachine('cobot')" id="mach-cobot" 
+               class="p-4 rounded-xl bg-slate-900/90 border-2 border-blue-500 cursor-pointer transition-all hover:bg-slate-900 relative">
+            <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30" data-i18n="tag_6dof">
+              6 EJES ARTICULADOS
+            </span>
+            <h3 class="text-base font-bold text-white mt-2" data-i18n="mach1_name">Brazo Cobot 6-DOF</h3>
+            <p class="text-xs text-slate-400 font-mono">UR10e / Fanuc CRX</p>
+            <div class="mt-4 pt-3 border-t border-slate-800/80 font-mono text-xs space-y-1.5">
+              <div class="flex justify-between"><span class="text-slate-400">Payload:</span><span class="text-slate-200">12.5 kg</span></div>
+              <div class="flex justify-between"><span class="text-slate-400">Alcance:</span><span class="text-slate-200">1300 mm</span></div>
+              <div class="flex justify-between"><span class="text-slate-400">Repetibilidad:</span><span class="text-emerald-400">± 0.03 mm</span></div>
+            </div>
+          </div>
+
+          <!-- Opción 2: Fresadora CNC 3E -->
+          <div onclick="selectMachine('fresadora')" id="mach-fresadora" 
+               class="p-4 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/40">
+            <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-300" data-i18n="tag_3axis">
+              3 EJES ORTOGONALES
+            </span>
+            <h3 class="text-base font-bold text-white mt-2" data-i18n="mach2_name">Fresadora CNC 3E</h3>
+            <p class="text-xs text-slate-400 font-mono">Haas VF-2 / Robodrill</p>
+            <div class="mt-4 pt-3 border-t border-slate-800/80 font-mono text-xs space-y-1.5">
+              <div class="flex justify-between"><span class="text-slate-400">Recorrido Z:</span><span class="text-slate-200">508 mm</span></div>
+              <div class="flex justify-between"><span class="text-slate-400">Husillo:</span><span class="text-slate-200">12,000 RPM</span></div>
+              <div class="flex justify-between"><span class="text-slate-400">Potencia:</span><span class="text-blue-400">22.4 kW</span></div>
+            </div>
+          </div>
+
+          <!-- Opción 3: 5 Ejes RTCP -->
+          <div onclick="selectMachine('5ejes')" id="mach-5ejes" 
+               class="p-4 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/40">
+            <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30" data-i18n="tag_5axis">
+              5 EJES SIMULTÁNEOS
+            </span>
+            <h3 class="text-base font-bold text-white mt-2" data-i18n="mach3_name">5 Ejes RTCP</h3>
+            <p class="text-xs text-slate-400 font-mono">DMG MORI / Hermle</p>
+            <div class="mt-4 pt-3 border-t border-slate-800/80 font-mono text-xs space-y-1.5">
+              <div class="flex justify-between"><span class="text-slate-400">Rotativo A:</span><span class="text-slate-200">-120° / +30°</span></div>
+              <div class="flex justify-between"><span class="text-slate-400">G43.4 RTCP:</span><span class="text-emerald-400">Activo</span></div>
+              <div class="flex justify-between"><span class="text-slate-400">Husillo:</span><span class="text-slate-200">18,000 RPM</span></div>
+            </div>
+          </div>
+
+          <!-- Opción 4: Torno & Celda Híbrida -->
+          <div onclick="selectMachine('torno')" id="mach-torno" 
+               class="p-4 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/40">
+            <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30" data-i18n="tag_lathe">
+              TORNO & CELDA HÍBRIDA
+            </span>
+            <h3 class="text-base font-bold text-white mt-2" data-i18n="mach4_name">Torno & Celda Híbrida</h3>
+            <p class="text-xs text-slate-400 font-mono">Mazak QT / Celda Robot</p>
+            <div class="mt-4 pt-3 border-t border-slate-800/80 font-mono text-xs space-y-1.5">
+              <div class="flex justify-between"><span class="text-slate-400">Torreta:</span><span class="text-slate-200">12 Posiciones</span></div>
+              <div class="flex justify-between"><span class="text-slate-400">Loader:</span><span class="text-blue-400">I/O Digitales</span></div>
+              <div class="flex justify-between"><span class="text-slate-400">Interlock:</span><span class="text-emerald-400">M10/M11 Ok</span></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- FILA 3: Herramienta TCP & Asistente Inteligente -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        
+        <!-- Configuración de Herramienta TCP -->
+        <div class="p-4 rounded-xl bg-slate-900/70 border border-slate-800 space-y-3 font-mono text-xs">
+          <div class="flex items-center justify-between">
+            <span class="text-slate-400" data-i18n="tcp_setup_title">05 // HERRAMENTAL INICIAL & PARÁMETROS TCP</span>
+            <span class="text-[10px] text-slate-400">Almacén T1-T32</span>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div class="p-3 rounded-lg bg-blue-600/10 border border-blue-500/30 text-white">
+              <span class="px-1.5 py-0.5 rounded bg-blue-500 text-slate-950 font-bold text-[10px]">T01</span>
+              <p class="font-bold mt-1">Fresa Plana D10</p>
+              <p class="text-[10px] text-slate-400">Metal Duro 4L · Rec. AlTiN</p>
+              <p class="text-[10px] text-blue-400 mt-1">Longitud Útil: 45.00 mm</p>
+            </div>
+            <div class="p-3 rounded-lg bg-slate-950 border border-slate-800 text-slate-400">
+              <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 font-bold text-[10px]">T02</span>
+              <p class="font-bold mt-1 text-slate-300">Fresa Esférica D6</p>
+              <p class="text-[10px] text-slate-400">Acabado 3D / Esculpido 5X</p>
+              <p class="text-[10px] text-slate-400 mt-1">Longitud Útil: 32.00 mm</p>
+            </div>
+          </div>
+          <div class="p-2.5 rounded-lg bg-slate-950 border border-slate-800 flex justify-between text-[11px]">
+            <span class="text-slate-400">Offsets Calibrados TCP:</span>
+            <span class="text-slate-200">X: 142.500 | Y: 0.000 | Z: 218.450 mm</span>
+          </div>
+        </div>
+
+        <!-- Asistencia Inteligente & Validación -->
+        <div class="p-4 rounded-xl bg-slate-900/70 border border-slate-800 space-y-3 font-mono text-xs">
+          <div class="flex items-center justify-between">
+            <span class="text-slate-400" data-i18n="ai_assist_title">06 // ASISTENCIA INTELIGENTE & VALIDACIÓN</span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">COPILOT READY</span>
+          </div>
+          <div class="space-y-2">
+            <label class="flex items-start gap-2.5 p-2 rounded-lg bg-slate-950 border border-slate-800 cursor-pointer">
+              <input type="radio" name="ai-mode" checked class="mt-0.5 text-blue-600 focus:ring-0">
+              <div>
+                <p class="font-bold text-white" data-i18n="ai_opt1_title">Asistente IA & Copilot CAM</p>
+                <p class="text-[11px] text-slate-400" data-i18n="ai_opt1_desc">Auditoría en tiempo real de G-code, prevención de colisiones y singularidades.</p>
+              </div>
+            </label>
+            <label class="flex items-start gap-2.5 p-2 rounded-lg bg-slate-950 border border-slate-800 cursor-pointer">
+              <input type="radio" name="ai-mode" class="mt-0.5 text-blue-600 focus:ring-0">
+              <div>
+                <p class="font-bold text-slate-300" data-i18n="ai_opt2_title">Modo Manual Puro (Autónomo)</p>
+                <p class="text-[11px] text-slate-400" data-i18n="ai_opt2_desc">Sin sugerencias automáticas. Recomendado para exámenes de alumnos.</p>
+              </div>
+            </label>
+          </div>
+          <p class="text-[10px] text-slate-400 flex items-center gap-1">
+            <span>⚡</span> <span data-i18n="ai_notice">Consumo estimado para arranque: 0 Tokens (Ejecución en WASM local).</span>
+          </p>
+        </div>
+
+      </div>
+
     </main>
   </div>
 
-  <!-- NAVEGACIÓN MÓVIL INFERIOR (BOTTOM TAB BAR - Solo visible en móviles '< md') -->
-  <nav class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#0c1322]/95 backdrop-blur border-t border-[#232d42] z-40 flex items-center justify-around px-1 select-none">
-    <button onclick="switchView('setup')" id="mob-nav-setup" class="flex flex-col items-center justify-center w-16 py-1 text-cyan-400 font-mono text-[10px] font-bold">
-      <i data-lucide="folder-plus" class="w-5 h-5 mb-0.5"></i>
-      <span>SETUP</span>
-    </button>
-    <button onclick="switchView('console')" id="mob-nav-console" class="flex flex-col items-center justify-center w-16 py-1 text-slate-400 hover:text-slate-200 font-mono text-[10px]">
-      <i data-lucide="activity" class="w-5 h-5 mb-0.5"></i>
-      <span>CINEMÁTICA</span>
-    </button>
-    <button onclick="switchView('editor')" id="mob-nav-editor" class="flex flex-col items-center justify-center w-16 py-1 text-slate-400 hover:text-slate-200 font-mono text-[10px]">
-      <i data-lucide="code" class="w-5 h-5 mb-0.5"></i>
-      <span>G-CODE</span>
-    </button>
-    <button onclick="switchView('academy')" id="mob-nav-academy" class="flex flex-col items-center justify-center w-16 py-1 text-slate-400 hover:text-slate-200 font-mono text-[10px]">
-      <i data-lucide="book-open" class="w-5 h-5 mb-0.5"></i>
-      <span>RETOS</span>
-    </button>
-  </nav>
-
-  <!-- BANNER FLOTANTE DE ENCUESTA INTELIGENTE 14 DÍAS / USO ACUMULADO -->
-  <div id="survey-floating-banner" class="hidden fixed bottom-20 md:bottom-6 right-3 md:right-6 max-w-sm w-[calc(100%-24px)] md:w-96 bg-[#141b2b] border border-amber-500/40 rounded-xl p-4 shadow-2xl z-50">
-    <div class="flex items-start space-x-3">
-      <div class="w-9 h-9 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0 mt-0.5">
-        <i data-lucide="sparkles" class="w-4 h-4"></i>
-      </div>
-      <div class="flex-1 space-y-1.5">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-1.5">
-            <span class="text-xs font-bold text-white">Tu opinión importa</span>
-            <span class="text-[9px] font-mono px-1.5 py-0.5 bg-amber-500/20 text-amber-300 rounded font-semibold border border-amber-500/30">+14 DÍAS</span>
-          </div>
-          <button onclick="dismissSurvey(5)" class="text-slate-400 hover:text-white p-1 text-xs">✕</button>
+  <!-- ==================== MODAL DE FEEDBACK ==================== -->
+  <div id="feedback-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl font-mono text-xs">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-base">💬</span>
+          <span class="text-sm font-bold text-white" data-i18n="modal_feedback_title">Enviar Feedback / Sugerencia</span>
         </div>
-        <p class="text-xs text-slate-300 leading-snug">
-          Llevas más de 14 días (o uso representativo) trabajando con CNC &amp; Cobot Studio. ¿Nos dedicas 1 minuto para ayudarnos a mejorar?
-        </p>
-        <div class="pt-1 flex flex-wrap items-center gap-2">
-          <button onclick="triggerSurveyModal()" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg text-xs font-mono transition flex items-center space-x-1.5 shadow">
-            <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
-            <span>Completar Encuesta (1 min)</span>
-          </button>
-          <button onclick="dismissSurvey(5)" class="text-[11px] text-slate-400 hover:text-slate-200 underline font-mono">
-            Recordármelo más tarde (5 días)
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL COMPLETO DE ENCUESTA SATISFACCIÓN -->
-  <div id="survey-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-[#141b2b] border border-[#232d42] rounded-2xl max-w-lg w-full p-6 space-y-5 shadow-2xl relative">
-      <button onclick="closeSurveyModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-1">✕</button>
-      
-      <div class="flex items-center space-x-3 pb-3 border-b border-[#232d42]">
-        <div class="w-10 h-10 rounded-xl bg-blue-600/20 border border-blue-500/30 text-cyan-400 flex items-center justify-center">
-          <i data-lucide="star" class="w-5 h-5"></i>
-        </div>
-        <div>
-          <h3 class="text-lg font-bold text-white">Micro-Encuesta de Satisfacción</h3>
-          <p class="text-xs text-slate-400 font-mono">CNC &amp; Cobot Studio &bull; cnccobot.feedback@gmail.com</p>
-        </div>
+        <button onclick="closeFeedbackModal()" class="text-slate-400 hover:text-white">✕</button>
       </div>
 
-      <form id="form-survey" onsubmit="submitSurvey(event)" class="space-y-4 text-xs font-mono">
+      <div class="space-y-3">
         <div>
-          <label class="text-slate-300 block mb-1.5">1. ¿Cuál es tu perfil principal de uso?</label>
-          <div class="grid grid-cols-3 gap-2">
-            <label class="flex items-center space-x-2 bg-[#0c1322] p-2.5 rounded-lg border border-[#232d42] cursor-pointer hover:border-slate-500">
-              <input type="radio" name="profile" value="Estudiante/Docente" checked class="text-blue-600">
-              <span class="text-slate-300">Estudiante</span>
-            </label>
-            <label class="flex items-center space-x-2 bg-[#0c1322] p-2.5 rounded-lg border border-[#232d42] cursor-pointer hover:border-slate-500">
-              <input type="radio" name="profile" value="Autónomo/Taller" class="text-blue-600">
-              <span class="text-slate-300">Taller/Pyme</span>
-            </label>
-            <label class="flex items-center space-x-2 bg-[#0c1322] p-2.5 rounded-lg border border-[#232d42] cursor-pointer hover:border-slate-500">
-              <input type="radio" name="profile" value="Ingeniero/CAM" class="text-blue-600">
-              <span class="text-slate-300">Ingeniería</span>
-            </label>
+          <label class="block text-slate-400 mb-1" data-i18n="modal_field_to">Canal directo:</label>
+          <div class="px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-blue-300">
+            cnccobot.feedback@gmail.com
           </div>
         </div>
-
         <div>
-          <label class="text-slate-300 block mb-1.5">2. Facilidad de uso del configurador TCP &amp; cinemática (1 a 5):</label>
-          <div class="flex items-center space-x-3 bg-[#0c1322] p-2.5 rounded-lg border border-[#232d42] justify-around">
-            <label class="cursor-pointer"><input type="radio" name="rating_ease" value="1"> 1★</label>
-            <label class="cursor-pointer"><input type="radio" name="rating_ease" value="2"> 2★</label>
-            <label class="cursor-pointer"><input type="radio" name="rating_ease" value="3"> 3★</label>
-            <label class="cursor-pointer"><input type="radio" name="rating_ease" value="4"> 4★</label>
-            <label class="cursor-pointer"><input type="radio" name="rating_ease" value="5" checked> 5★</label>
-          </div>
-        </div>
-
-        <div>
-          <label class="text-slate-300 block mb-1.5">3. ¿Qué funcionalidad te gustaría ver añadida próximamente?</label>
-          <select id="survey-feature" class="w-full bg-[#0c1322] border border-[#232d42] rounded-lg p-2.5 text-slate-200 focus:outline-none">
-            <option value="Soporte Robots KUKA / ABB / Yaskawa">Soporte Robots KUKA / ABB / Yaskawa</option>
-            <option value="Más probetas didácticas y retos de aula">Más probetas didácticas y retos de aula</option>
-            <option value="Transmisor directo Wi-Fi / Ethernet a máquina">Transmisor directo Wi-Fi / Ethernet a máquina</option>
-            <option value="App Móvil Nativa Android / iOS">App Móvil Nativa Android / iOS</option>
+          <label class="block text-slate-400 mb-1" data-i18n="modal_field_type">Tipo de mensaje:</label>
+          <select id="feedback-type" class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-white outline-none">
+            <option value="Sugerencia">Sugerencia de Mejora / Feature</option>
+            <option value="Error">Reporte de Bug / Error</option>
+            <option value="Docencia">Uso en Escuela / Universidad</option>
+            <option value="General">Consulta General</option>
           </select>
         </div>
-
         <div>
-          <label class="text-slate-300 block mb-1.5">4. Comentarios, sugerencias o mejoras para EagleCelest:</label>
-          <textarea id="survey-comments" rows="3" placeholder="Escribe aquí tu opinión sincera..." class="w-full bg-[#0c1322] border border-[#232d42] rounded-lg p-2.5 text-slate-200 focus:outline-none focus:border-blue-500 custom-scroll"></textarea>
+          <label class="block text-slate-400 mb-1" data-i18n="modal_field_msg">Tu mensaje o impresión:</label>
+          <textarea id="feedback-text" rows="4" placeholder="Escribe aquí tu sugerencia o duda..." class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-white placeholder-slate-500 outline-none"></textarea>
         </div>
+      </div>
 
-        <div class="pt-2 flex justify-end space-x-3">
-          <button type="button" onclick="closeSurveyModal()" class="px-4 py-2 bg-[#0c1322] hover:bg-slate-800 text-slate-300 rounded-lg">Cancelar</button>
-          <button type="submit" class="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg shadow transition">Enviar a Feedback</button>
-        </div>
-      </form>
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeFeedbackModal()" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300" data-i18n="modal_btn_cancel">
+          Cancelar
+        </button>
+        <button onclick="sendFeedback()" class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold" data-i18n="modal_btn_send">
+          Enviar por Correo
+        </button>
+      </div>
     </div>
   </div>
 
-  <div id="toast-container" class="fixed bottom-20 md:bottom-6 left-3 md:left-auto md:right-6 z-50 flex flex-col space-y-2 pointer-events-none"></div>
-
-  <!-- MOTOR JAVASCRIPT GLOBAL REACTIVO -->
+  <!-- ==================== LÓGICA JAVASCRIPT ==================== -->
   <script>
-    window.AppState = {
-      mode: 'edu',
-      currentView: 'setup',
-      eStopTriggered: false,
-      mobileBannerDismissed: false,
-      
-      project: {
-        name: 'Mecanizado_Probeta',
-        fileExtension: '.cncproj',
-        datum: 'G54',
-        kinematic: 'ur10e',
-        kinematicLabel: 'Brazo Cobot 6-DOF (UR10e / Fanuc CRX)',
-        tool: { id: 'T01', name: 'Fresa Plana D10', x: 142.50, y: 0.00, z: 218.45 },
-        aiAssistance: true,
-        roughStock: { material: 'AL-6061 T6', dimensions: '120 × 80 × 45 mm', rtcp: true }
-      },
+    /* ------------------------------------------------------------
+       DICCIONARIO DE TRADUCCIÓN BILINGÜE (i18n ES / EN)
+    ------------------------------------------------------------ */
+    let currentLanguage = 'es';
 
-      joints: { J1: -14.2, J2: -82.6, J3: 105.1, J4: -22.4, J5: 90.0, J6: 4.5 },
-      dro: { x: 428.352, y: -112.408, z: 256.094, rx: 179.82, ry: 0.14, rz: -89.95 },
-      jogStep: 1.0,
-      
-      tcpPointsRecorded: 3,
-      rmsResidual: 0.0382
+    const translations = {
+      es: {
+        badge_title: "Universal Orchestrator",
+        role_student: "Estudiante (0€)",
+        role_pro: "Taller Pro",
+        btn_feedback: "Feedback",
+        nav_workspace_heading: "Módulos de Trabajo",
+        mod_new_project: "Nuevo Proyecto & Setup",
+        mod_kinematics: "Centro Cinemático 3D",
+        mod_editor: "Editor & Transpilador",
+        mod_hub: "Hub de Aprendizaje",
+        sidebar_mission_title: "Misión Educativa",
+        sidebar_mission_desc: "Acceso libre y 100% gratuito para estudiantes y autónomos. Democratización técnica por EagleCelest.",
+        hardware_status: "HARDWARE:",
+        survey_title: "¿Cómo está siendo tu experiencia con CNC & Cobot Studio?",
+        survey_desc: "Ayúdanos a perfeccionar la herramienta con 1 minuto de tu opinión.",
+        btn_survey_start: "Completar Encuesta",
+        step_01: "PASO 01 // CONFIGURACIÓN INICIAL & CINEMÁTICA",
+        title_main: "Nuevo Proyecto & Selector de Máquina",
+        subtitle_main: "Democratización técnica para estudiantes, autónomos y talleres.",
+        btn_export: "Exportar .CNCPROJ",
+        btn_start: "Iniciar Proyecto Ahora →",
+        card1_title: "01 // IDENTIFICACIÓN",
+        card1_autosave: "✓ AUTO-GUARDADO",
+        card1_label: "Nombre del Archivo / Setup",
+        card2_title: "02 // ORIGEN DE PARTIDA (DATUM)",
+        card2_desc: "G54: Origen fijado en mordaza de amarre rápido.",
+        card3_title: "03 // BRUTO & PRECISIÓN",
+        card3_material: "Material Bruto:",
+        card3_interp: "Interpolación:",
+        kinematics_selector_title: "04 // SELECCIÓN DE CINEMÁTICA & HARDWARE DE TALLER",
+        tag_6dof: "6 EJES ARTICULADOS",
+        mach1_name: "Brazo Cobot 6-DOF",
+        tag_3axis: "3 EJES ORTOGONALES",
+        mach2_name: "Fresadora CNC 3E",
+        tag_5axis: "5 EJES SIMULTÁNEOS",
+        mach3_name: "5 Ejes RTCP",
+        tag_lathe: "TORNO & CELDA HÍBRIDA",
+        mach4_name: "Torno & Celda Híbrida",
+        tcp_setup_title: "05 // HERRAMENTAL INICIAL & PARÁMETROS TCP",
+        ai_assist_title: "06 // ASISTENCIA INTELIGENTE & VALIDACIÓN",
+        ai_opt1_title: "Asistente IA & Copilot CAM",
+        ai_opt1_desc: "Auditoría en tiempo real de G-code, prevención de colisiones y singularidades.",
+        ai_opt2_title: "Modo Manual Puro (Autónomo)",
+        ai_opt2_desc: "Sin sugerencias automáticas. Recomendado para exámenes de alumnos.",
+        ai_notice: "Consumo estimado para arranque: 0 Tokens (Ejecución en WASM local).",
+        modal_feedback_title: "Enviar Feedback / Sugerencia",
+        modal_field_to: "Canal directo:",
+        modal_field_type: "Tipo de mensaje:",
+        modal_field_msg: "Tu mensaje o impresión:",
+        modal_btn_cancel: "Cancelar",
+        modal_btn_send: "Enviar por Correo"
+      },
+      en: {
+        badge_title: "Universal Orchestrator",
+        role_student: "Student (Free)",
+        role_pro: "Workshop Pro",
+        btn_feedback: "Feedback",
+        nav_workspace_heading: "Workspaces",
+        mod_new_project: "New Project & Setup",
+        mod_kinematics: "3D Kinematics Center",
+        mod_editor: "Editor & Transpiler",
+        mod_hub: "Learning Hub",
+        sidebar_mission_title: "Educational Mission",
+        sidebar_mission_desc: "Free and open access for students & makers worldwide. Democratizing automation by EagleCelest.",
+        hardware_status: "HARDWARE:",
+        survey_title: "How is your experience with CNC & Cobot Studio?",
+        survey_desc: "Help us fine-tune the tool with just 1 minute of your feedback.",
+        btn_survey_start: "Take Survey",
+        step_01: "STEP 01 // INITIAL CONFIG & KINEMATICS",
+        title_main: "New Project & Machine Selector",
+        subtitle_main: "Democratizing robotics & CNC for students, makers & small machine shops.",
+        btn_export: "Export .CNCPROJ",
+        btn_start: "Launch Project Now →",
+        card1_title: "01 // IDENTIFICATION",
+        card1_autosave: "✓ AUTO-SAVED",
+        card1_label: "File Name / Setup",
+        card2_title: "02 // WORK COORDINATE SYSTEM (DATUM)",
+        card2_desc: "G54: Origin clamped on quick-change vise jaw.",
+        card3_title: "03 // STOCK & PRECISION",
+        card3_material: "Raw Material:",
+        card3_interp: "Interpolation:",
+        kinematics_selector_title: "04 // KINEMATICS SELECTION & SHOP HARDWARE",
+        tag_6dof: "6-AXIS ARTICULATED",
+        mach1_name: "6-DOF Cobot Arm",
+        tag_3axis: "3 ORTHOGONAL AXES",
+        mach2_name: "3-Axis CNC Mill",
+        tag_5axis: "5 CONTINUOUS AXES",
+        mach3_name: "5-Axis RTCP",
+        tag_lathe: "LATHE & HYBRID CELL",
+        mach4_name: "Lathe & Hybrid Cell",
+        tcp_setup_title: "05 // INITIAL TOOLING & TCP PARAMETERS",
+        ai_assist_title: "06 // INTELLIGENT ASSISTANCE & VALIDATION",
+        ai_opt1_title: "AI Copilot & CAM Assistant",
+        ai_opt1_desc: "Real-time G-code auditing, collision check and singularity prediction.",
+        ai_opt2_title: "Pure Manual Mode (Autonomous)",
+        ai_opt2_desc: "No automated suggestions. Ideal for student practical exams.",
+        ai_notice: "Estimated token burn: 0 Tokens (Client-side WASM execution).",
+        modal_feedback_title: "Send Feedback / Suggestions",
+        modal_field_to: "Direct channel:",
+        modal_field_type: "Message category:",
+        modal_field_msg: "Your thoughts or inquiries:",
+        modal_btn_cancel: "Cancel",
+        modal_btn_send: "Send via Email"
+      }
     };
 
-    window.switchView = function(view) {
-      window.AppState.currentView = view;
-      ['setup', 'console', 'editor', 'academy'].forEach(function(v) {
-        var btn = document.getElementById('nav-' + v);
-        if (btn) {
-          if (v === view) {
-            btn.className = "w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium bg-blue-600/15 text-blue-400 border border-blue-500/30 transition text-left shadow-sm";
-          } else {
-            btn.className = "w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-[#141b2b] transition text-left";
-          }
-        }
-        var mobBtn = document.getElementById('mob-nav-' + v);
-        if (mobBtn) {
-          if (v === view) {
-            mobBtn.className = "flex flex-col items-center justify-center w-16 py-1 text-cyan-400 font-mono text-[10px] font-bold";
-          } else {
-            mobBtn.className = "flex flex-col items-center justify-center w-16 py-1 text-slate-400 hover:text-slate-200 font-mono text-[10px]";
-          }
+    function switchLanguage(lang) {
+      currentLanguage = lang;
+      
+      const btnEs = document.getElementById('lang-btn-es');
+      const btnEn = document.getElementById('lang-btn-en');
+      
+      if (lang === 'es') {
+        btnEs.className = "flex items-center gap-1 px-2 py-1 rounded bg-blue-600/40 text-blue-300 font-semibold border border-blue-500/50 transition-all";
+        btnEn.className = "flex items-center gap-1 px-2 py-1 rounded text-slate-400 hover:text-slate-200 transition-all";
+      } else {
+        btnEn.className = "flex items-center gap-1 px-2 py-1 rounded bg-blue-600/40 text-blue-300 font-semibold border border-blue-500/50 transition-all";
+        btnEs.className = "flex items-center gap-1 px-2 py-1 rounded text-slate-400 hover:text-slate-200 transition-all";
+      }
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang] && translations[lang][key]) {
+          el.textContent = translations[lang][key];
         }
       });
-      window.renderCurrentView();
-    };
 
-    window.setAppMode = function(mode) {
-      window.AppState.mode = mode;
-      var btnEdu = document.getElementById('btn-mode-edu');
-      var btnPro = document.getElementById('btn-mode-pro');
-      if (mode === 'edu') {
-        if (btnEdu) btnEdu.className = "px-2.5 sm:px-3 py-1.5 rounded bg-blue-600 text-white font-semibold shadow flex items-center space-x-1.5";
-        if (btnPro) btnPro.className = "px-2.5 sm:px-3 py-1.5 rounded text-slate-400 hover:text-white transition flex items-center space-x-1.5";
-        window.showToast("Modo Estudiante: Democratización activa. Coste 0€ garantizado.", "info");
-      } else {
-        if (btnPro) btnPro.className = "px-2.5 sm:px-3 py-1.5 rounded bg-blue-600 text-white font-semibold shadow flex items-center space-x-1.5";
-        if (btnEdu) btnEdu.className = "px-2.5 sm:px-3 py-1.5 rounded text-slate-400 hover:text-white transition flex items-center space-x-1.5";
-        window.showToast("Modo Taller Pro Activado: Velocidades estándar y telemetría industrial.", "info");
-      }
-    };
-
-    window.triggerEStop = function() {
-      window.AppState.eStopTriggered = !window.AppState.eStopTriggered;
-      var btn = document.getElementById('btn-estop');
-      var hwBadge = document.getElementById('badge-hw-status');
-      
-      if (window.AppState.eStopTriggered) {
-        if (btn) btn.classList.add('animate-pulse', 'bg-red-800');
-        if (hwBadge) {
-          hwBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-red-500 inline-block mr-1.5 animate-ping"></span>BLOQUEADO SIL-3';
-          hwBadge.className = 'text-red-400 font-bold flex items-center';
-        }
-        window.showToast("🛑 PARO DE EMERGENCIA: Servomotores y relés desconectados.", "error");
-      } else {
-        if (btn) btn.classList.remove('animate-pulse', 'bg-red-800');
-        if (hwBadge) {
-          hwBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400 inline-block mr-1.5 pulse-dot"></span>CONECTADO';
-          hwBadge.className = 'text-emerald-400 font-bold flex items-center';
-        }
-        window.showToast("Circuito de seguridad rearmado. Servomotores en STANDBY.", "success");
-      }
-      if (window.AppState.currentView === 'console') window.renderCurrentView();
-    };
-
-    window.dismissMobileBanner = function() {
-      window.AppState.mobileBannerDismissed = true;
-      var b = document.getElementById('mobile-notice-banner');
-      if (b) b.remove();
-    };
-
-    window.getMobileBannerHTML = function() {
-      if (window.AppState.mobileBannerDismissed) return '';
-      return `
-        <!-- BANNER AVISO DISPOSITIVO MÓVIL (Solo visible en pantallas estrechas < md) -->
-        <div id="mobile-notice-banner" class="md:hidden mb-4 p-4 rounded-xl bg-gradient-to-r from-blue-950/80 via-slate-900 to-[#141b2b] border border-cyan-500/40 text-white relative shadow-lg">
-          <button onclick="dismissMobileBanner()" class="absolute top-2.5 right-2.5 text-slate-400 hover:text-white text-sm p-1">✕</button>
-          <div class="flex items-start space-x-3">
-            <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0 mt-0.5 border border-cyan-500/30">
-              <i data-lucide="smartphone" class="w-4 h-4"></i>
-            </div>
-            <div class="space-y-1 pr-4">
-              <div class="flex items-center space-x-2">
-                <h4 class="font-bold text-xs text-cyan-200">Vista Web Móvil</h4>
-                <span class="text-[9px] font-mono px-1.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 uppercase font-semibold border border-cyan-500/30">En desarrollo nativo</span>
-              </div>
-              <p class="text-[11px] text-slate-300 leading-relaxed">
-                Estás en la vista Web desde móvil. La suite de cinemática 3D y edición G-code está optimizada para <strong>Tablet y PC</strong>. Estamos preparando la App Móvil Nativa de CNC &amp; Cobot Studio.
-              </p>
-              <div class="pt-2 flex flex-wrap items-center gap-2">
-                <a href="mailto:cnccobot.feedback@gmail.com?subject=Sugerencia%20App%20Móvil" class="text-xs font-semibold text-cyan-300 hover:underline flex items-center space-x-1">
-                  <span>✉ Sugerir función</span>
-                </a>
-                <button onclick="dismissMobileBanner()" class="px-2.5 py-1 text-xs rounded bg-slate-800 text-slate-300 hover:bg-slate-700 font-mono">Entendido</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-    };
-
-    window.renderCurrentView = function() {
-      var container = document.getElementById('main-content-view');
-      if (!container) return;
-
-      var v = window.AppState.currentView;
-      var bannerHTML = window.getMobileBannerHTML();
-      var contentHTML = '';
-
-      if (v === 'setup') {
-        contentHTML = window.getSetupHTML();
-      } else if (v === 'console') {
-        contentHTML = window.getConsoleHTML();
-      } else if (v === 'editor') {
-        contentHTML = window.getEditorHTML();
-      } else if (v === 'academy') {
-        contentHTML = window.getAcademyHTML();
-      }
-
-      container.innerHTML = bannerHTML + contentHTML;
-
-      try {
-        if (window.lucide && typeof window.lucide.createIcons === 'function') {
-          window.lucide.createIcons();
-        }
-      } catch (e) {
-        console.warn(e);
-      }
-    };
-
-    window.getSetupHTML = function() {
-      var p = window.AppState.project;
-      return `
-        <div class="max-w-6xl mx-auto space-y-4 sm:space-y-6">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[#232d42] gap-3 sm:gap-4">
-            <div>
-              <div class="text-[11px] sm:text-xs font-mono text-cyan-400 tracking-wider font-semibold">PASO 01 // CONFIGURACIÓN INICIAL &amp; CINEMÁTICA</div>
-              <h1 class="text-xl sm:text-2xl font-bold text-white mt-0.5">Nuevo Proyecto &amp; Selector de Máquina</h1>
-              <p class="text-xs text-slate-400 font-mono mt-0.5">Democratización técnica para estudiantes, autónomos y talleres.</p>
-            </div>
-            <div class="flex items-center space-x-2 sm:space-x-3">
-              <button onclick="exportProjectFile()" class="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-[#141b2b] hover:bg-[#1b2438] border border-[#232d42] text-slate-300 rounded-lg text-xs sm:text-sm font-medium flex items-center justify-center space-x-1.5 sm:space-x-2 transition cursor-pointer">
-                <i data-lucide="download" class="w-4 h-4 text-slate-400"></i>
-                <span>Exportar .CNCPROJ</span>
-              </button>
-              <button onclick="launchProject()" class="flex-1 sm:flex-none px-4 sm:px-5 py-2 bg-blue-600 hover:bg-blue-500 font-bold text-white rounded-lg text-xs sm:text-sm flex items-center justify-center space-x-1.5 sm:space-x-2 shadow-[0_0_15px_rgba(37,99,235,0.4)] transition cursor-pointer active:scale-95">
-                <i data-lucide="play" class="w-4 h-4"></i>
-                <span>Iniciar Proyecto Ahora &rarr;</span>
-              </button>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-            <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-4 sm:p-5 space-y-3 sm:space-y-4">
-              <div class="flex justify-between items-center text-xs font-mono text-slate-400">
-                <span>01 // IDENTIFICACIÓN</span>
-                <span class="text-emerald-400 flex items-center font-semibold"><i data-lucide="check" class="w-3.5 h-3.5 mr-1"></i> AUTO-GUARDADO</span>
-              </div>
-              <div>
-                <label class="text-xs text-slate-400 block mb-1">Nombre del Archivo / Setup</label>
-                <div class="flex rounded-lg overflow-hidden border border-[#232d42] bg-[#0c1322] focus-within:border-blue-500">
-                  <input type="text" id="input-proj-name" value="${p.name}" oninput="window.AppState.project.name=this.value" class="w-full bg-transparent px-3 py-2 text-white font-mono text-sm focus:outline-none">
-                  <span class="bg-[#141b2b] px-3 py-2 text-slate-500 text-xs font-mono flex items-center border-l border-[#232d42]">.cncproj</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-4 sm:p-5 space-y-3 sm:space-y-4">
-              <div class="text-xs font-mono text-slate-400">02 // ORIGEN DE PARTIDA (DATUM)</div>
-              <div class="grid grid-cols-3 gap-2">
-                ${['G54', 'G55', 'BASE'].map(function(datum) {
-                  return `
-                  <button type="button" onclick="selectDatum('${datum}')" class="py-2 text-center rounded-lg font-mono font-bold text-xs sm:text-sm border transition cursor-pointer ${p.datum === datum ? 'bg-blue-600/25 border-blue-500 text-blue-400 shadow-sm' : 'bg-[#0c1322] border-[#232d42] text-slate-400 hover:border-slate-500'}">
-                    ${datum}
-                  </button>
-                `;}).join('')}
-              </div>
-              <p class="text-xs text-slate-500 font-mono">G54: Origen fijado en mordaza de amarre rápido.</p>
-            </div>
-
-            <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-4 sm:p-5 space-y-3 sm:space-y-4">
-              <div class="text-xs font-mono text-slate-400">03 // BRUTO &amp; PRECISIÓN</div>
-              <div class="flex justify-between items-center text-xs sm:text-sm">
-                <span class="text-slate-400">Material Bruto:</span>
-                <span class="font-mono text-white font-bold">${p.roughStock.material}</span>
-              </div>
-              <div class="flex justify-between items-center text-xs sm:text-sm">
-                <span class="text-slate-400">Interpolación:</span>
-                <span class="font-mono text-emerald-400 font-semibold">NURBS + RTCP (0.001mm)</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="space-y-3">
-            <div class="text-xs font-mono text-slate-400 flex items-center space-x-2">
-              <i data-lucide="bot" class="w-4 h-4 text-cyan-400"></i>
-              <span>04 // SELECCIÓN DE CINEMÁTICA &amp; HARDWARE DE TALLER</span>
-            </div>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-              <div onclick="selectKinematic('ur10e', 'Brazo Cobot 6-DOF (UR10e / Fanuc CRX)')" class="cursor-pointer p-4 rounded-xl border transition ${p.kinematic === 'ur10e' ? 'bg-blue-600/10 border-blue-500 ring-1 ring-blue-500 shadow-lg' : 'bg-[#141b2b] border-[#232d42] hover:border-slate-500'}">
-                <div class="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 inline-block mb-2 font-bold">6 EJES ARTICULADOS</div>
-                <div class="font-bold text-white text-base">Brazo Cobot 6-DOF</div>
-                <div class="text-xs text-slate-400 mb-3">UR10e / Fanuc CRX</div>
-                <div class="space-y-1 font-mono text-xs text-slate-400 border-t border-[#232d42] pt-2">
-                  <div class="flex justify-between"><span>Payload:</span><span class="text-slate-200">12.5 kg</span></div>
-                  <div class="flex justify-between"><span>Alcance:</span><span class="text-slate-200">1300 mm</span></div>
-                  <div class="flex justify-between"><span>Repetibilidad:</span><span class="text-emerald-400">± 0.03 mm</span></div>
-                </div>
-              </div>
-
-              <div onclick="selectKinematic('haas3x', 'Fresadora CNC 3 Ejes (Haas VF-2)')" class="cursor-pointer p-4 rounded-xl border transition ${p.kinematic === 'haas3x' ? 'bg-blue-600/10 border-blue-500 ring-1 ring-blue-500 shadow-lg' : 'bg-[#141b2b] border-[#232d42] hover:border-slate-500'}">
-                <div class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-700 text-slate-300 inline-block mb-2 font-bold">3 EJES ORTOGONALES</div>
-                <div class="font-bold text-white text-base">Fresadora CNC 3E</div>
-                <div class="text-xs text-slate-400 mb-3">Haas VF-2 / Robodrill</div>
-                <div class="space-y-1 font-mono text-xs text-slate-400 border-t border-[#232d42] pt-2">
-                  <div class="flex justify-between"><span>Recorrido Z:</span><span class="text-slate-200">508 mm</span></div>
-                  <div class="flex justify-between"><span>Husillo:</span><span class="text-slate-200">12,000 RPM</span></div>
-                  <div class="flex justify-between"><span>Potencia:</span><span class="text-blue-400">22.4 kW</span></div>
-                </div>
-              </div>
-
-              <div onclick="selectKinematic('dmg5x', '5 Ejes Continuo RTCP (DMG MORI DMU 50)')" class="cursor-pointer p-4 rounded-xl border transition ${p.kinematic === 'dmg5x' ? 'bg-blue-600/10 border-blue-500 ring-1 ring-blue-500 shadow-lg' : 'bg-[#141b2b] border-[#232d42] hover:border-slate-500'}">
-                <div class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/20 text-purple-400 inline-block mb-2 font-bold">5 EJES SIMULTÁNEOS</div>
-                <div class="font-bold text-white text-base">5 Ejes RTCP</div>
-                <div class="text-xs text-slate-400 mb-3">DMG MORI / Hermle</div>
-                <div class="space-y-1 font-mono text-xs text-slate-400 border-t border-[#232d42] pt-2">
-                  <div class="flex justify-between"><span>Rotativo A:</span><span class="text-slate-200">-120° / +30°</span></div>
-                  <div class="flex justify-between"><span>G43.4 RTCP:</span><span class="text-emerald-400">Activo</span></div>
-                  <div class="flex justify-between"><span>Husillo:</span><span class="text-slate-200">18,000 RPM</span></div>
-                </div>
-              </div>
-
-              <div onclick="selectKinematic('lathe', 'Torno CNC & Celda Dual Cobot Loader')" class="cursor-pointer p-4 rounded-xl border transition ${p.kinematic === 'lathe' ? 'bg-blue-600/10 border-blue-500 ring-1 ring-blue-500 shadow-lg' : 'bg-[#141b2b] border-[#232d42] hover:border-slate-500'}">
-                <div class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 inline-block mb-2 font-bold">TORNO &amp; CELDA ROBOT</div>
-                <div class="font-bold text-white text-base">Torno &amp; Celda Híbrida</div>
-                <div class="text-xs text-slate-400 mb-3">Mazak QT / Torno Celda</div>
-                <div class="space-y-1 font-mono text-xs text-slate-400 border-t border-[#232d42] pt-2">
-                  <div class="flex justify-between"><span>Torreta:</span><span class="text-slate-200">12 Posiciones</span></div>
-                  <div class="flex justify-between"><span>Loader:</span><span class="text-blue-400">I/O Digitales</span></div>
-                  <div class="flex justify-between"><span>Interlock:</span><span class="text-emerald-400">M10/M11 Ok</span></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-    };
-
-    window.getConsoleHTML = function() {
-      var s = window.AppState;
-      var radJ2 = (s.joints.J2 * Math.PI) / 180;
-      var radJ3 = ((s.joints.J2 + s.joints.J3) * Math.PI) / 180;
-      
-      var armLength1 = 65;
-      var armLength2 = 60;
-      
-      var joint2X = 150 + Math.sin(radJ2) * armLength1;
-      var joint2Y = 160 - Math.cos(radJ2) * armLength1;
-      
-      var tcpX = joint2X + Math.sin(radJ3) * armLength2;
-      var tcpY = joint2Y - Math.cos(radJ3) * armLength2;
-
-      return `
-        <div class="max-w-7xl mx-auto space-y-4 sm:space-y-6">
-          <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-3 sm:p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4">
-            <div class="flex items-center space-x-3">
-              <div class="w-3.5 h-3.5 rounded-full ${s.eStopTriggered ? 'bg-red-500 animate-ping' : 'bg-emerald-400 pulse-dot'} shrink-0"></div>
-              <div>
-                <span class="text-xs font-mono text-slate-400">PROYECTO SINCRONIZADO:</span>
-                <span class="font-bold font-mono text-white text-sm sm:text-base ml-1 sm:ml-2">${s.project.name}${s.project.fileExtension}</span>
-                <span class="text-[10px] sm:text-xs px-2 py-0.5 bg-blue-500/20 text-cyan-300 rounded font-mono ml-2 border border-blue-500/30">${s.project.kinematicLabel}</span>
-              </div>
-            </div>
-            <div class="flex items-center space-x-2">
-              <button onclick="switchView('setup')" class="px-3.5 py-1.5 bg-[#0c1322] hover:bg-[#1b2438] text-slate-300 rounded-lg text-xs font-mono border border-[#232d42] transition cursor-pointer">
-                &larr; Volver a Setup
-              </button>
-              <button onclick="saveProjectState()" class="px-4 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-mono font-bold transition shadow cursor-pointer">
-                Guardar Estado
-              </button>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
-            <div class="lg:col-span-4 space-y-4 sm:space-y-6">
-              <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-4 sm:p-5 space-y-4">
-                <div class="flex justify-between items-center">
-                  <div class="font-bold text-white text-sm flex items-center space-x-2">
-                    <i data-lucide="crosshair" class="w-4 h-4 text-cyan-400"></i>
-                    <span>Calibrador TCP (4 Puntos)</span>
-                  </div>
-                  <span class="text-xs font-mono bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded border border-blue-500/30">T01-MILL-D10</span>
-                </div>
-
-                <div class="space-y-2">
-                  <div class="flex justify-between text-xs text-slate-400">
-                    <span>Progreso de Puntas:</span>
-                    <span class="font-mono text-emerald-400 font-bold">${s.tcpPointsRecorded} de 4 fijados</span>
-                  </div>
-                  <div class="grid grid-cols-4 gap-2 text-xs font-mono text-center">
-                    <div class="p-2 bg-emerald-950/50 border border-emerald-500/50 text-emerald-400 rounded font-bold">P1 ✓</div>
-                    <div class="p-2 bg-emerald-950/50 border border-emerald-500/50 text-emerald-400 rounded font-bold">P2 ✓</div>
-                    <div class="p-2 bg-emerald-950/50 border border-emerald-500/50 text-emerald-400 rounded font-bold">P3 ✓</div>
-                    <div class="p-2 ${s.tcpPointsRecorded === 4 ? 'bg-emerald-950/50 border-emerald-500/50 text-emerald-400 font-bold' : 'bg-blue-950/50 border-blue-500 text-blue-400 animate-pulse font-bold'} rounded">
-                      P4 ${s.tcpPointsRecorded === 4 ? '✓' : '(Activo)'}
-                    </div>
-                  </div>
-                </div>
-
-                <div class="bg-[#0c1322] p-3 rounded-lg border border-[#232d42] flex justify-between items-center text-xs font-mono">
-                  <div>
-                    <span class="text-slate-500 block">Error Residual RMS:</span>
-                    <span class="text-emerald-400 font-bold text-sm">${s.rmsResidual.toFixed(4)} mm</span>
-                  </div>
-                  <span class="text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded border border-emerald-500/20 font-bold">Tolerancia Óptima</span>
-                </div>
-
-                <button type="button" onclick="recordP4Point()" class="w-full py-2.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg font-mono text-xs font-bold flex items-center justify-center space-x-2 shadow transition cursor-pointer active:scale-95">
-                  <i data-lucide="target" class="w-4 h-4"></i>
-                  <span>${s.tcpPointsRecorded === 4 ? 'RECALCULAR PUNTOS TCP' : 'REGISTRAR PUNTA P4 (CALIBRAR)'}</span>
-                </button>
-
-                <div class="grid grid-cols-3 gap-2 text-center text-xs font-mono bg-[#0c1322] p-2.5 rounded border border-[#232d42]">
-                  <div><span class="text-slate-500 block">TCP X:</span><span class="text-slate-200">${s.project.tool.x.toFixed(3)}</span></div>
-                  <div><span class="text-slate-500 block">TCP Y:</span><span class="text-slate-200">${s.project.tool.y.toFixed(3)}</span></div>
-                  <div><span class="text-emerald-400 font-bold block">TCP Z:</span><span class="text-emerald-400 font-bold">${s.project.tool.z.toFixed(3)}</span></div>
-                </div>
-              </div>
-
-              <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-4 sm:p-5 space-y-3">
-                <div class="flex justify-between items-center">
-                  <div class="font-bold text-white text-sm flex items-center space-x-2">
-                    <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
-                    <span>Zonas de Seguridad y Envolvente</span>
-                  </div>
-                  <span class="text-xs text-emerald-400 font-mono font-bold">SIL-3 Activo</span>
-                </div>
-                <div class="space-y-1.5 text-xs font-mono text-slate-400">
-                  <div class="flex justify-between"><span>Plano Seguridad:</span><span class="text-slate-200">Z+ 50.00 mm</span></div>
-                  <div class="flex justify-between"><span>Volumen Perimetral:</span><span class="text-slate-200">1600 × 1200 mm</span></div>
-                  <div class="flex justify-between"><span>Desaceleración:</span><span class="text-amber-400">250 mm/s (Stop 1)</span></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="lg:col-span-4 bg-[#141b2b] border border-[#232d42] rounded-xl p-4 sm:p-5 flex flex-col justify-between">
-              <div>
-                <div class="flex justify-between items-center mb-3">
-                  <span class="text-xs font-mono text-slate-400 flex items-center">
-                    <i data-lucide="box" class="w-4 h-4 mr-1 text-cyan-400"></i> ENTORNO CINEMÁTICO EN VIVO
-                  </span>
-                  <div class="flex space-x-1">
-                    <button type="button" class="px-2 py-0.5 bg-blue-600/30 text-cyan-300 text-[11px] font-mono rounded border border-blue-500/30 font-bold">VISTA RT</button>
-                  </div>
-                </div>
-
-                <div class="h-60 sm:h-64 bg-[#070e1d] rounded-lg border border-[#232d42] relative flex items-center justify-center overflow-hidden grid-bg shadow-inner">
-                  <svg class="w-full h-full" viewBox="0 0 300 240">
-                    <circle cx="150" cy="190" r="45" fill="none" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="4" opacity="0.4" />
-                    <rect x="130" y="180" width="40" height="20" rx="4" fill="#1e3a8a" stroke="#3b82f6" stroke-width="1.5" />
-                    
-                    <line x1="150" y1="180" x2="150" y2="160" stroke="#60a5fa" stroke-width="8" stroke-linecap="round" />
-                    <circle cx="150" cy="160" r="7" fill="#2563eb" stroke="#93c5fd" stroke-width="2" />
-                    
-                    <line x1="150" y1="160" x2="${joint2X.toFixed(1)}" y2="${joint2Y.toFixed(1)}" stroke="#3b82f6" stroke-width="6" stroke-linecap="round" />
-                    <circle cx="${joint2X.toFixed(1)}" cy="${joint2Y.toFixed(1)}" r="6" fill="#1d4ed8" stroke="#60a5fa" stroke-width="2" />
-
-                    <line x1="${joint2X.toFixed(1)}" y1="${joint2Y.toFixed(1)}" x2="${tcpX.toFixed(1)}" y2="${tcpY.toFixed(1)}" stroke="#93c5fd" stroke-width="4" stroke-linecap="round" />
-
-                    <g transform="translate(${tcpX.toFixed(1)}, ${tcpY.toFixed(1)})">
-                      <circle cx="0" cy="0" r="5" fill="#f59e0b" stroke="#ffffff" stroke-width="1.5" />
-                      <line x1="-12" y1="0" x2="12" y2="0" stroke="#22c55e" stroke-width="2" />
-                      <line x1="0" y1="-12" x2="0" y2="12" stroke="#ef4444" stroke-width="2" />
-                    </g>
-                  </svg>
-                  
-                  <div class="absolute bottom-2 left-2 text-[10px] font-mono text-slate-400 bg-[#0c1322]/90 px-2 py-0.5 rounded border border-[#232d42]">
-                    RT-SOLVER: WASM &bull; JITTER: 12µs
-                  </div>
-                  <div class="absolute top-2 right-2 text-[10px] font-mono text-amber-400 bg-[#0c1322]/90 px-2 py-0.5 rounded border border-[#232d42]">
-                    TCP: [X:${s.dro.x.toFixed(1)}, Z:${s.dro.z.toFixed(1)}]
-                  </div>
-                </div>
-              </div>
-
-              <div class="mt-4 bg-[#0c1322] p-3 rounded-lg border border-[#232d42] font-mono text-[11px] text-slate-400 space-y-1">
-                <div class="text-[10px] text-cyan-400 mb-1 flex justify-between font-bold">
-                  <span>MATRIZ HOMOGÉNEA T(4×4)</span>
-                  <span class="text-slate-500 font-normal">DH STANDARD</span>
-                </div>
-                <div class="grid grid-cols-4 gap-1 text-center font-mono">
-                  <span class="text-slate-200">0.9982</span><span>-0.0594</span><span>0.0081</span><span class="text-emerald-400 font-bold">${s.dro.x.toFixed(1)}</span>
-                  <span>0.0596</span><span class="text-slate-200">0.9978</span><span>-0.0271</span><span class="text-emerald-400 font-bold">${s.dro.y.toFixed(1)}</span>
-                  <span>-0.0065</span><span>0.0276</span><span class="text-slate-200">0.9996</span><span class="text-emerald-400 font-bold">${s.dro.z.toFixed(1)}</span>
-                  <span>0.0000</span><span>0.0000</span><span>0.0000</span><span>1.0000</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="lg:col-span-4 space-y-4 sm:space-y-6">
-              <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-4 sm:p-5 space-y-4">
-                <div class="flex justify-between items-center">
-                  <span class="font-bold text-white text-sm">Coordenadas TCP (DRO Estable)</span>
-                  <span class="text-xs font-mono bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-bold">LIVE RT</span>
-                </div>
-
-                <div class="space-y-2 font-mono">
-                  <div class="flex justify-between items-center bg-[#0c1322] p-2.5 rounded border border-[#232d42]">
-                    <span class="text-red-400 font-bold text-xs">EJE X:</span>
-                    <span class="text-white text-base sm:text-lg font-bold" id="dro-x">${s.dro.x.toFixed(4)} mm</span>
-                  </div>
-                  <div class="flex justify-between items-center bg-[#0c1322] p-2.5 rounded border border-[#232d42]">
-                    <span class="text-emerald-400 font-bold text-xs">EJE Y:</span>
-                    <span class="text-white text-base sm:text-lg font-bold" id="dro-y">${s.dro.y.toFixed(4)} mm</span>
-                  </div>
-                  <div class="flex justify-between items-center bg-[#0c1322] p-2.5 rounded border border-[#232d42]">
-                    <span class="text-blue-400 font-bold text-xs">EJE Z:</span>
-                    <span class="text-white text-base sm:text-lg font-bold" id="dro-z">${s.dro.z.toFixed(4)} mm</span>
-                  </div>
-                </div>
-
-                <div class="grid grid-cols-3 gap-2 text-center text-xs font-mono bg-[#0c1322] p-2 rounded border border-[#232d42] text-slate-400">
-                  <div>Rx: <span class="text-slate-200 font-bold">${s.dro.rx}°</span></div>
-                  <div>Ry: <span class="text-slate-200 font-bold">${s.dro.ry}°</span></div>
-                  <div>Rz: <span class="text-slate-200 font-bold">${s.dro.rz}°</span></div>
-                </div>
-              </div>
-
-              <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-4 sm:p-5 space-y-3">
-                <div class="flex justify-between items-center">
-                  <span class="font-bold text-white text-sm">Jog de Articulaciones</span>
-                  <div class="flex space-x-1 text-xs font-mono">
-                    ${[0.1, 1.0, 5.0].map(function(step) {
-                      return `
-                      <button type="button" onclick="setJogStep(${step})" class="px-2 py-0.5 rounded border transition cursor-pointer font-bold ${s.jogStep === step ? 'bg-blue-600 text-white border-blue-500' : 'bg-[#0c1322] text-slate-400 border-[#232d42]'}">${step}°</button>
-                    `;}).join('')}
-                  </div>
-                </div>
-
-                <div class="space-y-2 font-mono text-xs">
-                  ${['J1', 'J2', 'J3', 'J4', 'J5', 'J6'].map(function(joint) {
-                    return `
-                    <div class="flex items-center justify-between bg-[#0c1322] px-3 py-1.5 rounded border border-[#232d42]">
-                      <span class="font-bold text-cyan-400 w-8">${joint}</span>
-                      <span class="text-slate-200 font-bold w-16 text-center" id="val-${joint}">${s.joints[joint].toFixed(1)}°</span>
-                      <div class="flex space-x-1">
-                        <button type="button" onclick="jogJoint('${joint}', -1)" ${s.eStopTriggered ? 'disabled' : ''} class="w-8 h-8 bg-[#141b2b] hover:bg-slate-700 disabled:opacity-40 text-white rounded flex items-center justify-center border border-[#232d42] font-bold text-sm cursor-pointer active:scale-95 transition">-</button>
-                        <button type="button" onclick="jogJoint('${joint}', 1)" ${s.eStopTriggered ? 'disabled' : ''} class="w-8 h-8 bg-[#141b2b] hover:bg-slate-700 disabled:opacity-40 text-white rounded flex items-center justify-center border border-[#232d42] font-bold text-sm cursor-pointer active:scale-95 transition">+</button>
-                      </div>
-                    </div>
-                  `;}).join('')}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-    };
-
-    window.getEditorHTML = function() {
-      return `
-        <div class="max-w-6xl mx-auto space-y-4 sm:space-y-6">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[#232d42] gap-3 sm:gap-4">
-            <div>
-              <div class="text-[11px] sm:text-xs font-mono text-cyan-400 tracking-wider font-semibold">EDITOR ISO &amp; TRANSPILADOR DE SCRIPTS</div>
-              <h1 class="text-xl sm:text-2xl font-bold text-white mt-0.5">Transpilador Universal G-code a Script Robot</h1>
-            </div>
-            <button type="button" onclick="transpileCode()" class="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg text-xs sm:text-sm flex items-center justify-center space-x-2 shadow-[0_0_15px_rgba(37,99,235,0.4)] cursor-pointer transition active:scale-95">
-              <i data-lucide="play" class="w-4 h-4"></i>
-              <span>Transpilar a URScript / KAREL</span>
-            </button>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-            <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-4 space-y-2">
-              <div class="flex justify-between items-center text-xs font-mono text-slate-400">
-                <span>ENTRADA G-CODE (ISO 6983)</span>
-                <span class="text-cyan-400 font-bold">G54 Activo</span>
-              </div>
-              <textarea id="src-gcode" class="w-full h-72 sm:h-80 bg-[#070e1d] border border-[#232d42] rounded-lg p-3 font-mono text-xs text-slate-200 focus:outline-none focus:border-blue-500 custom-scroll leading-relaxed">O1001 (MECANIZADO PROBETA T01)
-G21 G90 G40 G80
-T01 M06 (FRESA PLANA D10)
-S4500 M03
-G54
-G00 X0.000 Y0.000 Z50.000
-G01 Z-2.000 F650.0
-G01 X50.000 F1200.0
-G02 X80.000 Y30.000 R30.000
-G01 Y60.000
-G00 Z50.000
-M05
-M30</textarea>
-            </div>
-
-            <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-4 space-y-2">
-              <div class="flex justify-between items-center text-xs font-mono text-slate-400">
-                <span>SCRIPT COBOT RESULTANTE</span>
-                <span class="text-emerald-400 font-bold" id="transpile-status">Listo para transpilar</span>
-              </div>
-              <textarea id="dst-script" readonly class="w-full h-72 sm:h-80 bg-[#070e1d] border border-[#232d42] rounded-lg p-3 font-mono text-xs text-emerald-300 focus:outline-none custom-scroll leading-relaxed"># Haz clic en "Transpilar a URScript / KAREL" para generar la cinemática adaptada al cobot seleccionado.</textarea>
-            </div>
-          </div>
-        </div>
-      `;
-    };
-
-    window.getAcademyHTML = function() {
-      return `
-        <div class="max-w-6xl mx-auto space-y-4 sm:space-y-6">
-          <div class="pb-4 border-b border-[#232d42]">
-            <div class="text-[11px] sm:text-xs font-mono text-cyan-400 tracking-wider font-semibold">CURRICULUM DIDÁCTICO &amp; RETOS DE TALLER</div>
-            <h1 class="text-xl sm:text-2xl font-bold text-white mt-0.5">Biblioteca de Probetas &amp; Progresión</h1>
-            <p class="text-xs text-slate-400 font-mono mt-0.5">Acceso libre sin barreras para aprender robótica colaborativa y mecanizado CNC.</p>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-            <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-4 sm:p-5 space-y-3 sm:space-y-4">
-              <div class="text-xs font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 inline-block font-bold">NIVEL 1 // BÁSICO</div>
-              <h3 class="font-bold text-white text-base sm:text-lg">Probeta 01: Planeado y Cajera Simple</h3>
-              <p class="text-xs text-slate-400">Aprende a fijar el origen G54 en mordaza y calibrar TCP plano en Z.</p>
-              <button type="button" onclick="loadProbeta('Probeta_01_Cajera', 'ur10e')" class="w-full py-2 bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white rounded-lg text-xs font-mono font-bold border border-blue-500/30 transition cursor-pointer active:scale-95">
-                Cargar en Setup &rarr;
-              </button>
-            </div>
-
-            <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-4 sm:p-5 space-y-3 sm:space-y-4">
-              <div class="text-xs font-mono px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 inline-block font-bold">NIVEL 2 // INTERMEDIO</div>
-              <h3 class="font-bold text-white text-base sm:text-lg">Probeta 02: Interpolación Circular</h3>
-              <p class="text-xs text-slate-400">Verificación de desvíos cuadrantales y chequeo de singularidad en muñeca.</p>
-              <button type="button" onclick="loadProbeta('Probeta_02_Circular', 'ur10e')" class="w-full py-2 bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white rounded-lg text-xs font-mono font-bold border border-blue-500/30 transition cursor-pointer active:scale-95">
-                Cargar en Setup &rarr;
-              </button>
-            </div>
-
-            <div class="bg-[#141b2b] border border-[#232d42] rounded-xl p-4 sm:p-5 space-y-3 sm:space-y-4">
-              <div class="text-xs font-mono px-2 py-0.5 rounded bg-purple-500/20 text-purple-400 inline-block font-bold">NIVEL 3 // 5 EJES RTCP</div>
-              <h3 class="font-bold text-white text-base sm:text-lg">Probeta 03: Alabeo Turbina 5X</h3>
-              <p class="text-xs text-slate-400">Manejo de vector normal de contacto I, J, K y orientación de husillo.</p>
-              <button type="button" onclick="loadProbeta('Probeta_03_Turbina', 'dmg5x')" class="w-full py-2 bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white rounded-lg text-xs font-mono font-bold border border-blue-500/30 transition cursor-pointer active:scale-95">
-                Cargar en Setup &rarr;
-              </button>
-            </div>
-          </div>
-        </div>
-      `;
-    };
-
-    window.selectDatum = function(datum) {
-      window.AppState.project.datum = datum;
-      window.renderCurrentView();
-      window.showToast("Datum actualizado a: " + datum, "info");
-    };
-
-    window.selectKinematic = function(key, label) {
-      window.AppState.project.kinematic = key;
-      window.AppState.project.kinematicLabel = label;
-      var sideName = document.getElementById('side-machine-name');
-      if (sideName) sideName.textContent = label;
-      window.renderCurrentView();
-      window.showToast("Cinemática configurada: " + label, "info");
-    };
-
-    window.setJogStep = function(step) {
-      window.AppState.jogStep = step;
-      window.renderCurrentView();
-    };
-
-    window.jogJoint = function(joint, dir) {
-      if (window.AppState.eStopTriggered) {
-        window.showToast("No se puede mover: E-STOP accionado.", "error");
-        return;
-      }
-      
-      var delta = window.AppState.jogStep * dir;
-      window.AppState.joints[joint] = +(window.AppState.joints[joint] + delta).toFixed(2);
-      
-      if (joint === 'J1') window.AppState.dro.x = +(window.AppState.dro.x + delta * 0.8).toFixed(4);
-      if (joint === 'J2') window.AppState.dro.z = +(window.AppState.dro.z + delta * 0.6).toFixed(4);
-      if (joint === 'J3') window.AppState.dro.y = +(window.AppState.dro.y + delta * 0.5).toFixed(4);
-      if (joint === 'J4') window.AppState.dro.rx = +(window.AppState.dro.rx + delta).toFixed(2);
-      if (joint === 'J5') window.AppState.dro.ry = +(window.AppState.dro.ry + delta).toFixed(2);
-      if (joint === 'J6') window.AppState.dro.rz = +(window.AppState.dro.rz + delta).toFixed(2);
-
-      window.renderCurrentView();
-    };
-
-    window.recordP4Point = function() {
-      window.AppState.rmsResidual = 0.0215;
-      window.AppState.tcpPointsRecorded = 4;
-      window.showToast("¡Punto P4 registrado! Residuos RMS recalibrados a 0.0215 mm (Aprobado).", "success");
-      window.renderCurrentView();
-    };
-
-    window.launchProject = function() {
-      window.switchView('console');
-      window.showToast("Proyecto '" + window.AppState.project.name + "' cargado en la Consola Cinemática.", "success");
-    };
-
-    window.saveProjectState = function() {
-      window.showToast("Estado y calibración guardados en memoria local.", "success");
-    };
-
-    window.exportProjectFile = function() {
-      var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(window.AppState, null, 2));
-      var downloadAnchor = document.createElement('a');
-      downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", window.AppState.project.name + ".cncproj");
-      document.body.appendChild(downloadAnchor);
-      downloadAnchor.click();
-      downloadAnchor.remove();
-      window.showToast("Archivo " + window.AppState.project.name + ".cncproj descargado con éxito.", "success");
-    };
-
-    window.loadProbeta = function(name, kin) {
-      window.AppState.project.name = name;
-      if (kin === 'dmg5x') {
-        window.selectKinematic('dmg5x', '5 Ejes Continuo RTCP (DMG MORI DMU 50)');
-      } else {
-        window.selectKinematic('ur10e', 'Brazo Cobot 6-DOF (UR10e / Fanuc CRX)');
-      }
-      window.switchView('setup');
-      window.showToast("Plantilla de reto '" + name + "' cargada en Setup.", "info");
-    };
-
-    window.transpileCode = function() {
-      var dst = document.getElementById('dst-script');
-      var status = document.getElementById('transpile-status');
-      
-      if (dst) {
-        dst.value = `def mecanizado_cobot():\n  # Inicialización cinemática y TCP\n  set_tcp(p[0.1425, 0.0, 0.21845, 0.0, 0.0, 0.0])\n  set_payload(1.450)\n  movej([-0.24, -1.44, 1.83, -0.39, 1.57, 0.07], a=1.4, v=1.05)\n  \n  # Trayectoria transpilada desde ISO G-code (G54):\n  movel(p[0.428, -0.112, 0.256, 3.14, 0.0, -1.57], a=0.8, v=0.25)\n  movel(p[0.478, -0.112, 0.254, 3.14, 0.0, -1.57], a=0.5, v=0.02)\n  movel(p[0.508, -0.082, 0.254, 3.14, 0.0, -1.57], a=0.5, v=0.02)\n  \n  textmsg("Mecanizado probeta finalizado con éxito")\nend\nmecanizado_cobot()`;
-      }
-      if (status) status.textContent = "Transpilación completada (URScript 100% válido)";
-      window.showToast("Código G-code transpilado a URScript exitosamente.", "success");
-    };
-
-    // --- LÓGICA DE ENCUESTA 14 DÍAS & RETENCIÓN ---
-    window.checkSurveyTrigger = function() {
-      var firstAccess = localStorage.getItem('cnc_first_access');
-      var surveyDismissedUntil = localStorage.getItem('cnc_survey_dismissed_until');
-      var surveyDone = localStorage.getItem('cnc_survey_done');
-
-      if (surveyDone === 'true') return;
-
-      var now = Date.now();
-      if (!firstAccess) {
-        localStorage.setItem('cnc_first_access', now);
-        return;
-      }
-
-      if (surveyDismissedUntil && now < parseInt(surveyDismissedUntil)) {
-        return;
-      }
-
-      var daysPassed = (now - parseInt(firstAccess)) / (1000 * 60 * 60 * 24);
-      var usageCount = parseInt(localStorage.getItem('cnc_usage_count') || '0') + 1;
-      localStorage.setItem('cnc_usage_count', usageCount);
-
-      if (daysPassed >= 14 || usageCount >= 6) {
-        var banner = document.getElementById('survey-floating-banner');
-        if (banner) banner.classList.remove('hidden');
-      }
-    };
-
-    window.triggerSurveyModal = function() {
-      var banner = document.getElementById('survey-floating-banner');
-      if (banner) banner.classList.add('hidden');
-      var modal = document.getElementById('survey-modal');
-      if (modal) modal.classList.remove('hidden');
-    };
-
-    window.closeSurveyModal = function() {
-      var modal = document.getElementById('survey-modal');
-      if (modal) modal.classList.add('hidden');
-    };
-
-    window.dismissSurvey = function(days) {
-      var banner = document.getElementById('survey-floating-banner');
-      if (banner) banner.classList.add('hidden');
-      var postponeTime = Date.now() + (days * 24 * 60 * 60 * 1000);
-      localStorage.setItem('cnc_survey_dismissed_until', postponeTime);
-      window.showToast("Recordatorio pospuesto " + days + " días. ¡Gracias!", "info");
-    };
-
-    window.submitSurvey = function(e) {
-      e.preventDefault();
-      var form = e.target;
-      var profile = form.profile.value;
-      var ease = form.rating_ease.value;
-      var feature = document.getElementById('survey-feature').value;
-      var comments = document.getElementById('survey-comments').value;
-
-      localStorage.setItem('cnc_survey_done', 'true');
-      window.closeSurveyModal();
-
-      var subject = encodeURIComponent("Encuesta Satisfacción [Día 14] - " + profile);
-      var body = encodeURIComponent(
-        "Perfil: " + profile + "\n" +
-        "Facilidad TCP/Cinemática: " + ease + "/5 estrellas\n" +
-        "Función solicitada: " + feature + "\n" +
-        "Comentarios adicionales:\n" + comments
-      );
-
-      window.open("mailto:cnccobot.feedback@gmail.com?subject=" + subject + "&body=" + body, "_blank");
-      window.showToast("¡Encuesta enviada con éxito! Muchas gracias por colaborar.", "success");
-    };
-
-    window.showToast = function(message, type) {
-      type = type || 'info';
-      var container = document.getElementById('toast-container');
-      if (!container) return;
-      
-      var toast = document.createElement('div');
-      var colors = {
-        info: 'bg-[#141b2b] border-blue-500 text-blue-200',
-        success: 'bg-[#141b2b] border-emerald-500 text-emerald-200',
-        error: 'bg-red-950/95 border-red-500 text-red-200'
-      };
-
-      toast.className = `p-3 rounded-lg border shadow-xl text-xs font-mono max-w-sm flex items-center space-x-2 transition-all transform duration-300 pointer-events-auto ${colors[type] || colors.info}`;
-      toast.innerHTML = `<span>${message}</span>`;
-      container.appendChild(toast);
-
-      setTimeout(function() {
-        toast.style.opacity = '0';
-        setTimeout(function() { toast.remove(); }, 300);
-      }, 3500);
-    };
-
-    window.addEventListener('DOMContentLoaded', function() {
-      window.renderCurrentView();
-      setTimeout(window.checkSurveyTrigger, 2000);
-    });
-
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
-      window.renderCurrentView();
-      setTimeout(window.checkSurveyTrigger, 2000);
+      localStorage.setItem('cnc_cobot_lang', lang);
     }
+
+    /* ------------------------------------------------------------
+       GESTIÓN DE ROLES (Estudiante vs Taller Pro)
+    ------------------------------------------------------------ */
+    let currentRole = 'student';
+
+    function setRole(role) {
+      currentRole = role;
+      const btnStd = document.getElementById('role-student-btn');
+      const btnPro = document.getElementById('role-pro-btn');
+      
+      if (role === 'student') {
+        btnStd.className = "px-2.5 py-1 rounded bg-blue-600 text-white font-medium shadow-sm transition-all flex items-center gap-1.5";
+        btnPro.className = "px-2.5 py-1 rounded text-slate-400 hover:text-white transition-all flex items-center gap-1.5";
+        showToast(currentLanguage === 'es' ? "Perfil Estudiante Activado (Acceso 100% Gratuito)" : "Student Profile Activated (100% Free Access)");
+      } else {
+        btnPro.className = "px-2.5 py-1 rounded bg-amber-600 text-white font-medium shadow-sm transition-all flex items-center gap-1.5";
+        btnStd.className = "px-2.5 py-1 rounded text-slate-400 hover:text-white transition-all flex items-center gap-1.5";
+        showToast(currentLanguage === 'es' ? "Perfil Taller Pro Activado (Funciones Avanzadas)" : "Workshop Pro Profile Activated (Advanced Features)");
+      }
+    }
+
+    /* ------------------------------------------------------------
+       INTERACCIÓN: SELECCIÓN DE MÁQUINAS Y DATUM
+    ------------------------------------------------------------ */
+    function selectMachine(type) {
+      const ids = ['cobot', 'fresadora', '5ejes', 'torno'];
+      ids.forEach(id => {
+        const el = document.getElementById('mach-' + id);
+        if (id === type) {
+          el.className = "p-4 rounded-xl bg-slate-900/90 border-2 border-blue-500 cursor-pointer transition-all hover:bg-slate-900 relative";
+        } else {
+          el.className = "p-4 rounded-xl bg-slate-950 border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/40";
+        }
+      });
+      showToast((currentLanguage === 'es' ? "Cinemática Seleccionada: " : "Kinematics Selected: ") + type.toUpperCase());
+    }
+
+    function selectDatum(d) {
+      ['G54', 'G55', 'BASE'].forEach(item => {
+        const btn = document.getElementById('datum-' + item.toLowerCase());
+        if (item === d) {
+          btn.className = "py-2 rounded-lg bg-blue-600/40 border border-blue-500/60 text-white font-bold text-center";
+        } else {
+          btn.className = "py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-400 hover:text-white text-center";
+        }
+      });
+      const descEl = document.getElementById('datum-desc');
+      if (d === 'G54') descEl.textContent = currentLanguage === 'es' ? "G54: Origen fijado en mordaza de amarre rápido." : "G54: Origin clamped on quick-change vise.";
+      if (d === 'G55') descEl.textContent = currentLanguage === 'es' ? "G55: Segunda mordaza / Referencia plato rotativo." : "G55: Secondary vise / Rotary plate datum.";
+      if (d === 'BASE') descEl.textContent = currentLanguage === 'es' ? "BASE: Coordenadas mundiales absolutas robot [0,0,0]." : "BASE: Absolute robot world frame [0,0,0].";
+    }
+
+    /* ------------------------------------------------------------
+       ACCIONES DE PROYECTO & MODALES
+    ------------------------------------------------------------ */
+    function startProject() {
+      const name = document.getElementById('project-name-input').value;
+      showToast((currentLanguage === 'es' ? "Iniciando Proyecto: " : "Launching Project: ") + name + ".cncproj...");
+    }
+
+    function exportProjectFile() {
+      const proj = {
+        name: document.getElementById('project-name-input').value,
+        machine: "UR10e_Cobot_6DOF",
+        datum: "G54",
+        tool: "T01_Plana_D10",
+        author: "EagleCelest",
+        version: "4.3"
+      };
+      const blob = new Blob([JSON.stringify(proj, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = proj.name + '.cncproj';
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast(currentLanguage === 'es' ? "Archivo .CNCPROJ descargado" : ".CNCPROJ file downloaded");
+    }
+
+    function triggerEmergencyStop() {
+      alert(currentLanguage === 'es' ? "🚨 E-STOP ACCIONADO: Interlock SIL-3 disparado. Cinemática y husillos detenidos con seguridad." : "🚨 E-STOP TRIGGERED: SIL-3 interlock active. Robot and spindles safely halted.");
+    }
+
+    function switchView(view) {
+      showToast((currentLanguage === 'es' ? "Navegando a: " : "Navigating to: ") + view);
+    }
+
+    /* ------------------------------------------------------------
+       FEEDBACK Y ENCUESTA INTELIGENTE
+    ------------------------------------------------------------ */
+    function openFeedbackModal(defaultType) {
+      if (defaultType) document.getElementById('feedback-type').value = defaultType;
+      document.getElementById('feedback-modal').classList.remove('hidden');
+    }
+
+    function closeFeedbackModal() {
+      document.getElementById('feedback-modal').classList.add('hidden');
+    }
+
+    function sendFeedback() {
+      const type = document.getElementById('feedback-type').value;
+      const text = document.getElementById('feedback-text').value;
+      const subject = encodeURIComponent("[CNC & Cobot Studio v4.3] " + type);
+      const body = encodeURIComponent(text + "\n\n---\nEnviado desde CNC & Cobot Studio Web App");
+      window.location.href = `mailto:cnccobot.feedback@gmail.com?subject=${subject}&body=${body}`;
+      closeFeedbackModal();
+    }
+
+    function dismissSurvey() {
+      document.getElementById('survey-banner').classList.add('hidden');
+      localStorage.setItem('cnc_survey_dismissed', Date.now());
+    }
+
+    function checkSurveyDisplay() {
+      const dismissed = localStorage.getItem('cnc_survey_dismissed');
+      // Mostrar si no se ha cerrado o tras 14 días
+      if (!dismissed || (Date.now() - dismissed > 14 * 24 * 60 * 60 * 1000)) {
+        document.getElementById('survey-banner').classList.remove('hidden');
+      }
+    }
+
+    /* ------------------------------------------------------------
+       NOTIFICACIONES FLOTANTES (TOASTS)
+    ------------------------------------------------------------ */
+    function showToast(msg) {
+      const existing = document.getElementById('app-toast');
+      if (existing) existing.remove();
+      const toast = document.createElement('div');
+      toast.id = 'app-toast';
+      toast.className = 'fixed bottom-4 right-4 bg-slate-900 border border-blue-500/50 text-white px-4 py-2.5 rounded-xl shadow-2xl font-mono text-xs z-50 flex items-center gap-2 animate-bounce';
+      toast.innerHTML = `<span>ℹ️</span> <span>${msg}</span>`;
+      document.body.appendChild(toast);
+      setTimeout(() => { if (toast) toast.remove(); }, 3000);
+    }
+
+    /* ------------------------------------------------------------
+       ARRANQUE DE LA APLICACIÓN
+    ------------------------------------------------------------ */
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedLang = localStorage.getItem('cnc_cobot_lang') || 'es';
+      switchLanguage(savedLang);
+      checkSurveyDisplay();
+    });
   </script>
 </body>
 </html>
