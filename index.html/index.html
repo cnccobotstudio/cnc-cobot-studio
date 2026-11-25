@@ -1,1268 +1,1496 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CNC & Cobot Studio v5.7 - Centro Cinemático & Suite Completa</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Google Fonts: Space Grotesk & Inter -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <script>
+<html class="h-full bg-[#070e1d] text-slate-100" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>CNC &amp; Cobot Studio v5.5 - Universal Kinematics &amp; Robotics Orchestrator</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
     tailwind.config = {
-      darkMode: 'class',
       theme: {
         extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            display: ['Space Grotesk', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace'],
-          },
           colors: {
-            industrial: {
-              950: '#070e1d',
-              900: '#0c1322',
-              850: '#10192b',
-              800: '#141f36',
-              700: '#1e2c4a',
-              600: '#2d3f66',
-              cyan: '#00e5ff',
-              emerald: '#10b981',
-              amber: '#f59e0b',
-              crimson: '#ef4444'
+            brand: {
+              surface: '#0c1322',
+              card: '#141b2b',
+              border: '#1e293b',
+              accent: '#2563eb',
+              cyan: '#00f2fe'
             }
           }
         }
       }
     }
   </script>
-
-  <style>
-    body {
-      background-color: #070e1d;
-      color: #e2e8f0;
-      font-family: 'Inter', sans-serif;
-    }
-    .font-mono-numbers {
-      font-variant-numeric: tabular-nums;
-    }
-    /* Grid de fondo técnico */
-    .bg-tech-grid {
-      background-size: 24px 24px;
-      background-image: 
-        linear-gradient(to right, rgba(0, 229, 255, 0.04) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(0, 229, 255, 0.04) 1px, transparent 1px);
-    }
-    .custom-scrollbar::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-track {
-      background: #0c1322;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: #1e2c4a;
-      border-radius: 3px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-      background: #00e5ff;
-    }
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<style>
+    body { font-family: 'Space Grotesk', -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .tabular-nums { font-variant-numeric: tabular-nums; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #070e1d; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+    .glow-cyan { filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.45)); }
+    .glow-green { filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.6)); }
+    .hidden-view { display: none !important; }
   </style>
 </head>
-<body class="bg-industrial-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-industrial-cyan selection:text-industrial-950">
-
-  <!-- CABECERA SUPERIOR (OFFICIAL HEADER) -->
-  <header class="bg-industrial-900 border-b border-industrial-700/60 px-4 py-2.5 flex items-center justify-between sticky top-0 z-40 select-none shadow-md">
-    <div class="flex items-center space-x-3">
-      <!-- LOGO OFICIAL BRAZO COBOT CON LÁSER -->
-      <div class="w-10 h-10 rounded-xl bg-industrial-800 border border-industrial-cyan/40 flex items-center justify-center p-1.5 shadow-[0_0_12px_rgba(0,229,255,0.2)]">
-        <svg viewBox="0 0 100 100" class="w-full h-full text-industrial-cyan">
-          <circle cx="50" cy="80" r="12" fill="none" stroke="#00e5ff" stroke-width="4"/>
-          <line x1="50" y1="80" x2="35" y2="50" stroke="#00e5ff" stroke-width="6" stroke-linecap="round"/>
-          <circle cx="35" cy="50" r="7" fill="#141f36" stroke="#00e5ff" stroke-width="3"/>
-          <line x1="35" y1="50" x2="65" y2="30" stroke="#00e5ff" stroke-width="5" stroke-linecap="round"/>
-          <circle cx="65" cy="30" r="6" fill="#141f36" stroke="#00e5ff" stroke-width="3"/>
-          <line x1="65" y1="30" x2="75" y2="38" stroke="#00e5ff" stroke-width="4" stroke-linecap="round"/>
-          <circle cx="75" cy="38" r="4" fill="#10b981"/>
-          <!-- Haz láser esmeralda -->
-          <line x1="75" y1="38" x2="88" y2="52" stroke="#10b981" stroke-width="2.5" stroke-dasharray="3 2"/>
-        </svg>
-      </div>
-      <div>
-        <div class="flex items-center space-x-2">
-          <span class="font-display font-bold text-lg tracking-wider text-white">CNC & COBOT STUDIO</span>
-          <span class="text-[10px] font-mono bg-industrial-cyan/15 text-industrial-cyan border border-industrial-cyan/30 px-1.5 py-0.5 rounded font-semibold">v5.7 PRO</span>
-        </div>
-        <p class="text-[11px] text-slate-400">Created by <span class="text-white font-medium">EagleCelest</span> · Universal Orchestrator</p>
-      </div>
-    </div>
-
-    <!-- TELEMETRÍA Y CONTROLES DE CABECERA -->
-    <div class="flex items-center space-x-3">
-      <!-- Estado de Bus RTDE -->
-      <div class="hidden lg:flex items-center space-x-2 bg-industrial-950/70 border border-industrial-700/70 px-2.5 py-1 rounded-lg text-xs font-mono">
-        <span class="w-2 h-2 rounded-full bg-industrial-emerald animate-pulse"></span>
-        <span class="text-slate-400">BUS:</span>
-        <span class="text-industrial-emerald font-semibold">500 Hz RTDE Ok</span>
-      </div>
-
-      <!-- Puntos XP Gamificados -->
-      <div class="flex items-center space-x-2 bg-industrial-950/70 border border-industrial-amber/40 px-3 py-1 rounded-lg text-xs font-mono">
-        <i class="fa-solid fa-star text-industrial-amber"></i>
-        <span class="text-slate-300">XP:</span>
-        <span id="header-xp-val" class="text-industrial-amber font-bold font-mono-numbers">350</span>
-        <button onclick="switchTab('tab-biblioteca')" class="ml-1 text-[10px] bg-industrial-amber/20 hover:bg-industrial-amber/30 text-industrial-amber px-1.5 py-0.5 rounded border border-industrial-amber/30 transition">Canjear</button>
-      </div>
-
-      <!-- Selector Idioma Bilingüe ES/EN -->
-      <div class="flex items-center bg-industrial-950/80 border border-industrial-700 rounded-lg p-0.5 text-xs font-medium">
-        <button id="btn-lang-es" onclick="setLanguage('es')" class="px-2 py-0.5 rounded bg-industrial-700 text-white font-semibold transition">🇪🇸 ES</button>
-        <button id="btn-lang-en" onclick="setLanguage('en')" class="px-2 py-0.5 rounded text-slate-400 hover:text-white transition">🇬🇧 EN</button>
-      </div>
-
-      <!-- Selector de Rol (Estudiante Gratuito / Taller Pro) -->
-      <div class="flex items-center bg-industrial-950/80 border border-industrial-700 rounded-lg p-0.5 text-xs">
-        <button id="btn-role-student" onclick="setRole('student')" class="px-2.5 py-1 rounded bg-blue-600 text-white font-medium flex items-center space-x-1.5 shadow-sm transition">
-          <i class="fa-solid fa-graduation-cap"></i>
-          <span>Estudiante (0€)</span>
+<body class="h-full flex flex-col bg-[#070e1d] text-slate-200 antialiased select-none overflow-x-hidden">
+<!-- ==================== TOP BAR CABECERA GLOBAL ==================== -->
+<header class="h-16 border-b border-slate-800 bg-[#0c1322]/95 backdrop-blur px-3 sm:px-5 flex items-center justify-between shrink-0 sticky top-0 z-40">
+<!-- Identidad y Logotipo Oficial Exacto (Brazo Cobot 6-DOF con Láser Verde) -->
+<div class="flex items-center gap-3 cursor-pointer" onclick="switchView('home')">
+<div class="relative w-10 h-10 flex-shrink-0 rounded-xl overflow-hidden border border-cyan-500/40 bg-[#070e1d] shadow-lg shadow-cyan-500/10 flex items-center justify-center p-0.5">
+<svg class="w-full h-full" viewbox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<lineargradient id="cobotBgGrad" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#0a101f"></stop>
+<stop offset="100%" stop-color="#030712"></stop>
+</lineargradient>
+<lineargradient id="cobotCyanBlue" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#00f2fe"></stop>
+<stop offset="50%" stop-color="#4facfe"></stop>
+<stop offset="100%" stop-color="#2563eb"></stop>
+</lineargradient>
+<filter height="140%" id="cobotGlow" width="140%" x="-20%" y="-20%">
+<fegaussianblur result="blur" stddeviation="6"></fegaussianblur>
+<fecomposite in="SourceGraphic" in2="blur" operator="over"></fecomposite>
+</filter>
+</defs>
+<rect fill="url(#cobotBgGrad)" height="400" rx="48" width="400"></rect>
+<rect fill="none" height="400" rx="48" stroke="#1e293b" stroke-width="3" width="400"></rect>
+<circle cx="200" cy="200" fill="none" r="140" stroke="#1e293b" stroke-dasharray="4 8" stroke-width="1.5"></circle>
+<circle cx="200" cy="200" fill="none" r="90" stroke="#2563eb" stroke-opacity="0.3" stroke-width="1"></circle>
+<line stroke="#38bdf8" stroke-linecap="round" stroke-width="2" x1="200" x2="200" y1="40" y2="70"></line>
+<line stroke="#38bdf8" stroke-linecap="round" stroke-width="2" x1="200" x2="200" y1="330" y2="360"></line>
+<line stroke="#38bdf8" stroke-linecap="round" stroke-width="2" x1="40" x2="70" y1="200" y2="200"></line>
+<line stroke="#38bdf8" stroke-linecap="round" stroke-width="2" x1="330" x2="360" y1="200" y2="200"></line>
+<path d="M 140 310 L 260 310 L 245 285 L 155 285 Z" fill="#1e293b" stroke="#38bdf8" stroke-linejoin="round" stroke-width="2.5"></path>
+<ellipse cx="200" cy="285" fill="#0f172a" rx="45" ry="10" stroke="#38bdf8" stroke-width="2"></ellipse>
+<circle cx="200" cy="265" fill="#0f172a" r="22" stroke="url(#cobotCyanBlue)" stroke-width="4"></circle>
+<circle cx="200" cy="265" fill="#38bdf8" r="9"></circle>
+<path d="M 190 265 L 135 175 L 158 160 L 210 252 Z" fill="#1e293b" stroke="#3b82f6" stroke-width="2"></path>
+<circle cx="145" cy="170" fill="#0b1329" filter="url(#cobotGlow)" r="26" stroke="url(#cobotCyanBlue)" stroke-width="4.5"></circle>
+<circle cx="145" cy="170" fill="#00f2fe" r="10"></circle>
+<path d="M 145 170 L 255 110 L 268 128 L 155 188 Z" fill="#1e293b" stroke="#38bdf8" stroke-width="2"></path>
+<circle cx="260" cy="120" fill="#0b1329" r="18" stroke="url(#cobotCyanBlue)" stroke-width="3.5"></circle>
+<circle cx="260" cy="120" fill="#38bdf8" r="7"></circle>
+<path d="M 260 120 L 290 145" stroke="#94a3b8" stroke-linecap="round" stroke-width="8"></path>
+<circle cx="295" cy="150" fill="#0f172a" r="12" stroke="#10b981" stroke-width="3"></circle>
+<path d="M 290 162 L 285 180 L 295 180" fill="none" stroke="#38bdf8" stroke-linecap="round" stroke-width="3"></path>
+<path d="M 300 162 L 305 180 L 295 180" fill="none" stroke="#38bdf8" stroke-linecap="round" stroke-width="3"></path>
+<circle cx="295" cy="195" fill="#10b981" filter="url(#cobotGlow)" r="4"></circle>
+<line stroke="#10b981" stroke-width="1.5" x1="285" x2="305" y1="195" y2="195"></line>
+<line stroke="#10b981" stroke-width="1.5" x1="295" x2="295" y1="185" y2="205"></line>
+<path d="M 295 195 C 330 250, 270 290, 200 290" fill="none" stroke="#10b981" stroke-dasharray="4 4" stroke-opacity="0.8" stroke-width="2"></path>
+<rect fill="#0f172a" height="30" rx="8" stroke="#334155" stroke-width="1.5" width="76" x="24" y="24"></rect>
+<text fill="#38bdf8" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="800" letter-spacing="1.5" text-anchor="middle" x="62" y="44">COBOT</text>
+</svg>
+</div>
+<div>
+<div class="flex items-center gap-1.5 sm:gap-2">
+<span class="font-bold tracking-tight text-white text-xs sm:text-base font-mono">CNC &amp; COBOT STUDIO</span>
+<span class="text-[9px] sm:text-[10px] font-mono px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 font-semibold border border-blue-500/30">v5.5 PRO</span>
+</div>
+<p class="text-[10px] sm:text-[11px] text-slate-400 font-mono truncate max-w-[180px] sm:max-w-none">
+          Created by <span class="text-amber-400 font-semibold">EagleCelest</span> · <span data-i18n="badge_title">Universal Orchestrator</span>
+</p>
+</div>
+</div>
+<!-- Centro Técnico: Estados RTDE -->
+<div class="hidden xl:flex items-center gap-3 font-mono text-xs">
+<div class="px-2.5 py-1 rounded-md bg-[#141b2b] border border-slate-800 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+<span class="text-slate-400">BUS:</span>
+<span class="text-emerald-400 font-semibold">500 Hz RTDE Ok</span>
+</div>
+<div class="px-2.5 py-1 rounded-md bg-[#141b2b] border border-slate-800 flex items-center gap-2">
+<span class="text-blue-400">⚡ KERNEL:</span>
+<span class="text-slate-300">0ms · WASM Local RT</span>
+</div>
+</div>
+<!-- Acciones Derecha -->
+<div class="flex items-center gap-1.5 sm:gap-2.5">
+<!-- Puntos XP -->
+<div class="hidden sm:flex items-center bg-[#141b2b] border border-amber-500/30 rounded-lg px-2.5 py-1 text-xs font-mono text-amber-300 gap-1.5">
+<span>⭐</span>
+<span>XP:</span>
+<span class="font-bold text-white tabular-nums" id="user-xp-display">350</span>
+<button class="ml-1 px-1.5 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/40 text-amber-200 text-[10px] border border-amber-500/40" onclick="openRedeemModal()">
+          Canjear
         </button>
-        <button id="btn-role-pro" onclick="setRole('pro')" class="px-2.5 py-1 rounded text-slate-400 hover:text-white flex items-center space-x-1.5 transition">
-          <i class="fa-solid fa-city text-[10px]"></i>
-          <span>Taller Pro</span>
+</div>
+<!-- SELECTOR BILINGÜE -->
+<div class="flex items-center bg-[#141b2b] border border-slate-700/80 rounded-lg p-0.5 text-xs font-mono shadow-inner">
+<button class="flex items-center gap-1 px-2 py-1 rounded bg-blue-600/40 text-blue-300 font-semibold border border-blue-500/50 transition-all" id="lang-btn-es" onclick="switchLanguage('es')">
+<span>🇪🇸</span>
+<span>ES</span>
+</button>
+<button class="flex items-center gap-1 px-2 py-1 rounded text-slate-400 hover:text-slate-200 transition-all" id="lang-btn-en" onclick="switchLanguage('en')">
+<span>🇬🇧</span>
+<span>EN</span>
+</button>
+</div>
+<!-- Selector Rol -->
+<div class="hidden md:flex items-center bg-[#141b2b] border border-slate-800 rounded-lg p-0.5 text-xs font-mono">
+<button class="px-2.5 py-1 rounded bg-blue-600 text-white font-medium shadow-sm transition-all flex items-center gap-1" id="role-student-btn" onclick="setRole('student')">
+<span>🎓</span>
+<span data-i18n="role_student">Estudiante (0€)</span>
+</button>
+<button class="px-2.5 py-1 rounded text-slate-400 hover:text-white transition-all flex items-center gap-1" id="role-pro-btn" onclick="setRole('pro')">
+<span>🏭</span>
+<span data-i18n="role_pro">Taller Pro</span>
+</button>
+</div>
+<!-- Feedback -->
+<button class="px-2.5 py-1.5 rounded-lg bg-[#141b2b] hover:bg-slate-800 border border-slate-700 text-xs font-mono text-slate-300 hover:text-white flex items-center gap-1.5 transition-all" onclick="openFeedbackModal()">
+<span>💬</span>
+<span class="hidden sm:inline" data-i18n="btn_feedback">Feedback</span>
+</button>
+<!-- E-STOP SIL-3 -->
+<button class="px-2.5 sm:px-3.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold font-mono tracking-wider flex items-center gap-1.5 shadow-lg shadow-rose-600/30 transition-all active:scale-95" id="btn-estop" onclick="triggerEmergencyStop()">
+<span class="w-2 h-2 rounded-full bg-white animate-ping"></span>
+<span>E-STOP</span>
+</button>
+</div>
+</header>
+<!-- ==================== CUERPO PRINCIPAL ==================== -->
+<div class="flex-1 flex overflow-hidden">
+<!-- Barra Lateral (Desktop) -->
+<aside class="w-64 border-r border-slate-800/80 bg-[#0c1322] flex flex-col justify-between shrink-0 hidden md:flex select-none">
+<div class="p-3 space-y-5">
+<div>
+<p class="px-3 text-[10px] font-mono tracking-wider text-slate-400 uppercase mb-2 font-semibold" data-i18n="nav_workspace_heading">Módulos de Trabajo</p>
+<nav class="space-y-1">
+<button class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg bg-blue-600/20 text-blue-300 border border-blue-500/30 text-xs font-medium transition-all text-left" id="nav-btn-home" onclick="switchView('home')">
+<span class="text-sm">🏠</span>
+<span data-i18n="mod_home">Inicio &amp; Proyectos</span>
+</button>
+<button class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-900/80 text-xs font-medium transition-all text-left" id="nav-btn-kinematics" onclick="switchView('kinematics')">
+<span class="text-sm">🦾</span>
+<span data-i18n="mod_kinematics">Centro Cinemático 3D</span>
+</button>
+<button class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-900/80 text-xs font-medium transition-all text-left" id="nav-btn-editor" onclick="switchView('editor')">
+<span class="text-sm">💻</span>
+<span data-i18n="mod_editor">Editor &amp; Transpilador</span>
+</button>
+<button class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-900/80 text-xs font-medium transition-all text-left" id="nav-btn-hub" onclick="switchView('hub')">
+<span class="text-sm">📖</span>
+<span data-i18n="mod_hub">Biblioteca</span>
+</button>
+</nav>
+</div>
+<div class="p-3.5 rounded-xl bg-[#141b2b] border border-slate-800 text-xs space-y-1.5">
+<div class="flex items-center gap-1.5 text-amber-400 font-semibold">
+<span>🛡️</span>
+<span data-i18n="sidebar_mission_title">Misión Educativa</span>
+</div>
+<p class="text-[11px] text-slate-400 leading-relaxed" data-i18n="sidebar_mission_desc">Acceso libre para estudiantes, autónomos y talleres. Democratizando la robótica con EagleCelest.</p>
+</div>
+</div>
+<div class="p-3 border-t border-slate-800 bg-[#070e1d] font-mono text-[11px] space-y-2">
+<div class="flex items-center justify-between text-slate-400">
+<span data-i18n="hardware_status">HARDWARE ACTIVO:</span>
+<span class="text-emerald-400 font-semibold" id="side-hw-status">● CONECTADO</span>
+</div>
+<p class="text-slate-200 font-bold truncate" id="side-machine-name">UR10e Cobot (6-DOF)</p>
+<div class="flex justify-between text-[10px] text-slate-400">
+<span>Interlock SIL-3:</span>
+<span class="text-emerald-400 font-semibold">ARMADO</span>
+</div>
+<button class="w-full py-1.5 px-2 rounded-lg bg-[#141b2b] hover:bg-slate-800 border border-amber-500/30 text-amber-300 text-[10px] text-center transition-all" onclick="openFeedbackModal()">
+          ✨ [Enviar Feedback / Encuesta]
         </button>
-      </div>
-
-      <!-- Feedback Directo a cnccobot.feedback@gmail.com -->
-      <a href="mailto:cnccobot.feedback@gmail.com?subject=Feedback%20CNC%20%26%20Cobot%20Studio" class="hidden sm:flex items-center space-x-1.5 bg-industrial-800 hover:bg-industrial-700 border border-industrial-600/70 text-slate-200 px-3 py-1.5 rounded-lg text-xs font-medium transition shadow-sm">
-        <i class="fa-regular fa-comment-dots text-industrial-cyan"></i>
-        <span>Feedback</span>
-      </a>
-
-      <!-- Botón de Parada de Emergencia E-STOP -->
-      <button onclick="triggerEStop()" class="bg-red-600 hover:bg-red-500 active:bg-red-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold tracking-wider flex items-center space-x-1.5 shadow-[0_0_12px_rgba(239,68,68,0.4)] transition">
-        <i class="fa-solid fa-circle-stop"></i>
-        <span>E-STOP</span>
-      </button>
-    </div>
-  </header>
-
-  <!-- CONTENEDOR PRINCIPAL: SIDEBAR + VISTAS -->
-  <div class="flex-1 flex overflow-hidden">
-    
-    <!-- BARRA LATERAL PERSISTENTE -->
-    <aside class="w-64 bg-industrial-900/90 border-r border-industrial-700/60 flex flex-col justify-between p-3.5 select-none shrink-0">
-      <div>
-        <p class="text-[10px] font-mono tracking-widest text-slate-400 uppercase mb-2 px-2">MÓDULOS DE TRABAJO</p>
-        <nav class="space-y-1.5">
-          <!-- 01. Inicio & Proyectos -->
-          <button id="nav-inicio" onclick="switchTab('tab-inicio')" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium bg-industrial-cyan/15 text-industrial-cyan border border-industrial-cyan/30 transition">
-            <i class="fa-solid fa-house-laptop w-4 text-center"></i>
-            <span>Inicio & Proyectos</span>
-          </button>
-
-          <!-- 02. Centro Cinemático 3D -->
-          <button id="nav-cinematica" onclick="switchTab('tab-cinematica')" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-slate-100 hover:bg-industrial-800 transition">
-            <i class="fa-solid fa-robot w-4 text-center"></i>
-            <span>Centro Cinemático 3D</span>
-          </button>
-
-          <!-- 03. Editor & Transpilador -->
-          <button id="nav-editor" onclick="switchTab('tab-editor')" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-slate-100 hover:bg-industrial-800 transition">
-            <i class="fa-solid fa-code w-4 text-center"></i>
-            <span>Editor & Transpilador</span>
-          </button>
-
-          <!-- 04. Biblioteca Didáctica & Retos -->
-          <button id="nav-biblioteca" onclick="switchTab('tab-biblioteca')" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-slate-100 hover:bg-industrial-800 transition">
-            <i class="fa-solid fa-book-open-reader w-4 text-center"></i>
-            <span>Biblioteca & Retos</span>
-          </button>
-        </nav>
-
-        <!-- BANNER DE MISIÓN EDUCATIVA -->
-        <div class="mt-6 bg-industrial-950/60 border border-industrial-700/60 rounded-xl p-3 text-[11px] text-slate-400">
-          <div class="flex items-center space-x-1.5 text-industrial-cyan font-semibold mb-1">
-            <i class="fa-solid fa-shield-halved"></i>
-            <span>Misión Educativa</span>
-          </div>
-          <p class="leading-relaxed">Acceso libre para estudiantes, autónomos y talleres. Democratizando la robótica con EagleCelest.</p>
-        </div>
-      </div>
-
-      <!-- FOOTER DE SIDEBAR: HARDWARE CONECTADO -->
-      <div class="border-t border-industrial-700/50 pt-3 text-[11px]">
-        <div class="flex items-center justify-between text-slate-400 mb-1">
-          <span>HARDWARE ACTIVO:</span>
-          <span class="text-industrial-emerald flex items-center space-x-1">
-            <span class="w-1.5 h-1.5 rounded-full bg-industrial-emerald animate-ping"></span>
-            <span>CONECTADO</span>
-          </span>
-        </div>
-        <p class="font-mono text-slate-200 font-semibold">UR10e Cobot (6-DOF)</p>
-        <p class="text-[10px] text-slate-400 flex items-center justify-between mt-1">
-          <span>Interlock SIL-3:</span>
-          <span class="text-industrial-emerald font-mono">ARMADO</span>
-        </p>
-
-        <!-- Botón rápido encuesta feedback -->
-        <a href="mailto:cnccobot.feedback@gmail.com?subject=Sugerencia%20de%20Taller" class="mt-3 block text-center bg-industrial-800/80 hover:bg-industrial-700 border border-industrial-amber/40 text-industrial-amber py-1.5 rounded-lg text-[11px] font-medium transition">
-          <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> [Enviar Feedback / Encuesta]
-        </a>
-
-        <p class="text-[10px] text-center text-slate-400 mt-2">Created by <span class="text-slate-300 font-medium">EagleCelest</span></p>
-      </div>
-    </aside>
-
-    <!-- ÁREA DE CONTENIDO CENTRAL INTERACTIVO -->
-    <main class="flex-1 overflow-y-auto custom-scrollbar p-6 bg-tech-grid">
-
-      <!-- ========================================== -->
-      <!-- PESTAÑA 01: INICIO & SELECTOR DE PROYECTOS -->
-      <!-- ========================================== -->
-      <section id="tab-inicio" class="max-w-6xl mx-auto space-y-6">
-        <div>
-          <p class="text-xs font-mono text-industrial-cyan tracking-wider uppercase mb-1">PASO 01 // CONFIGURACIÓN INICIAL & CINEMÁTICA</p>
-          <div class="flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <h1 class="font-display text-2xl lg:text-3xl font-bold text-white">Nuevo Proyecto & Selector de Máquina</h1>
-              <p class="text-sm text-slate-400 mt-0.5">Democratización técnica para estudiantes, autónomos y talleres.</p>
-            </div>
-            <div class="flex items-center space-x-3">
-              <button onclick="exportProjectFile()" class="bg-industrial-800 hover:bg-industrial-700 border border-industrial-600 px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 transition">
-                <i class="fa-solid fa-file-export text-industrial-amber"></i>
-                <span>Exportar .CNCPROJ</span>
-              </button>
-              <button onclick="switchTab('tab-cinematica')" class="bg-blue-600 hover:bg-blue-500 shadow-[0_0_15px_rgba(37,99,235,0.4)] px-4 py-2 rounded-xl text-xs font-bold tracking-wide flex items-center space-x-2 transition">
-                <i class="fa-solid fa-play"></i>
-                <span>Iniciar Proyecto Ahora →</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- 4 ACCIONES MAESTRAS -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <!-- Iniciar Proyecto Nuevo -->
-          <div class="bg-industrial-900/90 border-2 border-industrial-cyan p-4 rounded-2xl relative shadow-[0_0_15px_rgba(0,229,255,0.15)] cursor-pointer">
-            <span class="absolute top-3 right-3 text-[10px] font-mono bg-industrial-cyan text-industrial-950 font-bold px-2 py-0.5 rounded-full uppercase">ACTIVO</span>
-            <i class="fa-solid fa-wand-magic-sparkles text-industrial-amber text-xl mb-2"></i>
-            <h3 class="font-display font-bold text-sm text-white">Iniciar Proyecto Nuevo</h3>
-            <p class="text-xs text-slate-400 mt-1">Configura parámetros, casos guiados o arranca de cero.</p>
-          </div>
-
-          <!-- Proyecto Guardado -->
-          <div onclick="alert('Recuperando sesión anterior de memoria local...')" class="bg-industrial-900/80 border border-industrial-700/70 p-4 rounded-2xl relative hover:border-industrial-cyan/50 cursor-pointer transition">
-            <span class="absolute top-3 right-3 text-[10px] font-mono bg-industrial-700 text-slate-300 px-2 py-0.5 rounded uppercase">MEMORIA</span>
-            <i class="fa-solid fa-folder-open text-yellow-400 text-xl mb-2"></i>
-            <h3 class="font-display font-bold text-sm text-white">Proyecto Guardado</h3>
-            <p class="text-xs text-slate-400 mt-1">Recupera: Probeta_Didactica.cncproj de tu sesión previa.</p>
-          </div>
-
-          <!-- Importar Proyecto -->
-          <div onclick="document.getElementById('import-file').click()" class="bg-industrial-900/80 border border-industrial-700/70 p-4 rounded-2xl relative hover:border-industrial-cyan/50 cursor-pointer transition">
-            <input type="file" id="import-file" class="hidden" onchange="alert('Proyecto cargado con éxito en memoria.')">
-            <span class="absolute top-3 right-3 text-[10px] font-mono bg-industrial-700 text-slate-300 px-2 py-0.5 rounded uppercase">LOCAL</span>
-            <i class="fa-solid fa-file-import text-orange-400 text-xl mb-2"></i>
-            <h3 class="font-display font-bold text-sm text-white">Importar Proyecto</h3>
-            <p class="text-xs text-slate-400 mt-1">Carga archivos .cncproj, rutinas ISO o scripts de robot.</p>
-          </div>
-
-          <!-- Exportar Proyecto -->
-          <div onclick="exportProjectFile()" class="bg-industrial-900/80 border border-industrial-700/70 p-4 rounded-2xl relative hover:border-industrial-cyan/50 cursor-pointer transition">
-            <span class="absolute top-3 right-3 text-[10px] font-mono bg-industrial-700 text-slate-300 px-2 py-0.5 rounded uppercase">DESCARGA</span>
-            <i class="fa-solid fa-cloud-arrow-down text-industrial-cyan text-xl mb-2"></i>
-            <h3 class="font-display font-bold text-sm text-white">Exportar Proyecto</h3>
-            <p class="text-xs text-slate-400 mt-1">Genera archivo descargable con origen, piezas y herramientas.</p>
-          </div>
-        </div>
-
-        <!-- 00 // CASO PRÁCTICO DIDÁCTICO -->
-        <div class="space-y-2">
-          <div class="flex items-center justify-between text-xs">
-            <span class="font-mono text-industrial-cyan font-semibold flex items-center space-x-1.5">
-              <i class="fa-solid fa-layer-group"></i>
-              <span>00 // TIPO DE OPERACIÓN & CASO PRÁCTICO DIDÁCTICO</span>
-            </span>
-            <span class="text-slate-400">Selecciona una plantilla guiada para precargar cinemática y parámetros:</span>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            <!-- Caso 1 -->
-            <div class="bg-industrial-900/90 border-2 border-industrial-cyan p-3.5 rounded-xl cursor-pointer">
-              <div class="flex items-center justify-between mb-1.5">
-                <i class="fa-solid fa-cube text-industrial-cyan"></i>
-                <span class="text-[10px] font-mono bg-industrial-cyan/20 text-industrial-cyan px-2 py-0.5 rounded font-bold">ACTIVO</span>
-              </div>
-              <h4 class="font-bold text-xs text-white">Mecanizado de Probeta Didáctica</h4>
-              <p class="text-[11px] text-slate-400 mt-0.5">(Contorneado & Cajera CNC)</p>
-              <div class="mt-3 flex flex-wrap gap-1">
-                <span class="text-[9px] font-mono bg-industrial-800 text-slate-300 px-1.5 py-0.5 rounded">CNC 3E/5X</span>
-                <span class="text-[9px] font-mono bg-industrial-800 text-slate-300 px-1.5 py-0.5 rounded">AL-6061 T6</span>
-                <span class="text-[9px] font-mono bg-industrial-800 text-slate-300 px-1.5 py-0.5 rounded">Fresa D10</span>
-              </div>
-            </div>
-
-            <!-- Caso 2 -->
-            <div onclick="alert('Cargando plantilla Pick & Place Industrial...')" class="bg-industrial-900/60 border border-industrial-700/60 p-3.5 rounded-xl hover:border-industrial-cyan/40 cursor-pointer transition">
-              <div class="flex items-center justify-between mb-1.5">
-                <i class="fa-solid fa-hand-holding-hand text-slate-300"></i>
-                <span class="text-[10px] font-mono text-slate-400">CASO 02</span>
-              </div>
-              <h4 class="font-bold text-xs text-white">Pick & Place Industrial</h4>
-              <p class="text-[11px] text-slate-400 mt-0.5">& Dispensado Adhesivo</p>
-              <div class="mt-3 flex flex-wrap gap-1">
-                <span class="text-[9px] font-mono bg-industrial-800 text-slate-300 px-1.5 py-0.5 rounded">Cobot 6-DOF UR10e</span>
-                <span class="text-[9px] font-mono bg-industrial-800 text-slate-300 px-1.5 py-0.5 rounded">TCP Pinza/Boquilla</span>
-                <span class="text-[9px] font-mono bg-industrial-800 text-slate-300 px-1.5 py-0.5 rounded">Frame Base</span>
-              </div>
-            </div>
-
-            <!-- Caso 3 -->
-            <div onclick="alert('Cargando plantilla Torno CNC + Cobot Loader...')" class="bg-industrial-900/60 border border-industrial-700/60 p-3.5 rounded-xl hover:border-industrial-cyan/40 cursor-pointer transition">
-              <div class="flex items-center justify-between mb-1.5">
-                <i class="fa-solid fa-arrow-rotate-right text-slate-300"></i>
-                <span class="text-[10px] font-mono text-slate-400">CASO 03</span>
-              </div>
-              <h4 class="font-bold text-xs text-white">Carga Automática de Torno CNC</h4>
-              <p class="text-[11px] text-slate-400 mt-0.5">con Celda Robotizada</p>
-              <div class="mt-3 flex flex-wrap gap-1">
-                <span class="text-[9px] font-mono bg-industrial-800 text-slate-300 px-1.5 py-0.5 rounded">Torno Mazak + Cobot</span>
-                <span class="text-[9px] font-mono bg-industrial-800 text-slate-300 px-1.5 py-0.5 rounded">M10/M11 Interlock</span>
-              </div>
-            </div>
-
-            <!-- Caso 4 -->
-            <div onclick="alert('Abriendo plantilla de código libre vacía...')" class="bg-industrial-900/60 border border-industrial-700/60 p-3.5 rounded-xl hover:border-industrial-cyan/40 cursor-pointer transition">
-              <div class="flex items-center justify-between mb-1.5">
-                <i class="fa-regular fa-file-lines text-slate-300"></i>
-                <span class="text-[10px] font-mono text-slate-400">CASO 04</span>
-              </div>
-              <h4 class="font-bold text-xs text-white">Proyecto Libre</h4>
-              <p class="text-[11px] text-slate-400 mt-0.5">Carga de Código Propio (.CNC / .SRC)</p>
-              <div class="mt-3 flex flex-wrap gap-1">
-                <span class="text-[9px] font-mono bg-industrial-800 text-slate-300 px-1.5 py-0.5 rounded">G-Code ISO</span>
-                <span class="text-[9px] font-mono bg-industrial-800 text-slate-300 px-1.5 py-0.5 rounded">URScript Custom</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 01 // IDENTIFICACIÓN, DATUM Y BRUTO -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <!-- Identificación -->
-          <div class="bg-industrial-900/70 border border-industrial-700/60 p-4 rounded-xl">
-            <div class="flex items-center justify-between text-xs font-mono text-slate-400 mb-2">
-              <span>01 // IDENTIFICACIÓN</span>
-              <span class="text-industrial-emerald flex items-center space-x-1">
-                <i class="fa-solid fa-check"></i>
-                <span>AUTO-GUARDADO</span>
-              </span>
-            </div>
-            <label class="text-[11px] text-slate-400 block mb-1">Nombre del Archivo / Setup</label>
-            <div class="flex items-center bg-industrial-950 border border-industrial-700 rounded-lg px-3 py-2 font-mono text-xs text-industrial-cyan">
-              <input type="text" id="project-name-input" value="Probeta_Didactica_CNC" class="bg-transparent flex-1 focus:outline-none text-white">
-              <span class="text-slate-400">.cncproj</span>
-            </div>
-          </div>
-
-          <!-- Origen de Partida (Datum) -->
-          <div class="bg-industrial-900/70 border border-industrial-700/60 p-4 rounded-xl">
-            <div class="text-xs font-mono text-slate-400 mb-2">02 // ORIGEN DE PARTIDA (DATUM)</div>
-            <div class="grid grid-cols-3 gap-2">
-              <button class="bg-blue-600 font-mono text-xs font-bold text-white py-1.5 rounded-lg border border-blue-400">G54</button>
-              <button class="bg-industrial-800 hover:bg-industrial-700 font-mono text-xs text-slate-300 py-1.5 rounded-lg border border-industrial-700">G55</button>
-              <button class="bg-industrial-800 hover:bg-industrial-700 font-mono text-xs text-slate-300 py-1.5 rounded-lg border border-industrial-700">BASE</button>
-            </div>
-            <p class="text-[11px] text-slate-400 mt-2">G54: Origen fijado en mordaza de amarre rápido.</p>
-          </div>
-
-          <!-- Herramienta & Bruto -->
-          <div class="bg-industrial-900/70 border border-industrial-700/60 p-4 rounded-xl">
-            <div class="text-xs font-mono text-slate-400 mb-2">03 // HERRAMIENTA & BRUTO</div>
-            <div class="grid grid-cols-2 gap-2 text-xs">
-              <div class="bg-industrial-950 border border-industrial-cyan/40 p-2 rounded-lg">
-                <span class="text-industrial-cyan font-bold font-mono">T01</span>
-                <p class="text-[11px] text-slate-300">Fresa Plana D10</p>
-              </div>
-              <div class="bg-industrial-950 border border-industrial-700 p-2 rounded-lg">
-                <span class="text-slate-400 font-bold font-mono">T02</span>
-                <p class="text-[11px] text-slate-300">Fresa Esférica R3</p>
-              </div>
-            </div>
-            <p class="text-[11px] text-slate-400 mt-2 flex justify-between">
-              <span>Material Bruto:</span>
-              <span class="font-mono text-white font-medium">AL-6061 T6</span>
-            </p>
-          </div>
-        </div>
-
-        <!-- 04 // SELECCIÓN DE CINEMÁTICA & HARDWARE DE TALLER -->
-        <div class="space-y-2">
-          <p class="text-xs font-mono text-industrial-cyan font-semibold">🤖 04 // SELECCIÓN DE CINEMÁTICA & HARDWARE DE TALLER</p>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            <!-- Cobot 6-DOF -->
-            <div class="bg-industrial-900/90 border-2 border-industrial-cyan p-4 rounded-xl shadow-[0_0_12px_rgba(0,229,255,0.15)] cursor-pointer">
-              <span class="text-[10px] font-mono bg-blue-600/30 text-blue-300 border border-blue-400/30 px-2 py-0.5 rounded font-semibold uppercase">6-DOF COBOT</span>
-              <h4 class="font-bold text-sm text-white mt-2">Cobot 6-DOF</h4>
-              <p class="text-xs text-slate-400">UR10e / Fanuc CRX</p>
-              <div class="mt-3 text-xs space-y-1 font-mono text-slate-300">
-                <div class="flex justify-between"><span>Payload:</span><span class="text-white">12.5 kg</span></div>
-                <div class="flex justify-between"><span>Alcance:</span><span class="text-white">1300 mm</span></div>
-                <div class="flex justify-between"><span>Repetibilidad:</span><span class="text-industrial-emerald">± 0.03 mm</span></div>
-              </div>
-            </div>
-
-            <!-- 3-Axis CNC -->
-            <div class="bg-industrial-900/60 border border-industrial-700/60 p-4 rounded-xl cursor-pointer hover:border-industrial-cyan/40 transition">
-              <span class="text-[10px] font-mono bg-industrial-800 text-slate-300 px-2 py-0.5 rounded uppercase">3-AXIS CNC</span>
-              <h4 class="font-bold text-sm text-white mt-2">3-Axis CNC Mill</h4>
-              <p class="text-xs text-slate-400">Haas VF-2 / Robodrill</p>
-              <div class="mt-3 text-xs space-y-1 font-mono text-slate-400">
-                <div class="flex justify-between"><span>Recorrido Z:</span><span class="text-slate-300">508 mm</span></div>
-                <div class="flex justify-between"><span>Husillo:</span><span class="text-slate-300">12,000 RPM</span></div>
-                <div class="flex justify-between"><span>Potencia:</span><span class="text-slate-300">22.4 kW</span></div>
-              </div>
-            </div>
-
-            <!-- 5-Axis RTCP -->
-            <div class="bg-industrial-900/60 border border-industrial-700/60 p-4 rounded-xl cursor-pointer hover:border-industrial-cyan/40 transition">
-              <span class="text-[10px] font-mono bg-industrial-800 text-slate-300 px-2 py-0.5 rounded uppercase">5-AXIS RTCP</span>
-              <h4 class="font-bold text-sm text-white mt-2">5-Axis RTCP</h4>
-              <p class="text-xs text-slate-400">DMG MORI / Hermle</p>
-              <div class="mt-3 text-xs space-y-1 font-mono text-slate-400">
-                <div class="flex justify-between"><span>Rotativo A:</span><span class="text-slate-300">-120° / +30°</span></div>
-                <div class="flex justify-between"><span>G43.4 RTCP:</span><span class="text-industrial-emerald">Activo</span></div>
-                <div class="flex justify-between"><span>Husillo:</span><span class="text-slate-300">18,000 RPM</span></div>
-              </div>
-            </div>
-
-            <!-- Torno Celda Híbrida -->
-            <div class="bg-industrial-900/60 border border-industrial-700/60 p-4 rounded-xl cursor-pointer hover:border-industrial-cyan/40 transition">
-              <span class="text-[10px] font-mono bg-industrial-800 text-yellow-400 px-2 py-0.5 rounded uppercase">LATHE & HYBRID</span>
-              <h4 class="font-bold text-sm text-white mt-2">Torno & Celda Híbrida</h4>
-              <p class="text-xs text-slate-400">Mazak QT / Cobot Loader</p>
-              <div class="mt-3 text-xs space-y-1 font-mono text-slate-400">
-                <div class="flex justify-between"><span>Torreta:</span><span class="text-slate-300">12 Posiciones</span></div>
-                <div class="flex justify-between"><span>Loader:</span><span class="text-slate-300">I/O Digitales</span></div>
-                <div class="flex justify-between"><span>Interlock:</span><span class="text-industrial-emerald">M10/M11 Ok</span></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ============================================== -->
-      <!-- PESTAÑA 02: CENTRO CINEMÁTICO 3D (CENTRADÍSIMO) -->
-      <!-- ============================================== -->
-      <section id="tab-cinematica" class="hidden max-w-6xl mx-auto space-y-4">
-        <!-- HEADER DE LA CONSOLA -->
-        <div class="flex flex-wrap items-center justify-between gap-4 bg-industrial-900/80 border border-industrial-700/60 p-4 rounded-2xl">
-          <div>
-            <div class="flex items-center space-x-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-industrial-cyan animate-pulse"></span>
-              <h2 class="font-display text-xl font-bold text-white tracking-wide">Centro Cinemático 3D Inmersivo</h2>
-              <span class="text-[10px] font-mono bg-industrial-cyan/20 text-industrial-cyan border border-industrial-cyan/30 px-2 py-0.5 rounded font-bold">FK / IK ENGINE</span>
-            </div>
-            <p class="text-xs text-slate-400 mt-0.5">Control de cinemática directa/inversa, simulación continua y monitoreo de colisiones.</p>
-          </div>
-          <!-- Acciones Rápidas -->
-          <div class="flex items-center space-x-2">
-            <button onclick="toggleSimulation()" id="btn-sim-play" class="bg-industrial-emerald hover:bg-emerald-600 text-industrial-950 font-bold px-3.5 py-1.5 rounded-xl text-xs flex items-center space-x-1.5 shadow-[0_0_12px_rgba(16,185,129,0.3)] transition">
-              <i class="fa-solid fa-play"></i>
-              <span id="sim-status-text">Simular Trayectoria</span>
-            </button>
-            <button onclick="resetJoints()" class="bg-industrial-800 hover:bg-industrial-700 border border-industrial-700 text-slate-300 px-3 py-1.5 rounded-xl text-xs flex items-center space-x-1.5 transition">
-              <i class="fa-solid fa-arrow-rotate-left"></i>
-              <span>Home (0,0,0)</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- VIEWPORT PRINCIPAL DEL COBOT CENTRADO SIMÉTRICO -->
-        <div class="relative bg-industrial-950/95 border-2 border-industrial-cyan/40 rounded-3xl overflow-hidden shadow-[0_0_30px_rgba(0,229,255,0.1)] p-4 flex flex-col items-center">
-          
-          <!-- HUD Superior Flotante -->
-          <div class="w-full flex items-center justify-between text-xs font-mono z-10 mb-2">
-            <div class="flex items-center space-x-3 bg-industrial-900/90 border border-industrial-700/70 px-3 py-1.5 rounded-xl">
-              <span class="text-industrial-emerald flex items-center space-x-1.5">
-                <span class="w-2 h-2 rounded-full bg-industrial-emerald animate-ping"></span>
-                <span class="font-bold">LIVE TELEMETRY 60 FPS</span>
-              </span>
-              <span class="text-slate-400">|</span>
-              <span class="text-slate-300">Tool: <span class="text-industrial-cyan font-bold">LÁSER ESFERA D10</span></span>
-            </div>
-
-            <!-- DRO Rápido Flotante -->
-            <div class="bg-industrial-900/90 border border-industrial-cyan/40 px-3 py-1.5 rounded-xl text-slate-300 font-mono-numbers text-xs">
-              <span class="text-industrial-cyan font-bold">TCP:</span>
-              <span class="ml-1">X: <span id="dro-x" class="text-white font-bold">143.62</span></span>
-              <span class="ml-2">Y: <span id="dro-y" class="text-white font-bold">-30.00</span></span>
-              <span class="ml-2">Z: <span id="dro-z" class="text-white font-bold">225.37</span></span>
-            </div>
-          </div>
-
-          <!-- SVG CINEMÁTICO CENTRADO (EJE X=300 EXACTO) -->
-          <div class="w-full max-w-2xl h-[420px] flex items-center justify-center relative">
-            <svg id="cobot-viewport-svg" viewBox="0 0 600 440" class="w-full h-full select-none">
-              <defs>
-                <!-- Filtro de resplandor luminiscente (Glow) -->
-                <filter id="glow-cyan" x="-20%" y="-20%" width="140%" height="140%">
-                  <feGaussianBlur stdDeviation="4" result="blur"/>
-                  <feComposite in="SourceGraphic" in2="blur" operator="over"/>
-                </filter>
-                <filter id="glow-green" x="-20%" y="-20%" width="140%" height="140%">
-                  <feGaussianBlur stdDeviation="5" result="blur"/>
-                  <feComposite in="SourceGraphic" in2="blur" operator="over"/>
-                </filter>
-                <linearGradient id="link-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#00e5ff"/>
-                  <stop offset="100%" stop-color="#2563eb"/>
-                </linearGradient>
-              </defs>
-
-              <!-- Retícula Concéntrica Simétrica de Alcance -->
-              <circle cx="300" cy="350" r="260" fill="none" stroke="#1e2c4a" stroke-width="1" stroke-dasharray="4 4" opacity="0.6"/>
-              <circle cx="300" cy="350" r="190" fill="none" stroke="#1e2c4a" stroke-width="1" stroke-dasharray="4 4" opacity="0.8"/>
-              <circle cx="300" cy="350" r="110" fill="none" stroke="#1e2c4a" stroke-width="1" opacity="0.5"/>
-              
-              <!-- Ejes ortogonales simétricos centrados en X=300 -->
-              <line x1="40" y1="350" x2="560" y2="350" stroke="#1e2c4a" stroke-width="1.5" stroke-dasharray="2 2"/>
-              <line x1="300" y1="40" x2="300" y2="400" stroke="#1e2c4a" stroke-width="1.5" stroke-dasharray="2 2"/>
-
-              <!-- Trayectoria de Mecanizado Activa (Arco reactivo verde esmeralda) -->
-              <path id="trajectory-arc" d="M 280 200 Q 370 140 450 250" fill="none" stroke="#10b981" stroke-width="3" stroke-dasharray="6 4" filter="url(#glow-green)"/>
-              
-              <!-- Probeta Didáctica AL7075 en la mesa de trabajo -->
-              <g id="workpiece" transform="translate(430, 240)">
-                <rect x="0" y="0" width="70" height="40" rx="4" fill="#141f36" stroke="#00e5ff" stroke-width="1.5"/>
-                <text x="35" y="24" fill="#00e5ff" font-size="9" font-family="JetBrains Mono" text-anchor="middle" font-weight="bold">PROBETA</text>
-              </g>
-
-              <!-- SUELO Y PEDESTAL CENTRADO EN X=300 -->
-              <g id="cobot-base-mount">
-                <!-- Plataforma elíptica simétrica -->
-                <ellipse cx="300" cy="360" rx="80" ry="18" fill="#0c1322" stroke="#00e5ff" stroke-width="2"/>
-                <ellipse cx="300" cy="355" rx="55" ry="12" fill="#141f36" stroke="#1e2c4a" stroke-width="1.5"/>
-                <!-- Pedestal de amarre cilíndrico centrado -->
-                <rect x="270" y="315" width="60" height="40" rx="4" fill="#10192b" stroke="#00e5ff" stroke-width="2"/>
-                <circle cx="300" cy="335" r="10" fill="#141f36" stroke="#00e5ff" stroke-width="2"/>
-              </g>
-
-              <!-- CADENA CINEMÁTICA ARTICULAR CENTRADA (J1 -> J6) -->
-              <g id="robot-kinematic-chain">
-                <!-- Eslabón 1: Base a Hombro -->
-                <line id="link-1" x1="300" y1="320" x2="300" y2="240" stroke="url(#link-grad)" stroke-width="16" stroke-linecap="round" filter="url(#glow-cyan)"/>
-                
-                <!-- Eslabón 2: Hombro a Codo -->
-                <line id="link-2" x1="300" y1="240" x2="390" y2="160" stroke="url(#link-grad)" stroke-width="14" stroke-linecap="round" filter="url(#glow-cyan)"/>
-                
-                <!-- Eslabón 3: Codo a Muñeca 1 -->
-                <line id="link-3" x1="390" y1="160" x2="440" y2="210" stroke="url(#link-grad)" stroke-width="10" stroke-linecap="round"/>
-
-                <!-- Eslabón 4: Muñeca 1 a Brida Tool -->
-                <line id="link-4" x1="440" y1="210" x2="455" y2="245" stroke="#00e5ff" stroke-width="8" stroke-linecap="round"/>
-
-                <!-- Articulaciones Luminosas Dobles (Joint Circles) -->
-                <!-- J1: Base Rotativa -->
-                <circle cx="300" cy="320" r="12" fill="#070e1d" stroke="#00e5ff" stroke-width="3"/>
-                <circle cx="300" cy="320" r="5" fill="#00e5ff"/>
-
-                <!-- J2: Hombro -->
-                <circle id="joint-shoulder" cx="300" cy="240" r="13" fill="#070e1d" stroke="#00e5ff" stroke-width="3" filter="url(#glow-cyan)"/>
-                <circle cx="300" cy="240" r="5" fill="#00e5ff"/>
-
-                <!-- J3: Codo -->
-                <circle id="joint-elbow" cx="390" cy="160" r="11" fill="#070e1d" stroke="#00e5ff" stroke-width="3" filter="url(#glow-cyan)"/>
-                <circle cx="390" cy="160" r="4" fill="#00e5ff"/>
-
-                <!-- J4-J5: Muñecas -->
-                <circle id="joint-wrist" cx="440" cy="210" r="9" fill="#070e1d" stroke="#00e5ff" stroke-width="2.5"/>
-                <circle cx="440" cy="210" r="3" fill="#10b981"/>
-
-                <!-- TCP Flange & Pinza Láser -->
-                <g id="tcp-tool-head" transform="translate(455, 245)">
-                  <circle cx="0" cy="0" r="7" fill="#10b981" stroke="#ffffff" stroke-width="2" filter="url(#glow-green)"/>
-                  <!-- Haz Láser hacia la probeta -->
-                  <line x1="0" y1="0" x2="10" y2="20" stroke="#10b981" stroke-width="3" stroke-linecap="round"/>
-                  <circle cx="10" cy="20" r="3" fill="#ffffff" filter="url(#glow-green)"/>
-                </g>
-              </g>
-            </svg>
-
-            <!-- Overlay de información de orientación rápida -->
-            <div class="absolute bottom-3 left-4 bg-industrial-900/80 border border-industrial-700/70 px-3 py-1.5 rounded-xl text-[11px] font-mono text-slate-300">
-              <span class="text-industrial-cyan">ISO 15066:</span> Colisión <span class="text-industrial-emerald font-bold">&lt; 38 N</span> (Seguro)
-            </div>
-            <div class="absolute bottom-3 right-4 bg-industrial-900/80 border border-industrial-700/70 px-3 py-1.5 rounded-xl text-[11px] font-mono text-slate-300">
-              Modo: <span class="text-blue-400 font-bold">FREEDRIVE READY</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- PANELES INFERIORES: JOG MANUAL ARTICULAR (J1-J6) & SETUP CARTESIANO -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <!-- Jog Manual Articular J1-J6 -->
-          <div class="bg-industrial-900/80 border border-industrial-700/60 p-4 rounded-2xl">
-            <div class="flex items-center justify-between mb-3">
-              <h3 class="font-display font-bold text-sm text-white flex items-center space-x-2">
-                <i class="fa-solid fa-gamepad text-industrial-cyan"></i>
-                <span>Control Jog Manual Articular (J1 - J6)</span>
-              </h3>
-              <span class="text-xs font-mono text-slate-400">Paso: <strong>1.0°</strong></span>
-            </div>
-            
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 font-mono text-xs">
-              <!-- J1 Base -->
-              <div class="bg-industrial-950 p-2 rounded-xl border border-industrial-700/70 flex items-center justify-between">
-                <div>
-                  <span class="text-slate-400 block text-[10px]">J1 (Base)</span>
-                  <span id="val-j1" class="text-industrial-cyan font-bold font-mono-numbers">0.0°</span>
-                </div>
-                <div class="flex space-x-1">
-                  <button onclick="stepJoint('j1', -1)" class="w-6 h-6 rounded bg-industrial-800 hover:bg-industrial-700 text-white flex items-center justify-center font-bold">-</button>
-                  <button onclick="stepJoint('j1', 1)" class="w-6 h-6 rounded bg-industrial-800 hover:bg-industrial-700 text-white flex items-center justify-center font-bold">+</button>
-                </div>
-              </div>
-
-              <!-- J2 Hombro -->
-              <div class="bg-industrial-950 p-2 rounded-xl border border-industrial-700/70 flex items-center justify-between">
-                <div>
-                  <span class="text-slate-400 block text-[10px]">J2 (Hombro)</span>
-                  <span id="val-j2" class="text-industrial-cyan font-bold font-mono-numbers">-45.0°</span>
-                </div>
-                <div class="flex space-x-1">
-                  <button onclick="stepJoint('j2', -1)" class="w-6 h-6 rounded bg-industrial-800 hover:bg-industrial-700 text-white flex items-center justify-center font-bold">-</button>
-                  <button onclick="stepJoint('j2', 1)" class="w-6 h-6 rounded bg-industrial-800 hover:bg-industrial-700 text-white flex items-center justify-center font-bold">+</button>
-                </div>
-              </div>
-
-              <!-- J3 Codo -->
-              <div class="bg-industrial-950 p-2 rounded-xl border border-industrial-700/70 flex items-center justify-between">
-                <div>
-                  <span class="text-slate-400 block text-[10px]">J3 (Codo)</span>
-                  <span id="val-j3" class="text-industrial-cyan font-bold font-mono-numbers">90.0°</span>
-                </div>
-                <div class="flex space-x-1">
-                  <button onclick="stepJoint('j3', -1)" class="w-6 h-6 rounded bg-industrial-800 hover:bg-industrial-700 text-white flex items-center justify-center font-bold">-</button>
-                  <button onclick="stepJoint('j3', 1)" class="w-6 h-6 rounded bg-industrial-800 hover:bg-industrial-700 text-white flex items-center justify-center font-bold">+</button>
-                </div>
-              </div>
-
-              <!-- J4 Muñeca 1 -->
-              <div class="bg-industrial-950 p-2 rounded-xl border border-industrial-700/70 flex items-center justify-between">
-                <div>
-                  <span class="text-slate-400 block text-[10px]">J4 (Muñeca 1)</span>
-                  <span id="val-j4" class="text-slate-200 font-bold font-mono-numbers">-135.0°</span>
-                </div>
-                <div class="flex space-x-1">
-                  <button onclick="stepJoint('j4', -1)" class="w-6 h-6 rounded bg-industrial-800 hover:bg-industrial-700 text-white flex items-center justify-center font-bold">-</button>
-                  <button onclick="stepJoint('j4', 1)" class="w-6 h-6 rounded bg-industrial-800 hover:bg-industrial-700 text-white flex items-center justify-center font-bold">+</button>
-                </div>
-              </div>
-
-              <!-- J5 Muñeca 2 -->
-              <div class="bg-industrial-950 p-2 rounded-xl border border-industrial-700/70 flex items-center justify-between">
-                <div>
-                  <span class="text-slate-400 block text-[10px]">J5 (Muñeca 2)</span>
-                  <span id="val-j5" class="text-slate-200 font-bold font-mono-numbers">90.0°</span>
-                </div>
-                <div class="flex space-x-1">
-                  <button onclick="stepJoint('j5', -1)" class="w-6 h-6 rounded bg-industrial-800 hover:bg-industrial-700 text-white flex items-center justify-center font-bold">-</button>
-                  <button onclick="stepJoint('j5', 1)" class="w-6 h-6 rounded bg-industrial-800 hover:bg-industrial-700 text-white flex items-center justify-center font-bold">+</button>
-                </div>
-              </div>
-
-              <!-- J6 Muñeca 3 / Brida -->
-              <div class="bg-industrial-950 p-2 rounded-xl border border-industrial-700/70 flex items-center justify-between">
-                <div>
-                  <span class="text-slate-400 block text-[10px]">J6 (Flange)</span>
-                  <span id="val-j6" class="text-slate-200 font-bold font-mono-numbers">0.0°</span>
-                </div>
-                <div class="flex space-x-1">
-                  <button onclick="stepJoint('j6', -1)" class="w-6 h-6 rounded bg-industrial-800 hover:bg-industrial-700 text-white flex items-center justify-center font-bold">-</button>
-                  <button onclick="stepJoint('j6', 1)" class="w-6 h-6 rounded bg-industrial-800 hover:bg-industrial-700 text-white flex items-center justify-center font-bold">+</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Módulo Didáctico Rápido: TCP vs Base -->
-          <div class="bg-industrial-900/80 border border-industrial-700/60 p-4 rounded-2xl flex flex-col justify-between">
-            <div>
-              <div class="flex items-center justify-between mb-2">
-                <h3 class="font-display font-bold text-sm text-white flex items-center space-x-2">
-                  <i class="fa-solid fa-crosshairs text-industrial-emerald"></i>
-                  <span>Calibración TCP (Punta) vs Base (Frame)</span>
-                </h3>
-                <span class="text-[10px] font-mono bg-blue-600/20 text-blue-300 px-2 py-0.5 rounded">DIDÁCTICO</span>
-              </div>
-              <p class="text-xs text-slate-300 leading-relaxed">
-                El <strong>TCP (Tool Center Point)</strong> traslada las coordenadas al punto de contacto de la fresa o pinza. Moverse en <strong>Modo Base</strong> desplaza la estructura respecto a la peana fija.
+<div class="pt-1 text-center text-[10px] text-slate-400">
+          Created by <strong class="text-amber-400">EagleCelest</strong>
+</div>
+</div>
+</aside>
+<!-- Área de Trabajo Dinámica -->
+<main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 pb-20 md:pb-8">
+<!-- ============================================================
+           VISTA 1: INICIO & PROYECTOS (Limpia, Ordenada y Jerarquizada)
+      ============================================================ -->
+<div class="space-y-6 max-w-7xl mx-auto" id="view-home">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+<div>
+<span class="text-blue-400 font-mono text-xs uppercase tracking-wider font-semibold" data-i18n="step_01">PASO 01 // CONFIGURACIÓN INICIAL &amp; CINEMÁTICA</span>
+<h1 class="text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1" data-i18n="title_main">Nuevo Proyecto &amp; Selector de Máquina</h1>
+<p class="text-sm text-slate-400 mt-1 max-w-2xl" data-i18n="subtitle_main">Democratización técnica para estudiantes, autónomos y talleres.</p>
+</div>
+<div class="flex items-center gap-3 shrink-0">
+<button class="px-4 py-2 rounded-xl bg-[#141b2b] hover:bg-slate-800 border border-slate-700 text-xs font-mono text-slate-200 flex items-center gap-2 transition-all" onclick="exportProjectFile()">
+<span>📥</span>
+<span data-i18n="btn_export">Exportar .CNCPROJ</span>
+</button>
+<button class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs font-mono flex items-center gap-2 shadow-lg shadow-blue-600/30 transition-all active:scale-95" onclick="launchConfiguredProject()">
+<span>▶</span>
+<span data-i18n="btn_start">Iniciar Proyecto Ahora →</span>
+</button>
+</div>
+</div>
+<!-- 4 ACCIONES MAESTRAS -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-mono text-xs">
+<div class="p-4 rounded-xl bg-[#141b2b] border-2 border-blue-500 cursor-pointer transition-all hover:bg-slate-900 relative shadow-lg shadow-blue-500/10" id="action-card-new" onclick="selectHubAction('new')">
+<div class="flex items-center justify-between mb-2">
+<span class="text-2xl">✨</span>
+<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-blue-500 text-slate-950">ACTIVO</span>
+</div>
+<h3 class="text-sm font-bold text-white" data-i18n="act_new_title">Iniciar Proyecto Nuevo</h3>
+<p class="text-[11px] text-slate-400 mt-1 font-sans" data-i18n="act_new_desc">Configura parámetros, casos guiados o arranca de cero.</p>
+</div>
+<div class="p-4 rounded-xl bg-[#141b2b] border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/60 relative" id="action-card-saved" onclick="selectHubAction('saved')">
+<div class="flex items-center justify-between mb-2">
+<span class="text-2xl">📂</span>
+<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">MEMORIA</span>
+</div>
+<h3 class="text-sm font-bold text-white" data-i18n="act_saved_title">Proyecto Guardado</h3>
+<p class="text-[11px] text-slate-400 mt-1 font-sans" data-i18n="act_saved_desc">Recupera: Mecanizado_Probeta.cncproj de tu sesión previa.</p>
+</div>
+<div class="p-4 rounded-xl bg-[#141b2b] border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/60 relative" id="action-card-import" onclick="selectHubAction('import')">
+<div class="flex items-center justify-between mb-2">
+<span class="text-2xl">📥</span>
+<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">LOCAL</span>
+</div>
+<h3 class="text-sm font-bold text-white" data-i18n="act_import_title">Importar Proyecto</h3>
+<p class="text-[11px] text-slate-400 mt-1 font-sans" data-i18n="act_import_desc">Carga archivos .cncproj, rutinas ISO o scripts de robot.</p>
+</div>
+<div class="p-4 rounded-xl bg-[#141b2b] border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/60 relative" id="action-card-export" onclick="selectHubAction('export')">
+<div class="flex items-center justify-between mb-2">
+<span class="text-2xl">📤</span>
+<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">DESCARGA</span>
+</div>
+<h3 class="text-sm font-bold text-white" data-i18n="act_export_title">Exportar Proyecto</h3>
+<p class="text-[11px] text-slate-400 mt-1 font-sans" data-i18n="act_export_desc">Genera archivo descargable con origen, piezas y herramientas.</p>
+</div>
+</div>
+<!-- 4 CASOS GUIADOS -->
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2 text-xs font-mono text-blue-400 uppercase tracking-wider font-semibold">
+<span>📚</span>
+<span data-i18n="cases_heading">00 // TIPO DE OPERACIÓN &amp; CASO PRÁCTICO DIDÁCTICO</span>
+</div>
+<span class="text-[11px] text-slate-400 hidden sm:inline" data-i18n="cases_hint">Selecciona una plantilla guiada para precargar cinemática, herramientas y parámetros óptimos:</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="p-4 rounded-xl bg-[#141b2b] border-2 border-blue-500 cursor-pointer transition-all hover:bg-slate-900 relative" id="case-mecanizado" onclick="selectPracticalCase('mecanizado')">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xl">🔩</span>
+<span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-500 text-slate-950">ACTIVO</span>
+</div>
+<h3 class="text-sm font-bold text-white leading-snug" data-i18n="case1_title">Mecanizado de Probeta Didáctica</h3>
+<p class="text-[11px] text-slate-400 mt-1" data-i18n="case1_desc">(Contorneado &amp; Cajera CNC)</p>
+<div class="mt-3 pt-2.5 border-t border-slate-800 text-[10px] font-mono flex flex-wrap gap-1.5">
+<span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">CNC 3E/5X</span>
+<span class="px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300">AL-6061 T6</span>
+<span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">Fresa D10</span>
+</div>
+</div>
+<div class="p-4 rounded-xl bg-[#141b2b] border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/60 relative" id="case-pickplace" onclick="selectPracticalCase('pickplace')">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xl">🦾</span>
+<span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">CASO 02</span>
+</div>
+<h3 class="text-sm font-bold text-white leading-snug" data-i18n="case2_title">Pick &amp; Place Industrial</h3>
+<p class="text-[11px] text-slate-400 mt-1" data-i18n="case2_desc">&amp; Dispensado Adhesivo</p>
+<div class="mt-3 pt-2.5 border-t border-slate-800 text-[10px] font-mono flex flex-wrap gap-1.5">
+<span class="px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300">Cobot 6-DOF UR10e</span>
+<span class="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300">TCP Pinza/Boquilla</span>
+<span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">Frame Base</span>
+</div>
+</div>
+<div class="p-4 rounded-xl bg-[#141b2b] border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/60 relative" id="case-torno" onclick="selectPracticalCase('torno')">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xl">🔄</span>
+<span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">CASO 03</span>
+</div>
+<h3 class="text-sm font-bold text-white leading-snug" data-i18n="case3_title">Carga Automática de Torno CNC</h3>
+<p class="text-[11px] text-slate-400 mt-1" data-i18n="case3_desc">con Celda Robotizada</p>
+<div class="mt-3 pt-2.5 border-t border-slate-800 text-[10px] font-mono flex flex-wrap gap-1.5">
+<span class="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300">Torno Mazak + Cobot</span>
+<span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">M10/M11 Interlock</span>
+</div>
+</div>
+<div class="p-4 rounded-xl bg-[#141b2b] border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/60 relative" id="case-libre" onclick="selectPracticalCase('libre')">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xl">📝</span>
+<span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">CASO 04</span>
+</div>
+<h3 class="text-sm font-bold text-white leading-snug" data-i18n="case4_title">Proyecto Libre</h3>
+<p class="text-[11px] text-slate-400 mt-1" data-i18n="case4_desc">Carga de Código Propio (.CNC / .SRC)</p>
+<div class="mt-3 pt-2.5 border-t border-slate-800 text-[10px] font-mono flex flex-wrap gap-1.5">
+<span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">G-Code ISO</span>
+<span class="px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300">URScript Custom</span>
+</div>
+</div>
+</div>
+</div>
+<!-- IDENTIFICACIÓN, DATUM Y BRUTO -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
+<div class="p-4 rounded-xl bg-[#141b2b] border border-slate-800 space-y-3">
+<div class="flex items-center justify-between">
+<span class="text-slate-400" data-i18n="card1_title">01 // IDENTIFICACIÓN</span>
+<span class="text-emerald-400 text-[10px] bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">✓ AUTO-GUARDADO</span>
+</div>
+<div>
+<label class="block text-[11px] text-slate-400 mb-1" data-i18n="card1_label">Nombre del Archivo / Setup</label>
+<div class="flex items-center bg-[#070e1d] border border-slate-800 rounded-lg px-3 py-2 text-white">
+<input class="bg-transparent border-none outline-none w-full font-mono text-xs" id="project-name-input" type="text" value="Probeta_Didactica_CNC"/>
+<span class="text-slate-400">.cncproj</span>
+</div>
+</div>
+</div>
+<div class="p-4 rounded-xl bg-[#141b2b] border border-slate-800 space-y-3">
+<div class="text-slate-400" data-i18n="card2_title">02 // ORIGEN DE PARTIDA (DATUM)</div>
+<div class="grid grid-cols-3 gap-2">
+<button class="py-2 rounded-lg bg-blue-600/40 border border-blue-500/60 text-white font-bold text-center" id="datum-g54" onclick="selectDatum('G54')">G54</button>
+<button class="py-2 rounded-lg bg-[#070e1d] border border-slate-800 text-slate-400 hover:text-white text-center" id="datum-g55" onclick="selectDatum('G55')">G55</button>
+<button class="py-2 rounded-lg bg-[#070e1d] border border-slate-800 text-slate-400 hover:text-white text-center" id="datum-base" onclick="selectDatum('BASE')">BASE</button>
+</div>
+<p class="text-[11px] text-slate-400" data-i18n="card2_desc" id="datum-desc">G54: Origen fijado en mordaza de amarre rápido.</p>
+</div>
+<div class="p-4 rounded-xl bg-[#141b2b] border border-slate-800 space-y-3">
+<div class="text-slate-400" data-i18n="card3_title">03 // HERRAMIENTA &amp; BRUTO</div>
+<div class="grid grid-cols-2 gap-2">
+<div class="p-2 rounded bg-blue-600/20 border border-blue-500/40 text-blue-200">
+<p class="font-bold">T01</p>
+<p class="text-[10px] text-slate-300">Fresa Plana D10</p>
+</div>
+<div class="p-2 rounded bg-[#070e1d] border border-slate-800 text-slate-400">
+<p class="font-bold">T02</p>
+<p class="text-[10px]">Fresa Esférica R3</p>
+</div>
+</div>
+<div class="flex justify-between items-center text-[11px] pt-1">
+<span class="text-slate-400">Material Bruto:</span>
+<span class="text-white font-semibold">AL-6061 T6</span>
+</div>
+</div>
+</div>
+<!-- SELECTOR DE HARDWARE -->
+<div class="space-y-3">
+<div class="flex items-center gap-2 text-xs font-mono text-slate-400 uppercase tracking-wider font-semibold">
+<span>🤖</span>
+<span data-i18n="kinematics_selector_title">04 // SELECCIÓN DE CINEMÁTICA &amp; HARDWARE DE TALLER</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="p-4 rounded-xl bg-[#141b2b] border-2 border-blue-500 cursor-pointer transition-all hover:bg-slate-900 relative" id="mach-cobot" onclick="selectMachine('cobot')">
+<span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30" data-i18n="tag_6dof">6-DOF COBOT</span>
+<h3 class="text-base font-bold text-white mt-2" data-i18n="mach1_name">Cobot 6-DOF</h3>
+<p class="text-xs text-slate-400 font-mono">UR10e / Fanuc CRX</p>
+<div class="mt-4 pt-3 border-t border-slate-800 font-mono text-xs space-y-1.5">
+<div class="flex justify-between"><span class="text-slate-400">Payload:</span><span class="text-slate-200">12.5 kg</span></div>
+<div class="flex justify-between"><span class="text-slate-400">Alcance:</span><span class="text-slate-200">1300 mm</span></div>
+<div class="flex justify-between"><span class="text-slate-400">Repetibilidad:</span><span class="text-emerald-400">± 0.03 mm</span></div>
+</div>
+</div>
+<div class="p-4 rounded-xl bg-[#141b2b] border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/60" id="mach-fresadora" onclick="selectMachine('fresadora')">
+<span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-300" data-i18n="tag_3axis">3-AXIS CNC</span>
+<h3 class="text-base font-bold text-white mt-2" data-i18n="mach2_name">3-Axis CNC Mill</h3>
+<p class="text-xs text-slate-400 font-mono">Haas VF-2 / Robodrill</p>
+<div class="mt-4 pt-3 border-t border-slate-800 font-mono text-xs space-y-1.5">
+<div class="flex justify-between"><span class="text-slate-400">Recorrido Z:</span><span class="text-slate-200">508 mm</span></div>
+<div class="flex justify-between"><span class="text-slate-400">Husillo:</span><span class="text-slate-200">12,000 RPM</span></div>
+<div class="flex justify-between"><span class="text-slate-400">Potencia:</span><span class="text-blue-400">22.4 kW</span></div>
+</div>
+</div>
+<div class="p-4 rounded-xl bg-[#141b2b] border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/60" id="mach-5ejes" onclick="selectMachine('5ejes')">
+<span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30" data-i18n="tag_5axis">5-AXIS RTCP</span>
+<h3 class="text-base font-bold text-white mt-2" data-i18n="mach3_name">5-Axis RTCP</h3>
+<p class="text-xs text-slate-400 font-mono">DMG MORI / Hermle</p>
+<div class="mt-4 pt-3 border-t border-slate-800 font-mono text-xs space-y-1.5">
+<div class="flex justify-between"><span class="text-slate-400">Rotativo A:</span><span class="text-slate-200">-120° / +30°</span></div>
+<div class="flex justify-between"><span class="text-slate-400">G43.4 RTCP:</span><span class="text-emerald-400">Activo</span></div>
+<div class="flex justify-between"><span class="text-slate-400">Husillo:</span><span class="text-slate-200">18,000 RPM</span></div>
+</div>
+</div>
+<div class="p-4 rounded-xl bg-[#141b2b] border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/60" id="mach-torno" onclick="selectMachine('torno')">
+<span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30" data-i18n="tag_lathe">LATHE &amp; HYBRID</span>
+<h3 class="text-base font-bold text-white mt-2" data-i18n="mach4_name">Torno &amp; Celda Híbrida</h3>
+<p class="text-xs text-slate-400 font-mono">Mazak QT / Cobot Loader</p>
+<div class="mt-4 pt-3 border-t border-slate-800 font-mono text-xs space-y-1.5">
+<div class="flex justify-between"><span class="text-slate-400">Torreta:</span><span class="text-slate-200">12 Posiciones</span></div>
+<div class="flex justify-between"><span class="text-slate-400">Loader:</span><span class="text-blue-400">I/O Digitales</span></div>
+<div class="flex justify-between"><span class="text-slate-400">Interlock:</span><span class="text-emerald-400">M10/M11 Ok</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- ============================================================
+           VISTA 2: CENTRO CINEMÁTICO 3D (Simulador Cobot Centrado y DRO)
+      ============================================================ -->
+<div class="hidden-view space-y-6 max-w-7xl mx-auto" id="view-kinematics">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+<div>
+<span class="text-emerald-400 font-mono text-xs uppercase tracking-wider font-semibold" data-i18n="kin_step">MÓDULO 02 // CINEMÁTICA 3D &amp; MONITOR COBOT</span>
+<h1 class="text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1" data-i18n="kin_title">Centro Cinemático 3D &amp; DRO Táctil</h1>
+<p class="text-sm text-slate-400 mt-1 max-w-2xl" data-i18n="kin_subtitle">Simulación de trayectoria continua, monitoreo cartesiano del TCP y prevención de colisión ISO/TS 15066.</p>
+</div>
+<div class="flex items-center gap-3 shrink-0">
+<button class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs font-mono flex items-center gap-2 shadow-lg shadow-emerald-600/30 transition-all" id="btn-toggle-sim" onclick="toggleKinematicsSim()">
+<span>▶</span>
+<span data-i18n="kin_btn_run" id="txt-sim-run">Ejecutar Simulación</span>
+</button>
+<button class="px-4 py-2 rounded-xl bg-[#141b2b] hover:bg-slate-800 border border-slate-700 text-xs font-mono text-slate-200 flex items-center gap-2 transition-all" onclick="switchView('editor')">
+<span data-i18n="kin_btn_to_editor">Abrir en Editor G-Code →</span>
+</button>
+</div>
+</div>
+<!-- SIMULADOR 3D CENTRADO + JOG ARTICULAR Y TCP -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Visor Gráfico 3D (Cobot Centrado Simétrico: 500x420) -->
+<div class="lg:col-span-8 rounded-2xl bg-gradient-to-b from-[#0a1020] via-[#070e1d] to-[#040812] border border-slate-800 p-4 flex flex-col justify-between relative overflow-hidden h-[560px] shadow-2xl select-none"><div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: linear-gradient(to right, #4cd7f6 1px, transparent 1px), linear-gradient(to bottom, #4cd7f6 1px, transparent 1px); background-size: 28px 28px;"></div><div class="absolute inset-0 bg-radial from-transparent via-[#070e1d]/60 to-[#040812] pointer-events-none"></div><div class="flex items-center justify-between font-mono text-xs z-20 relative"><div class="flex items-center gap-2 bg-[#0c1322]/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-700/60 shadow-lg"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span><span class="text-emerald-400 font-bold tracking-wider">FK / IK ONLINE</span><span class="text-slate-600">|</span><span class="text-slate-400 text-[10px] tracking-wider uppercase font-semibold">60 FPS</span></div><div class="flex items-center gap-1.5 bg-[#0c1322]/90 backdrop-blur-md p-1 rounded-xl border border-slate-700/60"><button class="px-2.5 py-1 text-[11px] font-bold uppercase rounded bg-blue-600 text-white shadow-sm transition-all" id="btn-view-iso" onclick="setCameraView('iso')">ISO</button><button class="px-2.5 py-1 text-[11px] font-bold uppercase rounded text-slate-400 hover:text-white transition-all" id="btn-view-front" onclick="setCameraView('front')">FRENTE</button><button class="px-2.5 py-1 text-[11px] font-bold uppercase rounded text-slate-400 hover:text-white transition-all" id="btn-view-top" onclick="setCameraView('top')">TOP</button><button class="w-7 h-7 flex items-center justify-center text-slate-400 hover:text-cyan-400 rounded-lg active:scale-90 transition-all ml-1" onclick="resetCobotPose()" title="Restablecer posición inicial"><span class="text-sm">⟳</span></button></div></div><div class="absolute top-16 left-4 z-20 bg-[#141b2b]/90 backdrop-blur-md p-2.5 rounded-xl border border-cyan-500/30 shadow-2xl text-left font-mono"><div class="flex items-center justify-between gap-3 mb-1.5"><span class="text-[10px] uppercase text-cyan-400 font-bold tracking-wider flex items-center gap-1.5"><span>⚙</span> TCP TOOL POSE</span><span class="bg-blue-500/20 text-blue-300 text-[9px] px-1.5 py-0.5 rounded font-bold uppercase border border-blue-500/30" id="active-ret-badge">RETO #01</span></div><div class="grid grid-cols-3 gap-2 text-xs font-bold"><div><span class="text-rose-400 font-bold">X:</span> <span class="text-white font-mono" id="tcp-x">143.62</span></div><div><span class="text-emerald-400 font-bold">Y:</span> <span class="text-white font-mono" id="tcp-y">-30.00</span></div><div><span class="text-cyan-400 font-bold">Z:</span> <span class="text-white font-mono" id="tcp-z">225.37</span></div></div></div><div class="flex-1 w-full flex items-center justify-center p-2 relative overflow-hidden z-10"><svg class="w-full h-full max-h-[440px] drop-shadow-[0_12px_32px_rgba(0,0,0,0.8)]" id="cobot-viewport-svg" viewbox="0 0 500 420" xmlns="http://www.w3.org/2000/svg"><defs><lineargradient id="cobotArmGrad" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" stop-color="#334155"></stop><stop offset="50%" stop-color="#1e293b"></stop><stop offset="100%" stop-color="#0f172a"></stop></lineargradient><filter height="140%" id="cyanNeonGlow" width="140%" x="-20%" y="-20%"><fegaussianblur result="coloredBlur" stddeviation="4"></fegaussianblur><femerge><femergenode in="coloredBlur"></femergenode><femergenode in="SourceGraphic"></femergenode></femerge></filter></defs><ellipse cx="250" cy="375" fill="#0c1322" rx="115" ry="22" stroke="#334155" stroke-width="2.5"></ellipse><ellipse cx="250" cy="370" fill="#141b2b" rx="100" ry="18" stroke="#00f2fe" stroke-opacity="0.35" stroke-width="2"></ellipse><path d="M210 370 L222 330 L278 330 L290 370 Z" fill="url(#cobotArmGrad)" stroke="#475569" stroke-width="2"></path><circle cx="250" cy="330" fill="#1e293b" filter="url(#cyanNeonGlow)" r="26" stroke="#00f2fe" stroke-width="3.5"></circle><circle cx="250" cy="330" fill="#00f2fe" r="9"></circle><g id="cobot-kinematic-chain"><path class="glow-green" d="M 155 260 C 165 170, 250 120, 360 170 C 400 188, 385 240, 365 248" fill="none" filter="url(#cyanNeonGlow)" id="nurbs-trajectory" stroke="#10b981" stroke-dasharray="6 4" stroke-width="2.5"></path><g id="link-shoulder" transform="rotate(-15, 250, 330)"><rect fill="url(#cobotArmGrad)" height="115" rx="12" stroke="#64748b" stroke-width="2.5" width="24" x="238" y="215"></rect><line stroke="#38bdf8" stroke-linecap="round" stroke-width="3.5" x1="250" x2="250" y1="232" y2="312"></line><circle cx="250" cy="330" fill="#070e1d" r="16" stroke="#38bdf8" stroke-width="2.5"></circle><circle cx="250" cy="215" fill="#1e293b" filter="url(#cyanNeonGlow)" r="20" stroke="#10b981" stroke-width="3"></circle><circle cx="250" cy="215" fill="#10b981" r="7.5"></circle><g id="link-elbow" transform="rotate(52, 250, 215)"><rect fill="url(#cobotArmGrad)" height="105" rx="10" stroke="#64748b" stroke-width="2" width="20" x="240" y="110"></rect><line stroke="#7dd3fc" stroke-dasharray="4 3" stroke-width="3" x1="250" x2="250" y1="124" y2="198"></line><circle cx="250" cy="110" fill="#1e293b" r="15" stroke="#60a5fa" stroke-width="2.5"></circle><circle cx="250" cy="110" fill="#60a5fa" r="5.5"></circle><g id="link-wrist" transform="rotate(-38, 250, 110)"><rect fill="url(#cobotArmGrad)" height="60" rx="8" stroke="#64748b" stroke-width="2" width="15" x="242.5" y="50"></rect><circle cx="250" cy="50" fill="#0f172a" r="11" stroke="#f87171" stroke-width="2.5"></circle><g id="end-effector" transform="translate(0, 0)"><path d="M238 50 L262 50 L257 30 L243 30 Z" fill="#334155" stroke="#38bdf8" stroke-width="2"></path><rect fill="#7dd3fc" height="18" id="jaw-left" rx="2" width="5" x="234" y="12"></rect><rect fill="#7dd3fc" height="18" id="jaw-right" rx="2" width="5" x="261" y="12"></rect><g id="tcp-target-marker" transform="translate(250, 8)"><circle cx="0" cy="0" fill="none" r="8" stroke="#10b981" stroke-dasharray="3 2" stroke-width="2"></circle><circle cx="0" cy="0" fill="#10b981" r="3"></circle><line stroke="#10b981" stroke-width="1.5" x1="-12" x2="12" y1="0" y2="0"></line><line stroke="#10b981" stroke-width="1.5" x1="0" x2="0" y1="-12" y2="12"></line></g></g></g></g></g></g><g id="workpiece-render" transform="translate(330, 240)"><rect fill="#1e293b" height="56" rx="4" stroke="#64748b" stroke-width="2" width="44" x="0" y="0"></rect><polygon fill="#38bdf8" opacity="0.85" points="0,0 12,0 0,12"></polygon><text fill="#e2e8f0" font-family="monospace" font-size="8.5" font-weight="bold" text-anchor="middle" x="22" y="33">#04 CH-45°</text></g></svg><div class="absolute bottom-2 right-3 pointer-events-none flex items-center gap-1.5 text-[10px] text-slate-400 bg-[#141b2b]/80 backdrop-blur-md px-2.5 py-1 rounded-full border border-slate-700/50"><span>🖐️</span><span>Kinemática Reactiva</span></div></div><div class="grid grid-cols-3 sm:grid-cols-6 gap-2 bg-[#141b2b]/95 border border-slate-800 rounded-xl p-3 font-mono text-[11px] z-20 shadow-lg"><div><span class="text-slate-500">X:</span> <span class="text-white font-bold tabular-nums" id="tcp-x-bar">143.62</span> mm</div><div><span class="text-slate-500">Y:</span> <span class="text-white font-bold tabular-nums" id="tcp-y-bar">-30.00</span> mm</div><div><span class="text-slate-500">Z:</span> <span class="text-white font-bold tabular-nums" id="tcp-z-bar">225.37</span> mm</div><div><span class="text-slate-500">Rx:</span> <span class="text-blue-400 tabular-nums">179.8°</span></div><div><span class="text-slate-500">Ry:</span> <span class="text-blue-400 tabular-nums">-0.05°</span></div><div><span class="text-slate-500">Rz:</span> <span class="text-emerald-400 tabular-nums">45.2°</span></div></div></div>
+<!-- Panel Lateral: Jog Articular J1-J6 y Waypoint -->
+<div class="lg:col-span-4 space-y-4">
+<div class="rounded-2xl bg-[#141b2b] border border-slate-800 p-4 font-mono text-xs space-y-3 shadow-xl">
+<div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+<span class="font-bold text-white text-sm">Jog Manual Articular</span>
+<div class="flex items-center gap-1 text-[10px]">
+<span class="text-slate-500">Paso:</span>
+<button class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300" id="jog-step-01" onclick="setJogResolution(0.1)">0.1°</button>
+<button class="px-1.5 py-0.5 rounded bg-blue-600 text-white font-bold" id="jog-step-1" onclick="setJogResolution(1.0)">1.0°</button>
+<button class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300" id="jog-step-5" onclick="setJogResolution(5.0)">5.0°</button>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex items-center justify-between bg-[#070e1d] p-2 rounded-lg border border-slate-800">
+<span class="font-bold text-blue-400 w-7">J1:</span>
+<span class="text-white font-bold tabular-nums w-14 text-center" id="val-j1">-14.2°</span>
+<div class="flex gap-1">
+<button class="w-8 h-7 rounded bg-slate-800 hover:bg-slate-700 text-white font-bold active:scale-95" onclick="stepJoint('J1', -1)">-</button>
+<button class="w-8 h-7 rounded bg-slate-800 hover:bg-slate-700 text-white font-bold active:scale-95" onclick="stepJoint('J1', 1)">+</button>
+</div>
+</div>
+<div class="flex items-center justify-between bg-[#070e1d] p-2 rounded-lg border border-slate-800">
+<span class="font-bold text-blue-400 w-7">J2:</span>
+<span class="text-white font-bold tabular-nums w-14 text-center" id="val-j2">-82.6°</span>
+<div class="flex gap-1">
+<button class="w-8 h-7 rounded bg-slate-800 hover:bg-slate-700 text-white font-bold active:scale-95" onclick="stepJoint('J2', -1)">-</button>
+<button class="w-8 h-7 rounded bg-slate-800 hover:bg-slate-700 text-white font-bold active:scale-95" onclick="stepJoint('J2', 1)">+</button>
+</div>
+</div>
+<div class="flex items-center justify-between bg-[#070e1d] p-2 rounded-lg border border-slate-800">
+<span class="font-bold text-blue-400 w-7">J3:</span>
+<span class="text-white font-bold tabular-nums w-14 text-center" id="val-j3">105.1°</span>
+<div class="flex gap-1">
+<button class="w-8 h-7 rounded bg-slate-800 hover:bg-slate-700 text-white font-bold active:scale-95" onclick="stepJoint('J3', -1)">-</button>
+<button class="w-8 h-7 rounded bg-slate-800 hover:bg-slate-700 text-white font-bold active:scale-95" onclick="stepJoint('J3', 1)">+</button>
+</div>
+</div>
+<div class="flex items-center justify-between bg-[#070e1d] p-2 rounded-lg border border-slate-800">
+<span class="font-bold text-indigo-400 w-7">J4:</span>
+<span class="text-white font-bold tabular-nums w-14 text-center" id="val-j4">-22.4°</span>
+<div class="flex gap-1">
+<button class="w-8 h-7 rounded bg-slate-800 hover:bg-slate-700 text-white font-bold active:scale-95" onclick="stepJoint('J4', -1)">-</button>
+<button class="w-8 h-7 rounded bg-slate-800 hover:bg-slate-700 text-white font-bold active:scale-95" onclick="stepJoint('J4', 1)">+</button>
+</div>
+</div>
+<div class="flex items-center justify-between bg-[#070e1d] p-2 rounded-lg border border-slate-800">
+<span class="font-bold text-indigo-400 w-7">J5:</span>
+<span class="text-white font-bold tabular-nums w-14 text-center" id="val-j5">90.0°</span>
+<div class="flex gap-1">
+<button class="w-8 h-7 rounded bg-slate-800 hover:bg-slate-700 text-white font-bold active:scale-95" onclick="stepJoint('J5', -1)">-</button>
+<button class="w-8 h-7 rounded bg-slate-800 hover:bg-slate-700 text-white font-bold active:scale-95" onclick="stepJoint('J5', 1)">+</button>
+</div>
+</div>
+<div class="flex items-center justify-between bg-[#070e1d] p-2 rounded-lg border border-slate-800">
+<span class="font-bold text-emerald-400 w-7">J6:</span>
+<span class="text-white font-bold tabular-nums w-14 text-center" id="val-j6">4.5°</span>
+<div class="flex gap-1">
+<button class="w-8 h-7 rounded bg-slate-800 hover:bg-slate-700 text-white font-bold active:scale-95" onclick="stepJoint('J6', -1)">-</button>
+<button class="w-8 h-7 rounded bg-slate-800 hover:bg-slate-700 text-white font-bold active:scale-95" onclick="stepJoint('J6', 1)">+</button>
+</div>
+</div>
+</div>
+<!-- Modo FreeDrive -->
+<button class="w-full py-2.5 rounded-lg bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/30 font-bold transition flex items-center justify-center gap-2" id="btn-freedrive" onclick="toggleFreeDrive()">
+<span>🦾</span>
+<span>Modo FreeDrive (Gravedad Cero)</span>
+</button>
+</div>
+<!-- Grabación Waypoint -->
+<div class="rounded-2xl bg-[#141b2b] border border-slate-800 p-4 font-mono text-xs space-y-3 shadow-xl">
+<div class="flex items-center justify-between">
+<span class="font-bold text-white">Waypoint &amp; Generador</span>
+<span class="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/30">P1 READY</span>
+</div>
+<p class="text-[11px] text-slate-400 font-sans">
+                Registra la pose actual del robot y genera automáticamente la instrucción MoveJ/MoveL para el transpilador.
               </p>
-            </div>
-            
-            <div class="grid grid-cols-2 gap-3 mt-3">
-              <button onclick="switchTab('tab-biblioteca')" class="bg-industrial-800 hover:bg-industrial-700 border border-industrial-cyan/40 text-industrial-cyan p-2.5 rounded-xl text-xs font-semibold text-center transition">
-                <i class="fa-solid fa-graduation-cap mr-1"></i> Abrir Enciclopedia Didáctica
-              </button>
-              <button onclick="launchQuickChallenge()" class="bg-blue-600 hover:bg-blue-500 text-white p-2.5 rounded-xl text-xs font-bold text-center shadow-sm transition">
-                <i class="fa-solid fa-trophy mr-1"></i> Resolver Reto Calibración (+75 XP)
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ============================================== -->
-      <!-- PESTAÑA 03: EDITOR G-CODE & TRANSPILADOR ROBOT -->
-      <!-- ============================================== -->
-      <section id="tab-editor" class="hidden max-w-6xl mx-auto space-y-4">
-        <div class="bg-industrial-900/80 border border-industrial-700/60 p-4 rounded-2xl flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <h2 class="font-display text-xl font-bold text-white">Editor de Trayectorias & Transpilador</h2>
-            <p class="text-xs text-slate-400 mt-0.5">Conversión bidireccional entre G-code ISO CNC y dialectos de Robot (URScript / Fanuc KAREL).</p>
-          </div>
-          <div class="flex items-center space-x-2">
-            <button onclick="transpileCode()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-3.5 py-1.5 rounded-xl text-xs flex items-center space-x-1.5 transition">
-              <i class="fa-solid fa-bolt"></i>
-              <span>Transpilar a URScript</span>
-            </button>
-            <button onclick="downloadCodeFile()" class="bg-industrial-800 hover:bg-industrial-700 border border-industrial-600 text-slate-200 px-3 py-1.5 rounded-xl text-xs flex items-center space-x-1.5 transition">
-              <i class="fa-solid fa-download"></i>
-              <span>Descargar .SRC</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <!-- Entrada G-Code -->
-          <div class="bg-industrial-900/90 border border-industrial-700/70 rounded-2xl p-4 flex flex-col">
-            <div class="flex items-center justify-between text-xs font-mono text-slate-400 mb-2">
-              <span class="text-industrial-cyan font-bold">ENTRADA: G-CODE ISO (3-AXIS / 5-AXIS)</span>
-              <span>12 Líneas</span>
-            </div>
-            <textarea id="gcode-editor-area" class="w-full h-80 bg-industrial-950 border border-industrial-700/80 rounded-xl p-3 font-mono text-xs text-slate-200 focus:outline-none focus:border-industrial-cyan leading-relaxed resize-none custom-scrollbar">
-%
-O0001 (PROBETA DIDACTICA)
-G21 G90 G40 G80
-G54 (DATUM MORDAZA)
-T01 M06 (FRESA D10)
-S4500 M03
-G00 X0.0 Y0.0 Z10.0
-G01 Z-2.0 F350
-G01 X50.0 Y0.0 F600
-G02 X70.0 Y20.0 R20.0
-G01 Y40.0
-G00 Z25.0
-M30
-%</textarea>
-          </div>
-
-          <!-- Salida URScript Transpilada -->
-          <div class="bg-industrial-900/90 border border-industrial-700/70 rounded-2xl p-4 flex flex-col">
-            <div class="flex items-center justify-between text-xs font-mono text-slate-400 mb-2">
-              <span class="text-industrial-emerald font-bold">SALIDA: URSCRIPT (UNIVERSAL ROBOTS)</span>
-              <span class="text-slate-400">Target: CB3 / e-Series</span>
-            </div>
-            <textarea id="robot-script-area" readonly class="w-full h-80 bg-industrial-950 border border-industrial-700/80 rounded-xl p-3 font-mono text-xs text-industrial-emerald focus:outline-none leading-relaxed resize-none custom-scrollbar">
-def probeta_didactica():
-  set_tcp(p[0.0, 0.0, 0.225, 0.0, 0.0, 0.0])
+<button class="w-full py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold shadow transition flex items-center justify-center gap-2" onclick="recordWaypointP1()">
+<span>📍</span>
+<span>Guardar Pose como Waypoint P1</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- ============================================================
+           VISTA 3: EDITOR & TRANSPILADOR
+      ============================================================ -->
+<div class="hidden-view space-y-6 max-w-7xl mx-auto" id="view-editor">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+<div>
+<span class="text-indigo-400 font-mono text-xs uppercase tracking-wider font-semibold" data-i18n="ed_step">MÓDULO 03 // POSTPROCESADOR &amp; TRANSPILADOR ROBOT</span>
+<h1 class="text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1" data-i18n="ed_title">Editor &amp; Transpilador de Código</h1>
+<p class="text-sm text-slate-400 mt-1 max-w-2xl" data-i18n="ed_subtitle">Convierte rutinas ISO G-code a scripts nativos para Universal Robots y Fanuc CRX.</p>
+</div>
+<div class="flex items-center gap-3 shrink-0">
+<button class="px-4 py-2 rounded-xl bg-[#141b2b] hover:bg-slate-800 border border-slate-700 text-xs font-mono text-slate-200 flex items-center gap-2 transition-all" onclick="copyGeneratedScript()">
+<span>📋</span>
+<span data-i18n="ed_btn_copy">Copiar Script</span>
+</button>
+<button class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs font-mono flex items-center gap-2 shadow-lg shadow-blue-600/30 transition-all" onclick="switchView('hub')">
+<span data-i18n="ed_btn_to_hub">Ir a Biblioteca →</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 font-mono text-xs">
+<div class="rounded-2xl bg-[#070e1d] border border-slate-800 overflow-hidden flex flex-col shadow-xl">
+<div class="px-4 py-3 bg-[#141b2b] border-b border-slate-800 flex justify-between items-center">
+<span class="text-slate-300 font-bold">📄 Código ISO G-Code (Entrada)</span>
+<span class="text-[10px] text-blue-400">Dialecto ISO Universal</span>
+</div>
+<textarea class="w-full h-80 bg-[#070e1d] p-4 text-slate-300 font-mono text-xs focus:outline-none leading-relaxed border-none resize-none" id="src-gcode-editor">O1001 (EAGLECELEST_MECANIZADO_PROBETA)
+G21 G90 G40 G80 (Metrico, Absoluto, Cancelacion)
+G54 (Origen Mordaza Taller)
+T01 M06 (Fresa Plana D10)
+S12000 M03
+G00 X0.000 Y0.000 Z50.000
+G01 Z-5.000 F800
+G01 X100.000 Y0.000 F1500
+G02 X150.000 Y50.000 R50.000
+G01 Z50.000
+M30</textarea>
+</div>
+<div class="rounded-2xl bg-[#070e1d] border border-blue-500/40 overflow-hidden flex flex-col shadow-xl">
+<div class="px-4 py-3 bg-blue-950/40 border-b border-blue-500/30 flex justify-between items-center">
+<span class="text-blue-300 font-bold">🤖 Script Nativo Universal Robots (URScript)</span>
+<span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/30 font-bold">TRANSPILADO OK</span>
+</div>
+<textarea class="w-full h-80 bg-[#070e1d] p-4 text-emerald-300 font-mono text-xs focus:outline-none leading-relaxed border-none resize-none" id="dst-robot-script" readonly="">def EagleCelest_Routine():
+  # Calibracion TCP y masa de herramienta
+  set_tcp(p[0.1425, 0.0, 0.2184, 0.0, 0.0, 0.0])
   set_payload(1.2, [0.0, 0.0, 0.05])
-  # Retracción de seguridad
-  movej(p[0.0, 0.0, 0.100, 3.1415, 0.0, 0.0], a=1.2, v=0.5)
-  # Entrada controlada de mecanizado
-  movel(p[0.0, 0.0, -0.002, 3.1415, 0.0, 0.0], a=0.5, v=0.02)
-  movel(p[0.050, 0.0, -0.002, 3.1415, 0.0, 0.0], a=0.5, v=0.05)
-  movec(p[0.060, 0.010, -0.002, 3.1415, 0.0, 0.0], p[0.070, 0.020, -0.002, 3.1415, 0.0, 0.0], a=0.5, v=0.05)
-  # Fin de ciclo seguro
-  movel(p[0.070, 0.020, 0.100, 3.1415, 0.0, 0.0], a=1.0, v=0.25)
-end</textarea>
-          </div>
-        </div>
-      </section>
-
-      <!-- ======================================================= -->
-      <!-- PESTAÑA 04: BIBLIOTECA DIDÁCTICA & RETOS INTERACTIVOS XP -->
-      <!-- ======================================================= -->
-      <section id="tab-biblioteca" class="hidden max-w-6xl mx-auto space-y-6">
-        <!-- Encabezado de la Biblioteca -->
-        <div class="bg-industrial-900/80 border border-industrial-700/60 p-4 rounded-2xl flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <div class="flex items-center space-x-2">
-              <span class="text-xs font-mono bg-industrial-amber/20 text-industrial-amber px-2 py-0.5 rounded font-bold">ACADEMIA DUAL</span>
-              <h2 class="font-display text-xl font-bold text-white">Biblioteca Didáctica & Retos XP</h2>
-            </div>
-            <p class="text-xs text-slate-400 mt-0.5">Fundamentos esenciales de robótica colaborativa, cinemática y retos prácticos para desbloquear tu Diploma Oficial.</p>
-          </div>
-          <!-- Barra de Progreso XP hacia Diploma -->
-          <div class="bg-industrial-950 border border-industrial-700/70 p-3 rounded-xl min-w-[240px]">
-            <div class="flex items-center justify-between text-xs font-mono mb-1">
-              <span class="text-slate-300">Progreso a Diploma:</span>
-              <span class="text-industrial-amber font-bold"><span id="biblio-xp-val">350</span> / 500 XP</span>
-            </div>
-            <div class="w-full h-2.5 bg-industrial-800 rounded-full overflow-hidden">
-              <div id="biblio-xp-bar" class="h-full bg-gradient-to-r from-industrial-amber to-yellow-400 transition-all duration-500" style="width: 70%;"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- SECCIÓN 1: ENCICLOPEDIA DIDÁCTICA INDUSTRIAL -->
-        <div class="space-y-3">
-          <h3 class="text-xs font-mono text-industrial-cyan tracking-wider uppercase font-semibold flex items-center space-x-2">
-            <i class="fa-solid fa-book-bookmark"></i>
-            <span>ENCICLOPEDIA TÉCNICA: CONCEPTOS FUNDAMENTALES</span>
-          </h3>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <!-- Concepto 1: TCP vs Base -->
-            <div class="bg-industrial-900/70 border border-industrial-700/60 p-4 rounded-xl space-y-2">
-              <div class="flex items-center space-x-2 text-industrial-cyan font-bold text-sm">
-                <i class="fa-solid fa-arrows-to-dot"></i>
-                <span>1. TCP vs Coordenadas Base</span>
-              </div>
-              <p class="text-xs text-slate-300 leading-relaxed">
-                • <strong>Base (Frame del Robot):</strong> Sistema cartesiano fijado físicamente en la peana del robot. Las traslaciones mueven el brazo respecto al suelo o pedestal.<br><br>
-                • <strong>TCP (Tool Center Point):</strong> El punto de trabajo real (punta de broca, centro de ventosa, haz láser). Al rotar con TCP activo, la orientación cambia <em>pivotando sobre la punta de la pieza</em>, sin desviarse del objetivo.
+  
+  # MoveJ a punto de aproximacion seguro
+  movej([-0.216, -1.48, 1.61, -1.69, 1.56, 0.0], a=1.2, v=0.5)
+  
+  # MoveL trayectoria cartesiana de corte (G54)
+  movel(p[0.0, 0.0, 0.05, 3.1415, 0.0, 0.785], a=0.8, v=0.025)
+  movel(p[0.10, 0.0, 0.05, 3.1415, 0.0, 0.785], a=0.8, v=0.025)
+  movec(p[0.15, 0.05, 0.05, 3.1415, 0.0, 0.785], r=0.05)
+end
+EagleCelest_Routine()</textarea>
+</div>
+</div>
+</div>
+<!-- ============================================================
+           VISTA 4: BIBLIOTECA, ENCICLOPEDIA DIDÁCTICA, RETOS Y DIPLOMA
+      ============================================================ -->
+<div class="hidden-view space-y-8 max-w-7xl mx-auto" id="view-hub">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+<div>
+<span class="text-amber-400 font-mono text-xs uppercase tracking-wider font-semibold" data-i18n="hub_step">CURRICULUM DIDÁCTICO &amp; RETOS DE TALLER</span>
+<h1 class="text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1" data-i18n="hub_title">Biblioteca de Probetas &amp; Certificación</h1>
+<p class="text-sm text-slate-400 mt-1 max-w-2xl" data-i18n="hub_subtitle">Acceso libre sin barreras para aprender robótica colaborativa y mecanizado CNC.</p>
+</div>
+<div class="flex items-center gap-3 shrink-0">
+<button class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-slate-950 font-bold text-xs font-mono flex items-center gap-2 shadow-lg shadow-amber-500/20 transition-all" onclick="openDiplomaModal()">
+<span>📜</span>
+<span>Ver y Descargar Diploma A4</span>
+</button>
+<button class="px-4 py-2.5 rounded-xl bg-[#141b2b] hover:bg-slate-800 border border-slate-700 text-xs font-mono text-slate-300 transition-all" onclick="switchView('home')">
+<span>← Inicio</span>
+</button>
+</div>
+</div>
+<!-- Banner Certificación & Progreso XP -->
+<div class="p-6 rounded-2xl bg-gradient-to-r from-blue-950/60 via-slate-900 to-[#141b2b] border border-amber-500/40 shadow-2xl relative overflow-hidden">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="space-y-2">
+<div class="flex items-center gap-2">
+<span class="text-2xl">🎓</span>
+<h3 class="text-lg font-bold text-white">Certificado Oficial EagleCelest Academy (500 XP)</h3>
+<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30">ACREDITABLE CV</span>
+</div>
+<p class="text-xs text-slate-300 max-w-2xl leading-relaxed">
+                Completa los retos didácticos de cinemática Cobot 6-DOF y calibración TCP para emitir tu diploma oficial con nombre personalizado, hash criptográfico de verificación y desglose curricular para tu CV o LinkedIn.
               </p>
-            </div>
-
-            <!-- Concepto 2: MoveJ vs MoveL -->
-            <div class="bg-industrial-900/70 border border-industrial-700/60 p-4 rounded-xl space-y-2">
-              <div class="flex items-center space-x-2 text-industrial-emerald font-bold text-sm">
-                <i class="fa-solid fa-route"></i>
-                <span>2. Movimientos: MoveJ vs MoveL</span>
-              </div>
-              <p class="text-xs text-slate-300 leading-relaxed">
-                • <strong>MoveJ (Move Joint / Articular):</strong> Todos los ejes calculan la rotación más rápida para llegar al punto. La punta describe un arco no lineal en el espacio. <em>Uso: Movimientos en el aire libre.</em><br><br>
-                • <strong>MoveL (Move Linear / Cartesiano):</strong> La herramienta traza una recta rigurosa en el espacio euclídeo. <em>Uso obligado: Entradas y salidas de mecanizado, soldadura y dispensado.</em>
+<div class="flex items-center gap-3 pt-1 text-xs font-mono">
+<span class="text-slate-400">Progreso Actual:</span>
+<span class="text-amber-400 font-bold tabular-nums" id="hub-xp-text">350 / 500 XP</span>
+<div class="w-48 bg-[#070e1d] h-2 rounded-full overflow-hidden border border-slate-800">
+<div class="bg-amber-400 h-full transition-all duration-500" id="hub-xp-bar" style="width: 70%;"></div>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-2 shrink-0">
+<button class="px-4 py-2 rounded-lg bg-blue-600/30 hover:bg-blue-600/50 border border-blue-500/40 text-blue-200 text-xs font-mono font-bold transition" onclick="addDemoXP(150)">
+                ⚡ Desbloquear 500 XP (Demo)
+              </button>
+<button class="px-5 py-2.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-mono font-bold shadow-lg transition" onclick="openDiplomaModal()">
+                📜 Expedir Diploma A4
+              </button>
+</div>
+</div>
+</div>
+<!-- SECCIÓN 1: ENCICLOPEDIA DIDÁCTICA INTERACTIVA -->
+<div class="space-y-4">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+<div class="flex items-center gap-2 text-xs font-mono text-blue-400 uppercase tracking-wider font-semibold">
+<span>📘</span>
+<span>01 // ENCICLOPEDIA DIDÁCTICA INTERACTIVA DE ROBÓTICA &amp; CNC</span>
+</div>
+<!-- Pestañas de Navegación -->
+<div class="flex flex-wrap gap-1.5 bg-[#0c1322] p-1 rounded-xl border border-slate-800 font-mono text-xs">
+<button class="px-3 py-1.5 rounded-lg bg-blue-600 text-white font-semibold transition-all" id="enc-tab-tcp" onclick="switchEncyclopediaTab('tcp')">
+                🧭 TCP vs Base
+              </button>
+<button class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all" id="enc-tab-moves" onclick="switchEncyclopediaTab('moves')">
+                ⚡ MoveJ / L / P / C
+              </button>
+<button class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all" id="enc-tab-safety" onclick="switchEncyclopediaTab('safety')">
+                🛡️ Modos &amp; SIL-3
+              </button>
+</div>
+</div>
+<!-- Contenido Pestaña 1: TCP vs Base -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-4" id="enc-content-tcp">
+<div class="p-5 rounded-2xl bg-[#141b2b] border border-slate-800 space-y-3">
+<div class="flex items-center justify-between">
+<span class="text-xl">🎯</span>
+<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">FRAME HERRAMIENTA</span>
+</div>
+<h3 class="text-base font-bold text-white">¿Qué es el TCP (Tool Center Point)?</h3>
+<p class="text-xs text-slate-300 leading-relaxed">
+                Es el punto exacto de trabajo en el extremo de la herramienta (punta de la fresa, centro de las mordazas de una pinza o boquilla dispensadora). El controlador calcula toda la cinemática inversa para posicionar el TCP, no la brida del robot.
               </p>
-            </div>
-
-            <!-- Concepto 3: Singularidades & Seguridad -->
-            <div class="bg-industrial-900/70 border border-industrial-700/60 p-4 rounded-xl space-y-2">
-              <div class="flex items-center space-x-2 text-industrial-amber font-bold text-sm">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-                <span>3. Singularidades & ISO 15066</span>
+<div class="p-2.5 rounded-lg bg-[#070e1d] border border-slate-800 font-mono text-[11px] text-emerald-300">
+                set_tcp(p[0.0, 0.0, 0.145, 0.0, 0.0, 0.0])
               </div>
-              <p class="text-xs text-slate-300 leading-relaxed">
-                • <strong>Singularidad (J5 / Muñeca):</strong> Ocurre cuando dos ejes quedan colineales y el cálculo de cinemática inversa requiere velocidades infinitas para mantener una recta.<br><br>
-                • <strong>Seguridad SIL-3 & Colaborativa:</strong> Los cobots monitorizan el par motor en cada articulación limitando la fuerza a menos de 140 N en áreas sin pellizco y frenado de parada en &lt; 200 ms.
+</div>
+<div class="p-5 rounded-2xl bg-[#141b2b] border border-slate-800 space-y-3">
+<div class="flex items-center justify-between">
+<span class="text-xl">📐</span>
+<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">FRAME REFERENCIA</span>
+</div>
+<h3 class="text-base font-bold text-white">Coordenadas de Base (World / G54)</h3>
+<p class="text-xs text-slate-300 leading-relaxed">
+                Es el sistema de coordenadas cartesiano fijo en el pedestal del robot (Base) o en la mesa/mordaza de la pieza (G54). Permite programar trayectorias respecto a la pieza y reubicar el utillaje sin reescribir todo el programa.
               </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- SECCIÓN 2: 4 RETOS PRÁCTICOS DE TALLER (CON MODAL & XP) -->
-        <div class="space-y-3">
-          <div class="flex items-center justify-between">
-            <h3 class="text-xs font-mono text-industrial-cyan tracking-wider uppercase font-semibold flex items-center space-x-2">
-              <i class="fa-solid fa-trophy"></i>
-              <span>RETOS INTERACTIVOS DE FORMACIÓN (GANA XP)</span>
-            </h3>
-            <span class="text-xs text-slate-400">Resuelve cada reto para sumar puntos:</span>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <!-- Reto 1 -->
-            <div class="bg-industrial-900/80 border border-industrial-700/70 p-4 rounded-xl flex flex-col justify-between hover:border-industrial-cyan/50 transition">
-              <div>
-                <div class="flex items-center justify-between mb-2">
-                  <span class="text-[10px] font-mono bg-blue-600/30 text-blue-300 px-2 py-0.5 rounded font-bold">+75 XP</span>
-                  <span id="badge-r1" class="text-xs text-industrial-emerald"><i class="fa-solid fa-circle-check"></i> Superado</span>
-                </div>
-                <h4 class="font-bold text-sm text-white">Reto 1: Calibración TCP</h4>
-                <p class="text-xs text-slate-400 mt-1">Calibra una pinza angular con el método de los 4 puntos y calcula el error residual.</p>
+<div class="p-2.5 rounded-lg bg-[#070e1d] border border-slate-800 font-mono text-[11px] text-blue-300">
+                Origen Base: X=0, Y=0, Z=0 (Pedestal)
               </div>
-              <button onclick="openChallengeModal(1)" class="mt-4 w-full bg-industrial-800 hover:bg-industrial-700 border border-industrial-600 text-xs font-semibold py-1.5 rounded-lg text-slate-200 transition">
-                Abrir Ejercicio
+</div>
+<div class="p-5 rounded-2xl bg-[#141b2b] border border-blue-500/30 space-y-3">
+<div class="flex items-center justify-between">
+<span class="text-xl">🛠️</span>
+<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">CALIBRACIÓN</span>
+</div>
+<h3 class="text-base font-bold text-white">Método de Calibración de 4 Puntos</h3>
+<p class="text-xs text-slate-300 leading-relaxed">
+                Para hallar el offset (X, Y, Z) del TCP: se fija un puntero físico en la mesa y se toca su punta con el TCP desde <strong>4 orientaciones distintas</strong> de la muñeca. El algoritmo resuelve la esfera común y calcula la traslación exacta con precisión ±0.1 mm.
+              </p>
+</div>
+</div>
+<!-- Contenido Pestaña 2: MoveJ / MoveL / MoveP / MoveC -->
+<div class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="enc-content-moves">
+<div class="p-5 rounded-2xl bg-[#141b2b] border border-slate-800 space-y-2.5">
+<div class="flex items-center justify-between">
+<span class="font-mono font-bold text-blue-400 text-sm">MoveJ</span>
+<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-500/20 text-blue-300">ARTICULAR</span>
+</div>
+<p class="text-xs text-slate-300 leading-relaxed">
+                Interpolación en espacio articular. Cada eje gira simultáneamente para llegar al destino lo más rápido posible. La trayectoria del TCP es curva.
+              </p>
+<p class="text-[11px] text-slate-400 font-mono pt-1 border-t border-slate-800">
+                ✓ Uso: Aproximaciones libres y cambios de zona sin obstáculos.
+              </p>
+</div>
+<div class="p-5 rounded-2xl bg-[#141b2b] border border-slate-800 space-y-2.5">
+<div class="flex items-center justify-between">
+<span class="font-mono font-bold text-emerald-400 text-sm">MoveL</span>
+<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">LINEAL</span>
+</div>
+<p class="text-xs text-slate-300 leading-relaxed">
+                Interpolación lineal cartesiana. El TCP sigue una línea recta exacta entre dos puntos, aunque los ejes tengan que acelerar/desacelerar.
+              </p>
+<p class="text-[11px] text-slate-400 font-mono pt-1 border-t border-slate-800">
+                ✓ Uso: Inserción de piezas, paletizado y corte recto CNC.
+              </p>
+</div>
+<div class="p-5 rounded-2xl bg-[#141b2b] border border-slate-800 space-y-2.5">
+<div class="flex items-center justify-between">
+<span class="font-mono font-bold text-amber-400 text-sm">MoveP</span>
+<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300">PROCESO</span>
+</div>
+<p class="text-xs text-slate-300 leading-relaxed">
+                Movimiento lineal con <strong>velocidad constante</strong> y radios de mezcla (blend) suaves en las esquinas para evitar frenazos.
+              </p>
+<p class="text-[11px] text-slate-400 font-mono pt-1 border-t border-slate-800">
+                ✓ Uso: Dispensado de adhesivo, soldadura y fresado continuo.
+              </p>
+</div>
+<div class="p-5 rounded-2xl bg-[#141b2b] border border-slate-800 space-y-2.5">
+<div class="flex items-center justify-between">
+<span class="font-mono font-bold text-purple-400 text-sm">MoveC</span>
+<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/20 text-purple-300">CIRCULAR</span>
+</div>
+<p class="text-xs text-slate-300 leading-relaxed">
+                Interpolación de arco circular definida por un punto de paso intermedio (via point) y un punto final, equivalente a G02/G03 en ISO.
+              </p>
+<p class="text-[11px] text-slate-400 font-mono pt-1 border-t border-slate-800">
+                ✓ Uso: Contorneado de arcos, chaflanes curvos y sellado circular.
+              </p>
+</div>
+</div>
+<!-- Contenido Pestaña 3: Modos & Seguridad SIL-3 -->
+<div class="hidden grid grid-cols-1 lg:grid-cols-3 gap-4" id="enc-content-safety">
+<div class="p-5 rounded-2xl bg-[#141b2b] border border-slate-800 space-y-3">
+<div class="flex items-center justify-between">
+<span class="text-xl">🦾</span>
+<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-500/20 text-blue-300">TEACHING</span>
+</div>
+<h3 class="text-base font-bold text-white">Modo FreeDrive (Gravedad Cero)</h3>
+<p class="text-xs text-slate-300 leading-relaxed">
+                Compensa dinámicamente el peso del brazo y del payload configurado para que el operario pueda guiar el Cobot con la mano y grabar Waypoints físicamente sin esfuerzo.
+              </p>
+</div>
+<div class="p-5 rounded-2xl bg-[#141b2b] border border-slate-800 space-y-3">
+<div class="flex items-center justify-between">
+<span class="text-xl">🧭</span>
+<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300">JOGGING</span>
+</div>
+<h3 class="text-base font-bold text-white">Jog Cartesiano vs Articular</h3>
+<p class="text-xs text-slate-300 leading-relaxed">
+                El <strong>Jog Articular</strong> mueve un motor individual (J1-J6), ideal para salir de singularidades. El <strong>Jog Cartesiano</strong> traslada el TCP a lo largo de los ejes X, Y, Z manteniendo la orientación de la herramienta.
+              </p>
+</div>
+<div class="p-5 rounded-2xl bg-[#141b2b] border border-rose-500/30 space-y-3">
+<div class="flex items-center justify-between">
+<span class="text-xl">🛡️</span>
+<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-rose-500/20 text-rose-300">ISO/TS 15066</span>
+</div>
+<h3 class="text-base font-bold text-white">Seguridad Colaborativa &amp; SIL-3</h3>
+<p class="text-xs text-slate-300 leading-relaxed">
+                Limita la fuerza y presión biomecánica ante contacto accidental. El circuito de parada de emergencia <strong>SIL-3 / PL e</strong> desconecta la potencia de los servomotores mediante doble canal redundante.
+              </p>
+</div>
+</div>
+</div>
+<!-- SECCIÓN 2: 4 RETOS INTERACTIVOS DE TALLER -->
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2 text-xs font-mono text-amber-400 uppercase tracking-wider font-semibold">
+<span>🏆</span>
+<span>02 // 4 RETOS INTERACTIVOS DE TALLER (SUMA XP PARA TU DIPLOMA)</span>
+</div>
+<span class="text-[11px] text-slate-400 hidden sm:inline font-mono">Completa los 4 retos para sumar +350 XP reales</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Reto 1 -->
+<div class="p-5 rounded-2xl bg-[#141b2b] border border-slate-800 hover:border-blue-500/60 transition-all flex flex-col justify-between space-y-4">
+<div class="space-y-2">
+<div class="flex items-center justify-between">
+<span class="text-xs font-mono font-bold text-blue-400">RETO 01</span>
+<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold" id="badge-reto-1">+75 XP</span>
+</div>
+<h3 class="text-sm font-bold text-white">Calibración TCP de 4 Puntos</h3>
+<p class="text-xs text-slate-400 leading-relaxed">
+                  Valida el procedimiento correcto para obtener el offset exacto de una fresa o pinza.
+                </p>
+</div>
+<button class="w-full py-2 rounded-xl bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/40 font-mono text-xs font-bold transition-all" id="btn-reto-1" onclick="openChallengeModal(1)">
+                Iniciar Reto →
               </button>
-            </div>
-
-            <!-- Reto 2 -->
-            <div class="bg-industrial-900/80 border border-industrial-700/70 p-4 rounded-xl flex flex-col justify-between hover:border-industrial-cyan/50 transition">
-              <div>
-                <div class="flex items-center justify-between mb-2">
-                  <span class="text-[10px] font-mono bg-industrial-amber/30 text-industrial-amber px-2 py-0.5 rounded font-bold">+100 XP</span>
-                  <span id="badge-r2" class="text-xs text-slate-400 font-mono">Pendiente</span>
-                </div>
-                <h4 class="font-bold text-sm text-white">Reto 2: Singularidad J5</h4>
-                <p class="text-xs text-slate-400 mt-1">Evita la parada de emergencia en una trayectoria recta aplicando una inclinación de herramienta.</p>
-              </div>
-              <button onclick="openChallengeModal(2)" class="mt-4 w-full bg-industrial-800 hover:bg-industrial-700 border border-industrial-cyan/40 text-xs font-semibold py-1.5 rounded-lg text-industrial-cyan transition">
-                Resolver Reto
+</div>
+<!-- Reto 2 -->
+<div class="p-5 rounded-2xl bg-[#141b2b] border border-slate-800 hover:border-emerald-500/60 transition-all flex flex-col justify-between space-y-4">
+<div class="space-y-2">
+<div class="flex items-center justify-between">
+<span class="text-xs font-mono font-bold text-emerald-400">RETO 02</span>
+<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold" id="badge-reto-2">+100 XP</span>
+</div>
+<h3 class="text-sm font-bold text-white">Prevención de Singularidad en Muñeca J5</h3>
+<p class="text-xs text-slate-400 leading-relaxed">
+                  Identifica cómo evitar velocidades infinitas cuando los ejes J4 y J6 se alinean.
+                </p>
+</div>
+<button class="w-full py-2 rounded-xl bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white border border-emerald-500/40 font-mono text-xs font-bold transition-all" id="btn-reto-2" onclick="openChallengeModal(2)">
+                Iniciar Reto →
               </button>
-            </div>
-
-            <!-- Reto 3 -->
-            <div class="bg-industrial-900/80 border border-industrial-700/70 p-4 rounded-xl flex flex-col justify-between hover:border-industrial-cyan/50 transition">
-              <div>
-                <div class="flex items-center justify-between mb-2">
-                  <span class="text-[10px] font-mono bg-blue-600/30 text-blue-300 px-2 py-0.5 rounded font-bold">+75 XP</span>
-                  <span id="badge-r3" class="text-xs text-slate-400 font-mono">Pendiente</span>
-                </div>
-                <h4 class="font-bold text-sm text-white">Reto 3: MoveJ vs MoveL</h4>
-                <p class="text-xs text-slate-400 mt-1">Selecciona el tipo de comando adecuado en 5 puntos de un contorno con tolerancia de ±0.05 mm.</p>
-              </div>
-              <button onclick="openChallengeModal(3)" class="mt-4 w-full bg-industrial-800 hover:bg-industrial-700 border border-industrial-cyan/40 text-xs font-semibold py-1.5 rounded-lg text-industrial-cyan transition">
-                Resolver Reto
+</div>
+<!-- Reto 3 -->
+<div class="p-5 rounded-2xl bg-[#141b2b] border border-slate-800 hover:border-purple-500/60 transition-all flex flex-col justify-between space-y-4">
+<div class="space-y-2">
+<div class="flex items-center justify-between">
+<span class="text-xs font-mono font-bold text-purple-400">RETO 03</span>
+<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold" id="badge-reto-3">+75 XP</span>
+</div>
+<h3 class="text-sm font-bold text-white">Selección MoveJ vs MoveL en Contorneado</h3>
+<p class="text-xs text-slate-400 leading-relaxed">
+                  Elige la instrucción adecuada para mecanizar o dispensar adhesivo sin colisiones.
+                </p>
+</div>
+<button class="w-full py-2 rounded-xl bg-purple-600/20 hover:bg-purple-600 text-purple-300 hover:text-white border border-purple-500/40 font-mono text-xs font-bold transition-all" id="btn-reto-3" onclick="openChallengeModal(3)">
+                Iniciar Reto →
               </button>
-            </div>
-
-            <!-- Reto 4 -->
-            <div class="bg-industrial-900/80 border border-industrial-700/70 p-4 rounded-xl flex flex-col justify-between hover:border-industrial-cyan/50 transition">
-              <div>
-                <div class="flex items-center justify-between mb-2">
-                  <span class="text-[10px] font-mono bg-industrial-amber/30 text-industrial-amber px-2 py-0.5 rounded font-bold">+100 XP</span>
-                  <span id="badge-r4" class="text-xs text-slate-400 font-mono">Pendiente</span>
-                </div>
-                <h4 class="font-bold text-sm text-white">Reto 4: Interlock Torno CNC</h4>
-                <p class="text-xs text-slate-400 mt-1">Sincroniza la señal digital M10/M11 del plato del torno antes de ordenar el movimiento del robot.</p>
-              </div>
-              <button onclick="openChallengeModal(4)" class="mt-4 w-full bg-industrial-800 hover:bg-industrial-700 border border-industrial-cyan/40 text-xs font-semibold py-1.5 rounded-lg text-industrial-cyan transition">
-                Resolver Reto
+</div>
+<!-- Reto 4 -->
+<div class="p-5 rounded-2xl bg-[#141b2b] border border-slate-800 hover:border-rose-500/60 transition-all flex flex-col justify-between space-y-4">
+<div class="space-y-2">
+<div class="flex items-center justify-between">
+<span class="text-xs font-mono font-bold text-rose-400">RETO 04</span>
+<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold" id="badge-reto-4">+100 XP</span>
+</div>
+<h3 class="text-sm font-bold text-white">Interlock SIL-3 &amp; Carga de Torno M10/M11</h3>
+<p class="text-xs text-slate-400 leading-relaxed">
+                  Sincroniza la apertura de garras del plato con la entrada del Cobot en celda híbrida.
+                </p>
+</div>
+<button class="w-full py-2 rounded-xl bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-500/40 font-mono text-xs font-bold transition-all" id="btn-reto-4" onclick="openChallengeModal(4)">
+                Iniciar Reto →
               </button>
-            </div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- BARRA INFERIOR RESPONSIVE PARA SMARTPHONE -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#0c1322]/95 border-t border-slate-800 backdrop-blur z-40 flex items-center justify-around px-2 text-[11px] font-mono">
+<button class="flex flex-col items-center gap-1 text-blue-400" id="mob-btn-home" onclick="switchView('home')">
+<span class="text-base">🏠</span>
+<span>Inicio</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400" id="mob-btn-kinematics" onclick="switchView('kinematics')">
+<span class="text-base">🦾</span>
+<span>3D Kin</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400" id="mob-btn-editor" onclick="switchView('editor')">
+<span class="text-base">💻</span>
+<span>Editor</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400" id="mob-btn-hub" onclick="switchView('hub')">
+<span class="text-base">📖</span>
+<span>Biblioteca</span>
+</button>
+</nav>
+<!-- MODAL RETO INTERACTIVO -->
+<div class="fixed inset-0 bg-[#070e1d]/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden" id="challenge-modal">
+<div class="bg-[#0c1322] border border-blue-500/50 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+<div class="flex items-center justify-between border-b border-slate-800 pb-3">
+<div class="flex items-center gap-2">
+<span class="text-xl">🏆</span>
+<div>
+<span class="text-[10px] font-mono text-amber-400 font-bold uppercase" id="chal-badge">RETO 01 // +75 XP</span>
+<h3 class="text-base font-bold text-white" id="chal-title">Título del Reto</h3>
+</div>
+</div>
+<button class="text-slate-400 hover:text-white text-lg" onclick="closeChallengeModal()">✕</button>
+</div>
+<p class="text-xs sm:text-sm text-slate-200 leading-relaxed" id="chal-question"></p>
+<div class="space-y-2 font-mono text-xs" id="chal-options"></div>
+<div class="hidden p-3 rounded-xl text-xs leading-relaxed" id="chal-feedback"></div>
+<div class="flex justify-end pt-2">
+<button class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-mono text-xs" onclick="closeChallengeModal()">
+          Cerrar
+        </button>
+</div>
+</div>
+</div>
+<!-- MODAL DIPLOMA A4 -->
+<div class="fixed inset-0 bg-[#070e1d]/90 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-6 hidden overflow-y-auto" id="diploma-modal">
+<div class="bg-[#0c1322] border border-amber-500/50 rounded-2xl max-w-3xl w-full p-6 space-y-5 shadow-2xl relative">
+<div class="flex items-center justify-between border-b border-slate-800 pb-3">
+<div class="flex items-center gap-2">
+<span class="text-xl">📜</span>
+<h3 class="text-base font-bold text-white font-mono">Certificado Acreditable de Capacitación Cobot</h3>
+</div>
+<button class="text-slate-400 hover:text-white text-lg" onclick="closeDiplomaModal()">✕</button>
+</div>
+<div class="bg-[#141b2b] p-3 rounded-xl border border-slate-800 font-mono text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+<div>
+<label class="text-slate-400 block mb-1">Nombre y Apellidos para el Diploma:</label>
+<input class="bg-[#070e1d] border border-slate-700 px-3 py-1.5 rounded text-white font-bold w-64 focus:outline-none" id="diploma-student-name" oninput="updateDiplomaPreview(this.value)" type="text" value="Alejandro García Moreno"/>
+</div>
+<button class="px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center gap-2 shadow" onclick="window.print()">
+<span>🖨️</span>
+<span>Imprimir / Guardar como PDF</span>
+</button>
+</div>
+<div class="bg-[#070e1d] border-4 border-amber-500/40 rounded-xl p-8 text-center space-y-4 relative shadow-2xl">
+<div class="flex justify-between items-center border-b border-amber-500/20 pb-3 font-mono text-[10px] text-slate-400">
+<span>EAGLECELEST ACADEMY OF ROBOTICS</span>
+<span class="text-amber-400 font-bold">ID: EC-COBOT-2025-9842X</span>
+</div>
+<div class="space-y-1">
+<span class="text-amber-400 text-xs font-mono tracking-widest uppercase">Certificado Oficial de Formación Técnica</span>
+<h2 class="text-2xl font-bold text-white font-serif tracking-wide">Diploma de Cinemática &amp; Control Cobot 6-DOF</h2>
+</div>
+<p class="text-xs text-slate-400">Se certifica por la presente que</p>
+<p class="text-xl font-bold text-amber-300 font-serif border-b border-amber-500/30 inline-block px-8 pb-1" id="diploma-preview-name">
+          Alejandro García Moreno
+        </p>
+<p class="text-[11px] text-slate-300 max-w-lg mx-auto leading-relaxed">
+          Ha completado con éxito la capacitación en cinemática directa/inversa de robots colaborativos (UR10e / Fanuc CRX), cálculo y calibración de marcos de referencia TCP vs Base, prevención de colisiones SIL-3 y transpilación de código ISO G-code a dialectos nativos de taller.
+        </p>
+<div class="pt-4 border-t border-amber-500/20 flex justify-between items-end font-mono text-[10px] text-slate-400">
+<div class="text-left">
+<p>Hash SHA-256: <span class="text-slate-500">e3b0c44298fc1c149afbf4c89...</span></p>
+<p>Emisión: <span class="text-slate-300">Marzo 2025</span></p>
+</div>
+<div class="text-right">
+<p class="font-bold text-amber-400">EagleCelest</p>
+<p class="text-slate-500">Universal Robotics Orchestrator</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- MODAL FEEDBACK -->
+<div class="fixed inset-0 bg-[#070e1d]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden" id="feedback-modal">
+<div class="bg-[#0c1322] border border-slate-700 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl font-mono text-xs">
+<div class="flex items-center justify-between border-b border-slate-800 pb-3">
+<div class="flex items-center gap-2">
+<span class="text-base">💬</span>
+<span class="text-sm font-bold text-white" data-i18n="modal_feedback_title">Enviar Feedback / Sugerencias</span>
+</div>
+<button class="text-slate-400 hover:text-white" onclick="closeFeedbackModal()">✕</button>
+</div>
+<div class="space-y-3">
+<div>
+<label class="block text-slate-400 mb-1" data-i18n="modal_field_to">Canal directo:</label>
+<div class="px-3 py-2 rounded-lg bg-[#070e1d] border border-slate-800 text-blue-300">
+            cnccobot.feedback@gmail.com
           </div>
-        </div>
-
-        <!-- SECCIÓN 3: DIPLOMA OFICIAL DESCARGABLE (AL CANJEAR 500 XP) -->
-        <div class="bg-gradient-to-r from-industrial-900 via-industrial-850 to-industrial-900 border-2 border-industrial-amber/40 p-6 rounded-2xl flex flex-wrap items-center justify-between gap-6 shadow-[0_0_25px_rgba(245,158,11,0.1)]">
-          <div class="max-w-xl">
-            <div class="flex items-center space-x-2 text-industrial-amber text-xs font-mono font-bold uppercase mb-1">
-              <i class="fa-solid fa-award"></i>
-              <span>CERTIFICACIÓN DE LOGRO INDUSTRIAL</span>
-            </div>
-            <h3 class="font-display text-xl font-bold text-white">Diploma Acreditativo en Fundamentos de CNC & Cobot</h3>
-            <p class="text-xs text-slate-300 mt-1 leading-relaxed">
-              Consigue 500 XP completando los retos formativos para generar tu diploma en PDF de alta resolución con código de verificación único y el sello oficial de <strong>EagleCelest</strong>.
-            </p>
-          </div>
-          <div>
-            <button onclick="downloadOfficialDiploma()" class="bg-industrial-amber hover:bg-yellow-400 text-industrial-950 font-bold px-5 py-2.5 rounded-xl text-xs flex items-center space-x-2 shadow-[0_0_15px_rgba(245,158,11,0.4)] transition">
-              <i class="fa-solid fa-file-pdf text-base"></i>
-              <span>Generar Diploma Oficial A4</span>
-            </button>
-          </div>
-        </div>
-      </section>
-    </main>
-  </div>
-
-  <!-- MODAL GENÉRICO DE RESOLUCIÓN DE RETOS DIDÁCTICOS -->
-  <div id="challenge-modal" class="fixed inset-0 bg-industrial-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-industrial-900 border border-industrial-cyan/50 max-w-lg w-full rounded-2xl p-6 shadow-2xl space-y-4">
-      <div class="flex items-center justify-between border-b border-industrial-700/60 pb-3">
-        <div class="flex items-center space-x-2">
-          <i class="fa-solid fa-trophy text-industrial-amber"></i>
-          <h3 id="modal-challenge-title" class="font-display font-bold text-white text-base">Reto Técnico</h3>
-        </div>
-        <button onclick="closeChallengeModal()" class="text-slate-400 hover:text-white text-lg">✕</button>
-      </div>
-
-      <div id="modal-challenge-body" class="text-xs text-slate-300 space-y-3 leading-relaxed">
-        <!-- Contenido inyectado dinámicamente -->
-      </div>
-
-      <div class="flex items-center justify-end space-x-2 pt-2 border-t border-industrial-700/60">
-        <button onclick="closeChallengeModal()" class="bg-industrial-800 hover:bg-industrial-700 px-3 py-1.5 rounded-lg text-xs text-slate-300 transition">Cancelar</button>
-        <button id="btn-submit-challenge" onclick="submitChallengeAnswer()" class="bg-industrial-cyan hover:bg-cyan-400 text-industrial-950 font-bold px-4 py-1.5 rounded-lg text-xs shadow transition">Validar Solución (+XP)</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- JAVASCRIPT MAESTRO INTEGRADO (100% FUNCIONAL Y AUTOCONTENIDO) -->
-  <script>
-    // ESTADO GLOBAL DE LA APLICACIÓN
-    const state = {
+</div>
+<div>
+<label class="block text-slate-400 mb-1" data-i18n="modal_field_type">Categoría del mensaje:</label>
+<select class="w-full px-3 py-2 rounded-lg bg-[#070e1d] border border-slate-800 text-white outline-none" id="feedback-type">
+<option value="Sugerencia">Sugerencia de Mejora</option>
+<option value="Error">Informe de Error / Bug</option>
+<option value="Docencia">Consulta Educativa / Universidad</option>
+<option value="General">Consulta General</option>
+</select>
+</div>
+<div>
+<label class="block text-slate-400 mb-1" data-i18n="modal_field_msg">Tus impresiones o consulta:</label>
+<textarea class="w-full px-3 py-2 rounded-lg bg-[#070e1d] border border-slate-800 text-white placeholder-slate-500 outline-none" id="feedback-text" placeholder="Escribe aquí tu sugerencia o duda..." rows="4"></textarea>
+</div>
+</div>
+<div class="flex justify-end gap-2 pt-2">
+<button class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300" data-i18n="modal_btn_cancel" onclick="closeFeedbackModal()">Cancelar</button>
+<button class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold" data-i18n="modal_btn_send" onclick="sendFeedback()">Enviar por Email</button>
+</div>
+</div>
+</div>
+<!-- Contenedor Toasts -->
+<div class="fixed bottom-20 md:bottom-6 right-3 md:right-6 z-50 flex flex-col gap-2 pointer-events-none" id="toast-container"></div>
+<!-- JAVASCRIPT GLOBAL REACTIVO -->
+<script>
+    window.AppState = {
       lang: 'es',
       role: 'student',
+      currentView: 'home',
       xp: 350,
-      activeTab: 'tab-inicio',
-      simulating: false,
-      simInterval: null,
-      joints: {
-        j1: 0.0,
-        j2: -45.0,
-        j3: 90.0,
-        j4: -135.0,
-        j5: 90.0,
-        j6: 0.0
-      },
-      currentChallengeId: null
+      completedChallenges: {},
+      activeChallengeId: null,
+      eStop: false,
+      jogStep: 1.0,
+      simRunning: false,
+      joints: { J1: -14.2, J2: -82.6, J3: 105.1, J4: -22.4, J5: 90.0, J6: 4.5 },
+      dro: { x: 143.62, y: -30.00, z: 225.37, rx: 179.8, ry: -0.05, rz: 45.2 }
     };
 
-    // CAMBIO DE PESTAÑAS (NAVEGACIÓN LATERAL)
-    function switchTab(tabId) {
-      state.activeTab = tabId;
-      const tabs = ['tab-inicio', 'tab-cinematica', 'tab-editor', 'tab-biblioteca'];
-      
-      tabs.forEach(t => {
-        const el = document.getElementById(t);
-        if (el) el.classList.add('hidden');
-      });
+    const translations = {
+      es: {
+        badge_title: "Universal Orchestrator",
+        role_student: "Estudiante (0€)",
+        role_pro: "Taller Pro",
+        btn_feedback: "Feedback",
+        nav_workspace_heading: "Módulos de Trabajo",
+        mod_home: "Inicio & Proyectos",
+        mod_kinematics: "Centro Cinemático 3D",
+        mod_editor: "Editor & Transpilador",
+        mod_hub: "Biblioteca",
+        sidebar_mission_title: "Misión Educativa",
+        sidebar_mission_desc: "Acceso libre para estudiantes, autónomos y talleres. Democratizando la robótica con EagleCelest.",
+        hardware_status: "HARDWARE ACTIVO:",
+        step_01: "PASO 01 // CONFIGURACIÓN INICIAL & CINEMÁTICA",
+        title_main: "Nuevo Proyecto & Selector de Máquina",
+        subtitle_main: "Democratización técnica para estudiantes, autónomos y talleres.",
+        btn_export: "Exportar .CNCPROJ",
+        btn_start: "Iniciar Proyecto Ahora →",
+        act_new_title: "Iniciar Proyecto Nuevo",
+        act_new_desc: "Configura parámetros, casos guiados o arranca de cero.",
+        act_saved_title: "Proyecto Guardado",
+        act_saved_desc: "Recupera: Mecanizado_Probeta.cncproj de tu sesión previa.",
+        act_import_title: "Importar Proyecto",
+        act_import_desc: "Carga archivos .cncproj, rutinas ISO o scripts de robot.",
+        act_export_title: "Exportar Proyecto",
+        act_export_desc: "Genera archivo descargable con origen, piezas y herramientas.",
+        cases_heading: "00 // TIPO DE OPERACIÓN & CASO PRÁCTICO DIDÁCTICO",
+        cases_hint: "Selecciona una plantilla guiada para precargar cinemática, herramientas y parámetros óptimos:",
+        case1_title: "Mecanizado de Probeta Didáctica",
+        case1_desc: "(Contorneado & Cajera CNC)",
+        case2_title: "Pick & Place Industrial",
+        case2_desc: "& Dispensado Adhesivo",
+        case3_title: "Carga Automática de Torno CNC",
+        case3_desc: "con Celda Robotizada",
+        case4_title: "Proyecto Libre",
+        case4_desc: "Carga de Código Propio (.CNC / .SRC)",
+        card1_title: "01 // IDENTIFICACIÓN",
+        card1_label: "Nombre del Archivo / Setup",
+        card2_title: "02 // ORIGEN DE PARTIDA (DATUM)",
+        card2_desc: "G54: Origen fijado en mordaza de amarre rápido.",
+        card3_title: "03 // HERRAMIENTA & BRUTO",
+        kinematics_selector_title: "04 // SELECCIÓN DE CINEMÁTICA & HARDWARE DE TALLER",
+        tag_6dof: "6-DOF COBOT",
+        mach1_name: "Cobot 6-DOF",
+        tag_3axis: "3-AXIS CNC",
+        mach2_name: "3-Axis CNC Mill",
+        tag_5axis: "5-AXIS RTCP",
+        mach3_name: "5-Axis RTCP",
+        tag_lathe: "LATHE & HYBRID",
+        mach4_name: "Torno & Celda Híbrida",
+        kin_step: "MÓDULO 02 // CINEMÁTICA 3D & MONITOR COBOT",
+        kin_title: "Centro Cinemático 3D & DRO Táctil",
+        kin_subtitle: "Simulación de trayectoria continua, monitoreo cartesiano del TCP y prevención de colisión ISO/TS 15066.",
+        kin_btn_run: "Ejecutar Simulación",
+        kin_btn_to_editor: "Abrir en Editor G-Code →",
+        ed_step: "MÓDULO 03 // POSTPROCESADOR & TRANSPILADOR ROBOT",
+        ed_title: "Editor & Transpilador de Código",
+        ed_subtitle: "Convierte rutinas ISO G-code a scripts nativos para Universal Robots y Fanuc CRX.",
+        ed_btn_copy: "Copiar Script",
+        ed_btn_to_hub: "Ir a Biblioteca →",
+        hub_step: "CURRICULUM DIDÁCTICO & RETOS DE TALLER",
+        hub_title: "Biblioteca de Probetas & Certificación",
+        hub_subtitle: "Acceso libre sin barreras para aprender robótica colaborativa y mecanizado CNC.",
+        modal_feedback_title: "Enviar Feedback / Sugerencias",
+        modal_field_to: "Canal directo:",
+        modal_field_type: "Categoría del mensaje:",
+        modal_field_msg: "Tus impresiones o consulta:",
+        modal_btn_cancel: "Cancelar",
+        modal_btn_send: "Enviar por Email"
+      },
+      en: {
+        badge_title: "Universal Orchestrator",
+        role_student: "Student (Free)",
+        role_pro: "Workshop Pro",
+        btn_feedback: "Feedback",
+        nav_workspace_heading: "Workspaces",
+        mod_home: "Home & Projects",
+        mod_kinematics: "3D Kinematics Center",
+        mod_editor: "Editor & Transpiler",
+        mod_hub: "Library",
+        sidebar_mission_title: "Educational Mission",
+        sidebar_mission_desc: "Free access for students, makers & small machine shops by EagleCelest.",
+        hardware_status: "ACTIVE HARDWARE:",
+        step_01: "STEP 01 // INITIAL CONFIG & KINEMATICS",
+        title_main: "New Project & Machine Selector",
+        subtitle_main: "Democratizing robotics & CNC for students, makers & small machine shops.",
+        btn_export: "Export .CNCPROJ",
+        btn_start: "Launch Project Now →",
+        act_new_title: "Start New Project",
+        act_new_desc: "Configure parameters, guided cases or start from scratch.",
+        act_saved_title: "Saved Project",
+        act_saved_desc: "Restore: Machining_Sample.cncproj from previous session.",
+        act_import_title: "Import Project",
+        act_import_desc: "Load .cncproj files, ISO G-code or robot routines.",
+        act_export_title: "Export Project",
+        act_export_desc: "Generate backup package with WCS datum, parts and tools.",
+        cases_heading: "00 // OPERATION TYPE & GUIDED CASE TEMPLATE",
+        cases_hint: "Select a guided template to preload optimal kinematics, tools and parameters:",
+        case1_title: "Machining of Sample Part",
+        case1_desc: "(Contouring & CNC Pocketing)",
+        case2_title: "Industrial Pick & Place",
+        case2_desc: "& Adhesive Dispensing",
+        case3_title: "CNC Lathe Auto-Loading",
+        case3_desc: "with Robotic Cell",
+        case4_title: "Free Project",
+        case4_desc: "Custom Code (.CNC / .SRC)",
+        card1_title: "01 // IDENTIFICATION",
+        card1_label: "File Name / Setup",
+        card2_title: "02 // WORK COORDINATE SYSTEM (DATUM)",
+        card2_desc: "G54: Origin clamped on quick-change vise jaw.",
+        card3_title: "03 // TOOLING & RAW STOCK",
+        kinematics_selector_title: "04 // KINEMATICS SELECTION & SHOP HARDWARE",
+        tag_6dof: "6-DOF COBOT",
+        mach1_name: "Cobot 6-DOF",
+        tag_3axis: "3-AXIS CNC",
+        mach2_name: "3-Axis CNC Mill",
+        tag_5axis: "5-AXIS RTCP",
+        mach3_name: "5-Axis RTCP",
+        tag_lathe: "LATHE & HYBRID",
+        mach4_name: "Lathe & Hybrid Cell",
+        kin_step: "MODULE 02 // 3D KINEMATICS & SIL-3 SAFETY",
+        kin_title: "3D Kinematics Center & Touch DRO",
+        kin_subtitle: "Continuous trajectory simulation, cartesian TCP tracking and ISO/TS 15066 safety.",
+        kin_btn_run: "Run Simulation",
+        kin_btn_to_editor: "Open in G-Code Editor →",
+        ed_step: "MODULE 03 // POST-PROCESSOR & ROBOT TRANSPILER",
+        ed_title: "Editor & Code Transpiler",
+        ed_subtitle: "Convert ISO G-code routines directly to Universal Robots URScript and Fanuc dialects.",
+        ed_btn_copy: "Copy Script",
+        ed_btn_to_hub: "Go to Library →",
+        hub_step: "DIDACTIC CURRICULUM & SHOP RETOS",
+        hub_title: "Sample Parts Library & Progression",
+        hub_subtitle: "Open barrier-free access to learn collaborative robotics and precision CNC.",
+        modal_feedback_title: "Send Feedback / Suggestions",
+        modal_field_to: "Direct channel:",
+        modal_field_type: "Message category:",
+        modal_field_msg: "Your thoughts or inquiries:",
+        modal_btn_cancel: "Cancel",
+        modal_btn_send: "Send via Email"
+      }
+    };
 
-      const activeEl = document.getElementById(tabId);
-      if (activeEl) activeEl.classList.remove('hidden');
-
-      // Actualizar estilos en la barra de navegación lateral
-      const navMapping = {
-        'tab-inicio': 'nav-inicio',
-        'tab-cinematica': 'nav-cinematica',
-        'tab-editor': 'nav-editor',
-        'tab-biblioteca': 'nav-biblioteca'
-      };
-
-      Object.values(navMapping).forEach(navId => {
-        const btn = document.getElementById(navId);
-        if (btn) {
-          btn.className = "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 hover:text-slate-100 hover:bg-industrial-800 transition";
+    function switchLanguage(lang) {
+      window.AppState.lang = lang;
+      const btnEs = document.getElementById('lang-btn-es');
+      const btnEn = document.getElementById('lang-btn-en');
+      if (lang === 'es') {
+        btnEs.className = "flex items-center gap-1 px-2 py-1 rounded bg-blue-600/40 text-blue-300 font-semibold border border-blue-500/50 transition-all";
+        btnEn.className = "flex items-center gap-1 px-2 py-1 rounded text-slate-400 hover:text-slate-200 transition-all";
+      } else {
+        btnEn.className = "flex items-center gap-1 px-2 py-1 rounded bg-blue-600/40 text-blue-300 font-semibold border border-blue-500/50 transition-all";
+        btnEs.className = "flex items-center gap-1 px-2 py-1 rounded text-slate-400 hover:text-slate-200 transition-all";
+      }
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang] && translations[lang][key]) {
+          el.textContent = translations[lang][key];
         }
       });
-
-      const activeBtn = document.getElementById(navMapping[tabId]);
-      if (activeBtn) {
-        activeBtn.className = "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium bg-industrial-cyan/15 text-industrial-cyan border border-industrial-cyan/30 transition";
-      }
+      localStorage.setItem('cnc_lang', lang);
     }
 
-    // PASO MANUAL DE ARTICULACIÓN J1-J6
-    function stepJoint(joint, delta) {
-      state.joints[joint] += delta * 1.5;
-      const label = document.getElementById(`val-${joint}`);
-      if (label) label.innerText = state.joints[joint].toFixed(1) + '°';
+    const views = ['home', 'kinematics', 'editor', 'hub'];
+    function switchView(target) {
+      window.AppState.currentView = target;
+      views.forEach(v => {
+        const viewEl = document.getElementById('view-' + v);
+        const navEl = document.getElementById('nav-btn-' + v);
+        const mobEl = document.getElementById('mob-btn-' + v);
 
-      // Actualizar representación gráfica SVG manteniendo el centro exacto
-      updateCobotVisuals();
-    }
-
-    // ACTUALIZACIÓN DE GEOMETRÍA SVG CENTRADA
-    function updateCobotVisuals() {
-      const j2 = state.joints.j2 * (Math.PI / 180);
-      const j3 = state.joints.j3 * (Math.PI / 180);
-
-      // Longitudes de eslabón proporcionales
-      const L1 = 110;
-      const L2 = 90;
-
-      // Base fija centrada en (300, 240)
-      const xShoulder = 300;
-      const yShoulder = 240;
-
-      // Cálculo cinemático directo 2D centrado
-      const xElbow = xShoulder + L1 * Math.cos(j2);
-      const yElbow = yShoulder + L1 * Math.sin(j2);
-
-      const xWrist = xElbow + L2 * Math.cos(j2 + j3);
-      const yWrist = yElbow + L2 * Math.sin(j2 + j3);
-
-      // Actualizar líneas y círculos del SVG
-      const link2 = document.getElementById('link-2');
-      if (link2) {
-        link2.setAttribute('x1', xShoulder);
-        link2.setAttribute('y1', yShoulder);
-        link2.setAttribute('x2', xElbow);
-        link2.setAttribute('y2', yElbow);
-      }
-
-      const link3 = document.getElementById('link-3');
-      if (link3) {
-        link3.setAttribute('x1', xElbow);
-        link3.setAttribute('y1', yElbow);
-        link3.setAttribute('x2', xWrist);
-        link3.setAttribute('y2', yWrist);
-      }
-
-      const jElbow = document.getElementById('joint-elbow');
-      if (jElbow) {
-        jElbow.setAttribute('cx', xElbow);
-        jElbow.setAttribute('cy', yElbow);
-      }
-
-      const jWrist = document.getElementById('joint-wrist');
-      if (jWrist) {
-        jWrist.setAttribute('cx', xWrist);
-        jWrist.setAttribute('cy', yWrist);
-      }
-
-      const toolHead = document.getElementById('tcp-tool-head');
-      if (toolHead) {
-        toolHead.setAttribute('transform', `translate(${xWrist}, ${yWrist})`);
-      }
-
-      // Actualizar DRO numérico flotante
-      const droX = document.getElementById('dro-x');
-      const droY = document.getElementById('dro-y');
-      const droZ = document.getElementById('dro-z');
-      if (droX) droX.innerText = (xWrist - 150).toFixed(2);
-      if (droY) droY.innerText = (-30 + state.joints.j1 * 0.5).toFixed(2);
-      if (droZ) droZ.innerText = (400 - yWrist).toFixed(2);
-    }
-
-    // RESET A POSICIÓN HOME
-    function resetJoints() {
-      state.joints = { j1: 0.0, j2: -45.0, j3: 90.0, j4: -135.0, j5: 90.0, j6: 0.0 };
-      ['j1','j2','j3','j4','j5','j6'].forEach(j => {
-        const lbl = document.getElementById(`val-${j}`);
-        if (lbl) lbl.innerText = state.joints[j].toFixed(1) + '°';
+        if (v === target) {
+          if (viewEl) viewEl.classList.remove('hidden-view');
+          if (navEl) navEl.className = "w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg bg-blue-600/20 text-blue-300 border border-blue-500/30 text-xs font-medium transition-all text-left";
+          if (mobEl) mobEl.className = "flex flex-col items-center gap-1 text-blue-400 font-bold";
+        } else {
+          if (viewEl) viewEl.classList.add('hidden-view');
+          if (navEl) navEl.className = "w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-900/80 text-xs font-medium transition-all text-left";
+          if (mobEl) mobEl.className = "flex flex-col items-center gap-1 text-slate-400";
+        }
       });
-      updateCobotVisuals();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // SIMULACIÓN DE TRAYECTORIA CONTINUA
-    function toggleSimulation() {
-      state.simulating = !state.simulating;
-      const btn = document.getElementById('btn-sim-play');
-      const txt = document.getElementById('sim-status-text');
-
-      if (state.simulating) {
-        btn.className = "bg-red-600 hover:bg-red-500 text-white font-bold px-3.5 py-1.5 rounded-xl text-xs flex items-center space-x-1.5 shadow transition";
-        txt.innerText = "Detener Simulación";
-        let step = 0;
-        state.simInterval = setInterval(() => {
-          step += 0.08;
-          state.joints.j2 = -45.0 + Math.sin(step) * 15;
-          state.joints.j3 = 90.0 + Math.cos(step) * 20;
-          updateCobotVisuals();
-        }, 50);
-      } else {
-        clearInterval(state.simInterval);
-        btn.className = "bg-industrial-emerald hover:bg-emerald-600 text-industrial-950 font-bold px-3.5 py-1.5 rounded-xl text-xs flex items-center space-x-1.5 shadow transition";
-        txt.innerText = "Simular Trayectoria";
-      }
-    }
-
-    // GESTIÓN BILINGÜE
-    function setLanguage(lang) {
-      state.lang = lang;
-      const btnEs = document.getElementById('btn-lang-es');
-      const btnEn = document.getElementById('btn-lang-en');
-
-      if (lang === 'es') {
-        btnEs.className = "px-2 py-0.5 rounded bg-industrial-700 text-white font-semibold transition";
-        btnEn.className = "px-2 py-0.5 rounded text-slate-400 hover:text-white transition";
-      } else {
-        btnEn.className = "px-2 py-0.5 rounded bg-industrial-700 text-white font-semibold transition";
-        btnEs.className = "px-2 py-0.5 rounded text-slate-400 hover:text-white transition";
-      }
-    }
-
-    // GESTIÓN DE ROLES
     function setRole(role) {
-      state.role = role;
-      const btnStudent = document.getElementById('btn-role-student');
-      const btnPro = document.getElementById('btn-role-pro');
-
+      window.AppState.role = role;
+      const btnStd = document.getElementById('role-student-btn');
+      const btnPro = document.getElementById('role-pro-btn');
       if (role === 'student') {
-        btnStudent.className = "px-2.5 py-1 rounded bg-blue-600 text-white font-medium flex items-center space-x-1.5 shadow-sm transition";
-        btnPro.className = "px-2.5 py-1 rounded text-slate-400 hover:text-white flex items-center space-x-1.5 transition";
+        btnStd.className = "px-2.5 py-1 rounded bg-blue-600 text-white font-medium shadow-sm transition-all flex items-center gap-1";
+        btnPro.className = "px-2.5 py-1 rounded text-slate-400 hover:text-white transition-all flex items-center gap-1";
+        showToast(window.AppState.lang === 'es' ? "Perfil Estudiante (0€)" : "Student Profile (Free)");
       } else {
-        btnPro.className = "px-2.5 py-1 rounded bg-blue-600 text-white font-medium flex items-center space-x-1.5 shadow-sm transition";
-        btnStudent.className = "px-2.5 py-1 rounded text-slate-400 hover:text-white flex items-center space-x-1.5 transition";
+        btnPro.className = "px-2.5 py-1 rounded bg-amber-600 text-white font-medium shadow-sm transition-all flex items-center gap-1";
+        btnStd.className = "px-2.5 py-1 rounded text-slate-400 hover:text-white transition-all flex items-center gap-1";
+        showToast(window.AppState.lang === 'es' ? "Perfil Taller Pro Activado" : "Workshop Pro Profile Activated");
       }
     }
 
-    // PARADA DE EMERGENCIA E-STOP
-    function triggerEStop() {
-      if (state.simulating) toggleSimulation();
-      alert('⚠️ PARADA DE EMERGENCIA ACTIVADA (E-STOP)\nTodos los actuadores y buses RTDE han sido congelados de forma segura.');
+    function triggerEmergencyStop() {
+      window.AppState.eStop = !window.AppState.eStop;
+      const btn = document.getElementById('btn-estop');
+      const hwStatus = document.getElementById('side-hw-status');
+      if (window.AppState.eStop) {
+        btn.classList.add('bg-red-800', 'animate-pulse');
+        hwStatus.innerHTML = "● BLOQUEADO SIL-3";
+        hwStatus.className = "text-rose-500 font-bold";
+        alert(window.AppState.lang === 'es' ? "🚨 E-STOP DISPARADO: Interlock SIL-3 activo. Servomotores desconectados." : "🚨 E-STOP TRIGGERED: SIL-3 interlock active. Servos cut off.");
+      } else {
+        btn.classList.remove('bg-red-800', 'animate-pulse');
+        hwStatus.innerHTML = "● CONECTADO";
+        hwStatus.className = "text-emerald-400 font-semibold";
+        showToast(window.AppState.lang === 'es' ? "Circuito de seguridad rearmado." : "Safety circuit reset.");
+      }
     }
 
-    // EXPORTAR ARCHIVO .CNCPROJ
+    function setJogResolution(step) {
+      window.AppState.jogStep = step;
+      ['01', '1', '5'].forEach(s => {
+        const b = document.getElementById('jog-step-' + s);
+        if (b) b.className = "px-1.5 py-0.5 rounded bg-slate-800 text-slate-300";
+      });
+      const activeBtn = document.getElementById(step === 0.1 ? 'jog-step-01' : (step === 1.0 ? 'jog-step-1' : 'jog-step-5'));
+      if (activeBtn) activeBtn.className = "px-1.5 py-0.5 rounded bg-blue-600 text-white font-bold";
+    }
+
+    function stepJoint(joint, dir) {
+      if (window.AppState.eStop) {
+        showToast("E-STOP Accionado. Movimiento bloqueado.", "error");
+        return;
+      }
+      const delta = window.AppState.jogStep * dir;
+      window.AppState.joints[joint] = +(window.AppState.joints[joint] + delta).toFixed(1);
+      document.getElementById('val-' + joint.toLowerCase()).textContent = window.AppState.joints[joint] + "°";
+
+      const radJ2 = (window.AppState.joints.J2 * Math.PI) / 180;
+      const radJ3 = ((window.AppState.joints.J2 + window.AppState.joints.J3) * Math.PI) / 180;
+
+      const newJoint2X = 200 + Math.sin(radJ2) * 90;
+      const newJoint2Y = 310 - Math.cos(radJ2) * 90;
+      const newJoint3X = newJoint2X + Math.sin(radJ3) * 105;
+      const newJoint3Y = newJoint2Y - Math.cos(radJ3) * 105;
+
+      const link1 = document.getElementById('robot-link-1');
+      const j2 = document.getElementById('robot-joint-2');
+      const link2 = document.getElementById('robot-link-2');
+      const j3 = document.getElementById('robot-joint-3');
+
+      if (link1 && j2) {
+        link1.setAttribute('x2', newJoint2X);
+        link1.setAttribute('y2', newJoint2Y);
+        j2.setAttribute('cx', newJoint2X);
+        j2.setAttribute('cy', newJoint2Y);
+      }
+      if (link2 && j3) {
+        link2.setAttribute('x1', newJoint2X);
+        link2.setAttribute('y1', newJoint2Y);
+        link2.setAttribute('x2', newJoint3X);
+        link2.setAttribute('y2', newJoint3Y);
+        j3.setAttribute('cx', newJoint3X);
+        j3.setAttribute('cy', newJoint3Y);
+      }
+
+      window.AppState.dro.x = +(window.AppState.dro.x + delta * 0.4).toFixed(2);
+      window.AppState.dro.z = +(window.AppState.dro.z + delta * 0.3).toFixed(2);
+      document.getElementById('tcp-x').textContent = window.AppState.dro.x;
+      document.getElementById('tcp-z').textContent = window.AppState.dro.z;
+    }
+
+    function toggleFreeDrive() {
+      const b = document.getElementById('btn-freedrive');
+      b.classList.toggle('bg-emerald-600/30');
+      b.classList.toggle('text-emerald-300');
+      showToast(window.AppState.lang === 'es' ? "Modo FreeDrive conmutado" : "FreeDrive mode toggled");
+    }
+
+    function recordWaypointP1() {
+      updateXPDisplay(50);
+      showToast(window.AppState.lang === 'es' ? "📍 Waypoint P1 Guardado (+50 XP)" : "📍 Waypoint P1 Saved (+50 XP)");
+    }
+
+    let simTimer = null;
+    function toggleKinematicsSim() {
+      const btn = document.getElementById('btn-toggle-sim');
+      const txt = document.getElementById('txt-sim-run');
+      window.AppState.simRunning = !window.AppState.simRunning;
+
+      if (window.AppState.simRunning) {
+        btn.className = "px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-semibold text-xs font-mono flex items-center gap-2 shadow-lg shadow-amber-600/30 transition-all";
+        txt.textContent = window.AppState.lang === 'es' ? "Pausar Simulación" : "Pause Simulation";
+        let step = 0;
+        simTimer = setInterval(() => {
+          step += 0.08;
+          document.getElementById('tcp-x').textContent = (143.6 + Math.sin(step) * 15).toFixed(2);
+          document.getElementById('tcp-y').textContent = (-30.0 + Math.cos(step) * 12).toFixed(2);
+          document.getElementById('tcp-z').textContent = (225.3 + Math.sin(step * 0.6) * 8).toFixed(2);
+        }, 120);
+      } else {
+        clearInterval(simTimer);
+        btn.className = "px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs font-mono flex items-center gap-2 shadow-lg shadow-emerald-600/30 transition-all";
+        txt.textContent = window.AppState.lang === 'es' ? "Ejecutar Simulación" : "Run Simulation";
+      }
+    }
+
+    function setCameraView(cam) {
+      showToast((window.AppState.lang === 'es' ? "Perspectiva: " : "View: ") + cam.toUpperCase());
+    }
+
+    function selectPracticalCase(c) {
+      ['mecanizado', 'pickplace', 'torno', 'libre'].forEach(id => {
+        const el = document.getElementById('case-' + id);
+        if (el) el.className = id === c ? "p-4 rounded-xl bg-[#141b2b] border-2 border-blue-500 cursor-pointer transition-all hover:bg-slate-900 relative" : "p-4 rounded-xl bg-[#141b2b] border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/60 relative";
+      });
+      const nameInput = document.getElementById('project-name-input');
+      const visor = document.getElementById('visor-active-case');
+      if (c === 'mecanizado') {
+        nameInput.value = "Probeta_Didactica_CNC";
+        if (visor) visor.textContent = "Caso Activo: Probeta Didáctica";
+      } else if (c === 'pickplace') {
+        nameInput.value = "Pick_And_Place_Cobot";
+        if (visor) visor.textContent = "Caso Activo: Pick & Place Cobot";
+      }
+      showToast((window.AppState.lang === 'es' ? "Caso Cargado: " : "Loaded Case: ") + c.toUpperCase());
+    }
+
+    function selectMachine(m) {
+      ['cobot', 'fresadora', '5ejes', 'torno'].forEach(id => {
+        const el = document.getElementById('mach-' + id);
+        if (el) el.className = id === m ? "p-4 rounded-xl bg-[#141b2b] border-2 border-blue-500 cursor-pointer transition-all hover:bg-slate-900 relative" : "p-4 rounded-xl bg-[#141b2b] border border-slate-800 cursor-pointer transition-all hover:border-slate-700 hover:bg-slate-900/60";
+      });
+      document.getElementById('side-machine-name').textContent = m === 'cobot' ? 'UR10e Cobot (6-DOF)' : (m === 'fresadora' ? 'Fresadora Haas VF-2' : (m === '5ejes' ? 'DMG MORI 5 Ejes RTCP' : 'Torno Mazak Celda'));
+    }
+
+    function selectDatum(d) {
+      ['G54', 'G55', 'BASE'].forEach(item => {
+        const btn = document.getElementById('datum-' + item.toLowerCase());
+        if (btn) btn.className = item === d ? "py-2 rounded-lg bg-blue-600/40 border border-blue-500/60 text-white font-bold text-center" : "py-2 rounded-lg bg-[#070e1d] border border-slate-800 text-slate-400 hover:text-white text-center";
+      });
+      document.getElementById('datum-desc').textContent = d === 'G54' ? "G54: Origen fijado en mordaza de amarre rápido." : (d === 'G55' ? "G55: Segunda mordaza / Referencia plato rotativo." : "BASE: Coordenadas mundiales absolutas robot.");
+    }
+
+    function selectHubAction(act) {
+      if (act === 'export') exportProjectFile();
+      showToast("Acción seleccionada: " + act.toUpperCase());
+    }
+
+    function launchConfiguredProject() {
+      switchView('kinematics');
+      showToast(window.AppState.lang === 'es' ? "Cargando proyecto en la consola cinemática..." : "Loading project into kinematics console...");
+    }
+
     function exportProjectFile() {
-      const data = {
+      const proj = {
         app: "CNC & Cobot Studio",
-        version: "5.7",
-        project: document.getElementById('project-name-input')?.value || "Probeta_Didactica",
-        joints: state.joints,
+        version: "5.5",
+        author: "EagleCelest",
+        project: document.getElementById('project-name-input').value,
         timestamp: new Date().toISOString()
       };
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const blob = new Blob([JSON.stringify(proj, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${data.project}.cncproj`;
+      a.download = proj.project + ".cncproj";
       a.click();
       URL.revokeObjectURL(url);
+      showToast(".CNCPROJ Descargado con éxito");
     }
 
-    // TRANSPILACIÓN DE G-CODE A URSCRIPT
-    function transpileCode() {
-      const rawGCode = document.getElementById('gcode-editor-area').value;
-      alert('⚡ Transpilando código G-code a dialecto nativo URScript con cinemática inversa...');
-      switchTab('tab-editor');
+    function copyGeneratedScript() {
+      const script = document.getElementById('dst-robot-script').value;
+      navigator.clipboard.writeText(script).then(() => {
+        showToast("Script copiado al portapapeles");
+      });
     }
 
-    function downloadCodeFile() {
-      const scriptContent = document.getElementById('robot-script-area').value;
-      const blob = new Blob([scriptContent], { type: "text/plain" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = "probeta_didactica.script";
-      a.click();
-      URL.revokeObjectURL(url);
+    function updateXPDisplay(delta) {
+      window.AppState.xp += delta;
+      const topXp = document.getElementById('user-xp-display');
+      if (topXp) topXp.textContent = window.AppState.xp;
+      const hubText = document.getElementById('hub-xp-text');
+      const hubBar = document.getElementById('hub-xp-bar');
+      if (hubText) hubText.textContent = `${window.AppState.xp} / 500 XP`;
+      if (hubBar) {
+        const pct = Math.min(100, Math.round((window.AppState.xp / 500) * 100));
+        hubBar.style.width = pct + '%';
+      }
     }
 
-    // MODAL DE RETOS DIDÁCTICOS Y SUMA DE XP
-    const challengeData = {
+    // Enciclopedia Didáctica Interactiva
+    function switchEncyclopediaTab(tabId) {
+      ['tcp', 'moves', 'safety'].forEach(t => {
+        const btn = document.getElementById('enc-tab-' + t);
+        const content = document.getElementById('enc-content-' + t);
+        if (t === tabId) {
+          if (btn) btn.className = "px-3 py-1.5 rounded-lg bg-blue-600 text-white font-semibold transition-all";
+          if (content) content.classList.remove('hidden');
+        } else {
+          if (btn) btn.className = "px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all";
+          if (content) content.classList.add('hidden');
+        }
+      });
+    }
+
+    // 4 Retos Interactivos de Taller
+    const challengesData = {
       1: {
-        title: "Reto 1: Calibración TCP de 4 Puntos",
-        body: `<p>Para calibrar la herramienta se registran 4 aproximaciones distintas manteniendo la punta exactamente en el mismo centro de punzón.</p>
-               <p class="mt-2 font-mono bg-industrial-950 p-2 rounded text-industrial-cyan">P1: X120.4, Y-30.2, Z220.1<br>P2: X120.5, Y-30.1, Z220.2<br>P3: X120.3, Y-30.3, Z220.1<br>P4: X120.4, Y-30.2, Z220.0</p>
-               <p class="mt-2">¿Cuál es el error medio residual obtenido?</p>
-               <div class="mt-2 space-y-1.5">
-                 <label class="flex items-center space-x-2"><input type="radio" name="ch-opt" value="ok" checked> <span>± 0.08 mm (Aceptable para mecanizado y fresado)</span></label>
-                 <label class="flex items-center space-x-2"><input type="radio" name="ch-opt" value="err"> <span>± 1.25 mm (Fuera de tolerancia, recalibrar)</span></label>
-               </div>`,
+        badge: "RETO 01 // +75 XP",
+        title: "Calibración TCP de 4 Puntos",
         xp: 75,
-        badgeId: 'badge-r1'
+        question: "Al calibrar el TCP de una fresa o pinza mediante el método de 4 puntos, ¿qué debes hacer en cada una de las 4 capturas sobre el puntero de referencia?",
+        options: [
+          "A) Tocar el puntero con el TCP desde 4 orientaciones distintas de la muñeca.",
+          "B) Mover el robot 100 mm en línea recta en el eje Z entre cada punto.",
+          "C) Cambiar la herramienta por otra distinta en cada captura."
+        ],
+        correctIndex: 0,
+        explanation: "¡Correcto! Al tocar el mismo punto físico desde 4 orientaciones diferentes, el controlador resuelve la esfera común y calcula el offset exacto (X, Y, Z) del TCP."
       },
       2: {
-        title: "Reto 2: Singularidad en Muñeca J5",
-        body: `<p>Durante una trayectoria lineal recta (MoveL), el ángulo de la muñeca J5 se aproxima a 0°, lo que provoca un determinante Jacobiano nulo y paro por sobrevelocidad.</p>
-               <p class="mt-2 font-semibold text-white">¿Qué solución es la adecuada?</p>
-               <div class="mt-2 space-y-1.5">
-                 <label class="flex items-center space-x-2"><input type="radio" name="ch-opt" value="ok" checked> <span>Aplicar un ángulo de inclinación (*tilt*) de 5° a 10° a la brida de la herramienta</span></label>
-                 <label class="flex items-center space-x-2"><input type="radio" name="ch-opt" value="err"> <span>Aumentar la aceleración articular al máximo (a = 5.0 m/s²)</span></label>
-               </div>`,
+        badge: "RETO 02 // +100 XP",
+        title: "Prevención de Singularidad en Muñeca J5",
         xp: 100,
-        badgeId: 'badge-r2'
+        question: "Si la muñeca del Cobot (eje J5) se acerca a 0°, los ejes J4 y J6 quedan colineales provocando una singularidad. ¿Cuál es la solución más segura en taller?",
+        options: [
+          "A) Aumentar la velocidad de MoveL al 100% para cruzar rápido.",
+          "B) Inclinar ligeramente la orientación de la herramienta o usar MoveJ para atravesar la zona.",
+          "C) Desactivar el límite de fuerza ISO/TS 15066."
+        ],
+        correctIndex: 1,
+        explanation: "¡Exacto! Reorientar ligeramente el TCP o usar un movimiento articular (MoveJ) evita que J4 y J6 requieran velocidades angulares infinitas."
       },
       3: {
-        title: "Reto 3: Selección MoveJ vs MoveL",
-        body: `<p>Vas a desplazar el robot desde la posición de reposo exterior hacia la entrada de la mordaza CNC.</p>
-               <p class="mt-2 font-semibold text-white">¿Cuál es la combinación correcta de comandos?</p>
-               <div class="mt-2 space-y-1.5">
-                 <label class="flex items-center space-x-2"><input type="radio" name="ch-opt" value="ok" checked> <span>MoveJ en el aire libre hasta 30 mm antes de la pieza, y MoveL lineal para la entrada</span></label>
-                 <label class="flex items-center space-x-2"><input type="radio" name="ch-opt" value="err"> <span>MoveJ a toda velocidad hasta tocar la pieza de trabajo</span></label>
-               </div>`,
+        badge: "RETO 03 // +75 XP",
+        title: "Selección MoveJ vs MoveL en Contorneado",
         xp: 75,
-        badgeId: 'badge-r3'
+        question: "Necesitas aplicar un cordón continuo de adhesivo o mecanizar un contorno recto sobre una probeta AL-6061. ¿Qué instrucción garantiza trayectoria recta y velocidad constante?",
+        options: [
+          "A) MoveJ (Articular)",
+          "B) MoveP (Proceso Lineal con velocidad constante)",
+          "C) FreeDrive"
+        ],
+        correctIndex: 1,
+        explanation: "¡Muy bien! MoveP mantiene una trayectoria lineal cartesiana con velocidad constante y radios de mezcla suaves, ideal para dispensado y mecanizado."
       },
       4: {
-        title: "Reto 4: Interlock Torno CNC M10/M11",
-        body: `<p>El robot introduce una probeta en el plato del torno CNC antes del mecanizado.</p>
-               <p class="mt-2 font-semibold text-white">¿En qué orden debe programarse el enclavamiento SIL-3?</p>
-               <div class="mt-2 space-y-1.5">
-                 <label class="flex items-center space-x-2"><input type="radio" name="ch-opt" value="ok" checked> <span>Entrar celda -> Cerrar plato (M10) -> Confirmar presostato digital -> Abrir pinza -> Retirar robot</span></label>
-                 <label class="flex items-center space-x-2"><input type="radio" name="ch-opt" value="err"> <span>Abrir pinza antes de que el plato del torno haya cerrado la mordaza</span></label>
-               </div>`,
+        badge: "RETO 04 // +100 XP",
+        title: "Interlock SIL-3 & Carga de Torno M10/M11",
         xp: 100,
-        badgeId: 'badge-r4'
+        question: "En una celda híbrida con torno Mazak, el Cobot va a retirar la pieza del plato. ¿Qué condición de seguridad debe cumplirse antes de abrir las garras (M11)?",
+        options: [
+          "A) El husillo del torno debe estar completamente detenido (0 RPM) y el Cobot sujetando la pieza.",
+          "B) El husillo puede girar a 500 RPM para facilitar la extracción.",
+          "C) Basta con activar el modo FreeDrive."
+        ],
+        correctIndex: 0,
+        explanation: "¡Correcto! El interlock SIL-3 exige confirmar husillo parado (0 RPM) y agarre seguro de la pinza antes de ejecutar M11 (apertura de plato)."
       }
     };
 
     function openChallengeModal(id) {
-      state.currentChallengeId = id;
-      const data = challengeData[id];
+      const data = challengesData[id];
       if (!data) return;
+      window.AppState.activeChallengeId = id;
+      document.getElementById('chal-badge').textContent = data.badge;
+      document.getElementById('chal-title').textContent = data.title;
+      document.getElementById('chal-question').textContent = data.question;
 
-      document.getElementById('modal-challenge-title').innerText = data.title;
-      document.getElementById('modal-challenge-body').innerHTML = data.body;
+      const fb = document.getElementById('chal-feedback');
+      fb.classList.add('hidden');
+      fb.textContent = '';
+
+      const optsContainer = document.getElementById('chal-options');
+      optsContainer.innerHTML = '';
+      data.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = "w-full text-left p-3 rounded-xl bg-[#141b2b] hover:bg-slate-800 border border-slate-700 text-slate-200 transition-all";
+        btn.textContent = opt;
+        btn.onclick = () => submitChallengeAnswer(idx);
+        optsContainer.appendChild(btn);
+      });
+
       document.getElementById('challenge-modal').classList.remove('hidden');
     }
 
@@ -1270,78 +1498,162 @@ end</textarea>
       document.getElementById('challenge-modal').classList.add('hidden');
     }
 
-    function launchQuickChallenge() {
-      switchTab('tab-biblioteca');
-      openChallengeModal(2);
-    }
+    function submitChallengeAnswer(selectedIndex) {
+      const id = window.AppState.activeChallengeId;
+      const data = challengesData[id];
+      if (!data) return;
 
-    function submitChallengeAnswer() {
-      const id = state.currentChallengeId;
-      const data = challengeData[id];
-      if (data) {
-        state.xp = Math.min(500, state.xp + data.xp);
-        document.getElementById('header-xp-val').innerText = state.xp;
-        document.getElementById('biblio-xp-val').innerText = state.xp;
-        
-        const pct = (state.xp / 500) * 100;
-        document.getElementById('biblio-xp-bar').style.width = `${pct}%`;
+      const fb = document.getElementById('chal-feedback');
+      fb.classList.remove('hidden');
 
-        const badge = document.getElementById(data.badgeId);
-        if (badge) {
-          badge.className = "text-xs text-industrial-emerald font-bold";
-          badge.innerHTML = '<i class="fa-solid fa-circle-check"></i> Superado';
+      if (selectedIndex === data.correctIndex) {
+        fb.className = "p-3 rounded-xl text-xs leading-relaxed bg-emerald-500/20 border border-emerald-500/40 text-emerald-200";
+        if (!window.AppState.completedChallenges[id]) {
+          window.AppState.completedChallenges[id] = true;
+          updateXPDisplay(data.xp);
+          const badgeEl = document.getElementById('badge-reto-' + id);
+          if (badgeEl) {
+            badgeEl.textContent = "✓ COMPLETADO";
+            badgeEl.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold";
+          }
+          const btnEl = document.getElementById('btn-reto-' + id);
+          if (btnEl) {
+            btnEl.textContent = "✓ Superado (" + data.xp + " XP)";
+            btnEl.className = "w-full py-2 rounded-xl bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 font-mono text-xs font-bold";
+          }
+          showToast(`🏆 ¡Reto ${id} superado! +${data.xp} XP`);
         }
-
-        alert(`🎉 ¡Excelente! Respuesta correcta.\nHas sumado +${data.xp} XP a tu expediente formativo.`);
+        fb.textContent = data.explanation;
+      } else {
+        fb.className = "p-3 rounded-xl text-xs leading-relaxed bg-rose-500/20 border border-rose-500/40 text-rose-200";
+        fb.textContent = "❌ Respuesta incorrecta. Revisa la Enciclopedia Didáctica arriba e inténtalo de nuevo.";
       }
-      closeChallengeModal();
     }
 
-    // DIPLOMA OFICIAL DESCARGABLE
-    function downloadOfficialDiploma() {
-      const studentName = prompt('Introduce tu nombre y apellidos para el Diploma Oficial:', 'Alumno / Técnico de Taller');
-      if (!studentName) return;
-
-      const certHtml = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <title>Diploma Oficial - CNC & Cobot Studio</title>
-          <style>
-            body { font-family: 'Helvetica Neue', Arial, sans-serif; background: #0c1322; color: #fff; padding: 40px; text-align: center; }
-            .border-box { border: 8px double #f59e0b; padding: 50px; border-radius: 16px; background: #070e1d; }
-            h1 { font-size: 32px; color: #00e5ff; margin-bottom: 5px; }
-            h2 { font-size: 20px; color: #f59e0b; letter-spacing: 2px; }
-            p { font-size: 16px; color: #cbd5e1; line-height: 1.6; }
-            .name { font-size: 28px; color: #fff; font-weight: bold; margin: 25px 0; border-bottom: 2px solid #00e5ff; display: inline-block; padding: 0 40px 10px; }
-            .footer-info { margin-top: 40px; font-size: 12px; color: #64748b; font-family: monospace; }
-          </style>
-        </head>
-        <body>
-          <div class="border-box">
-            <h2>CERTIFICACIÓN DE CAPACITACIÓN TÉCNICA</h2>
-            <h1>CNC & COBOT STUDIO</h1>
-            <p>Se otorga el presente diploma acreditativo de aprovechamiento a:</p>
-            <div class="name">${studentName}</div>
-            <p>Por haber superado con éxito las pruebas y competencias de cinemática articular (6-DOF), calibración de TCP de 4 puntos, trayectorias continuas RTCP y seguridad colaborativa ISO/TS 15066.</p>
-            <div class="footer-info">
-              ID CERTIFICADO: CNC-COBOT-2025-XP500 · VERIFICADO POR EAGLECELEST · FIRMA DIGITAL OK
-            </div>
-          </div>
-          <script>window.print();<\/script>
-        </body>
-        </html>
-      `;
-
-      const win = window.open('', '_blank');
-      win.document.write(certHtml);
-      win.document.close();
+    function openDiplomaModal() {
+      document.getElementById('diploma-modal').classList.remove('hidden');
+    }
+    function closeDiplomaModal() {
+      document.getElementById('diploma-modal').classList.add('hidden');
+    }
+    function updateDiplomaPreview(val) {
+      document.getElementById('diploma-preview-name').textContent = val || "Estudiante";
+    }
+    function addDemoXP(amount) {
+      updateXPDisplay(amount);
+      showToast("¡Felicidades! +150 XP añadidos. Requisito 500 XP alcanzado.");
+    }
+    function openRedeemModal() {
+      showToast(`${window.AppState.xp} XP disponibles = ${Math.floor(window.AppState.xp / 2)} Créditos de Simulación`);
     }
 
-    // INICIALIZACIÓN
-    window.addEventListener('DOMContentLoaded', () => {
-      updateCobotVisuals();
+    function openFeedbackModal() {
+      document.getElementById('feedback-modal').classList.remove('hidden');
+    }
+    function closeFeedbackModal() {
+      document.getElementById('feedback-modal').classList.add('hidden');
+    }
+    function sendFeedback() {
+      const type = document.getElementById('feedback-type').value;
+      const text = document.getElementById('feedback-text').value;
+      window.location.href = `mailto:cnccobot.feedback@gmail.com?subject=[CNC & Cobot Studio v5.5] ${encodeURIComponent(type)}&body=${encodeURIComponent(text)}`;
+      closeFeedbackModal();
+    }
+
+    function showToast(msg) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'p-3 rounded-xl bg-[#0c1322] border border-blue-500/50 text-white font-mono text-xs shadow-2xl flex items-center gap-2 pointer-events-auto transition-all duration-300';
+      toast.innerHTML = `<span>ℹ️</span> <span>${msg}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3200);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedLang = localStorage.getItem('cnc_lang') || 'es';
+      switchLanguage(savedLang);
     });
   </script>
-</body>
-</html>
+<script>
+  window.stepJoint = function(joint, dir) {
+    if (window.AppState.eStop) {
+      showToast("E-STOP Accionado. Movimiento bloqueado.", "error");
+      return;
+    }
+    const delta = window.AppState.jogStep * dir;
+    window.AppState.joints[joint] = +(window.AppState.joints[joint] + delta).toFixed(1);
+    const valEl = document.getElementById('val-' + joint.toLowerCase());
+    if (valEl) valEl.textContent = window.AppState.joints[joint] + "°";
+
+    const radJ2 = (window.AppState.joints.J2 * Math.PI) / 180;
+    const radJ3 = ((window.AppState.joints.J2 + window.AppState.joints.J3) * Math.PI) / 180;
+    const radJ4 = ((window.AppState.joints.J2 + window.AppState.joints.J3 + window.AppState.joints.J4) * Math.PI) / 180;
+
+    // Base centrada simétrica en X=250, Y=315
+    const newJoint2X = 250 + Math.sin(radJ2) * 90;
+    const newJoint2Y = 315 - Math.cos(radJ2) * 90;
+    const newJoint3X = newJoint2X + Math.sin(radJ3) * 105;
+    const newJoint3Y = newJoint2Y - Math.cos(radJ3) * 105;
+    const newJoint4X = newJoint3X + Math.sin(radJ4) * 65;
+    const newJoint4Y = newJoint3Y - Math.cos(radJ4) * 65;
+    const tcpX = newJoint4X + 15;
+    const tcpY = newJoint4Y + 40;
+
+    const link1 = document.getElementById('robot-link-1');
+    const j2 = document.getElementById('robot-joint-2');
+    const link2 = document.getElementById('robot-link-2');
+    const j3 = document.getElementById('robot-joint-3');
+    const link3 = document.getElementById('robot-link-3');
+    const j4 = document.getElementById('robot-joint-4');
+    const linkTcp = document.getElementById('robot-link-tcp');
+    const tcpTip = document.getElementById('robot-tcp-tip');
+    const laserBeam = document.getElementById('robot-laser-beam');
+    const laserPt = document.getElementById('robot-laser-point');
+
+    if (link1 && j2) {
+      link1.setAttribute('x2', newJoint2X);
+      link1.setAttribute('y2', newJoint2Y);
+      j2.setAttribute('cx', newJoint2X);
+      j2.setAttribute('cy', newJoint2Y);
+    }
+    if (link2 && j3) {
+      link2.setAttribute('x1', newJoint2X);
+      link2.setAttribute('y1', newJoint2Y);
+      link2.setAttribute('x2', newJoint3X);
+      link2.setAttribute('y2', newJoint3Y);
+      j3.setAttribute('cx', newJoint3X);
+      j3.setAttribute('cy', newJoint3Y);
+    }
+    if (link3 && j4) {
+      link3.setAttribute('x1', newJoint3X);
+      link3.setAttribute('y1', newJoint3Y);
+      link3.setAttribute('x2', newJoint4X);
+      link3.setAttribute('y2', newJoint4Y);
+      j4.setAttribute('cx', newJoint4X);
+      j4.setAttribute('cy', newJoint4Y);
+    }
+    if (linkTcp && tcpTip && laserBeam) {
+      linkTcp.setAttribute('x1', newJoint4X);
+      linkTcp.setAttribute('y1', newJoint4Y);
+      linkTcp.setAttribute('x2', tcpX);
+      linkTcp.setAttribute('y2', tcpY);
+      tcpTip.setAttribute('cx', tcpX);
+      tcpTip.setAttribute('cy', tcpY);
+      laserBeam.setAttribute('x1', tcpX);
+      laserBeam.setAttribute('y1', tcpY);
+      laserBeam.setAttribute('x2', tcpX);
+      if (laserPt) laserPt.setAttribute('cx', tcpX);
+    }
+
+    window.AppState.dro.x = +(window.AppState.dro.x + delta * 0.4).toFixed(2);
+    window.AppState.dro.z = +(window.AppState.dro.z + delta * 0.3).toFixed(2);
+    const dx = document.getElementById('tcp-x');
+    const dz = document.getElementById('tcp-z');
+    if (dx) dx.textContent = window.AppState.dro.x;
+    if (dz) dz.textContent = window.AppState.dro.z;
+  };
+</script>
+</body></html>
